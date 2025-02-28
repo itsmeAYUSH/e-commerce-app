@@ -1,0 +1,89 @@
+.categories {
+  display: flex;
+  padding-inline: 10vw;
+  justify-content: space-between;
+  padding-top: 80px;
+  align-items: center;
+
+}
+.btn {
+  background-color: #D09423 !important;
+  color: #ffffff !important;
+  border-radius: 25px !important; 
+  overflow: visible !important; 
+  border: none !important;
+  white-space: nowrap !important;
+}
+
+.items {
+  display: flex;
+  padding-inline: 10vw;
+}
+/*  */
+.items {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding-inline: 10vw;
+  overflow: hidden;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 200px;
+  opacity: 0.5;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.item.active {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.imageContainer {
+  width: 150px;
+  height: 150px;
+  background-color: #f3f3f3;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image {
+  width: 100px;
+  height: auto;
+  border-radius: 50%;
+}
+
+/* Dots Navigation */
+.dots {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  margin: 0 5px;
+  background-color: lightgray;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.activeDot {
+  background-color: #003b46;
+  width: 50px;
+  border-radius: 25px; 
+  overflow: visible;
+  border: none;
+  white-space: nowrap;
+}
+.description{
+    font-size: 10px;
+}
