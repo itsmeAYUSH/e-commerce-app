@@ -6,6 +6,7 @@ import Navbar from './components/Navbar/Navbar';
 import Categories from './components/Categories/Categories';
 import Trending from './components/Trending/Trending';
 import TestimonialSection from './components/TestimonialsSection/TestimonialSection';
+import Footer from './components/Footer/Footer';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <Categories/>
       <Trending/>
       <TestimonialSection/>
+      <Footer/>
     </div>
   );
 }

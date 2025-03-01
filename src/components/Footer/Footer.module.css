@@ -1,0 +1,77 @@
+.footerContainer {
+  /* padding: 40px 60px; */
+}
+
+.footerTop {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.footerLogo h2 {
+  font-size: 38px;
+  font-weight: bold;
+  color: #333;
+  display: flex;
+  justify-content: center;
+}
+
+.footerLogo span {
+  color: #d4a019;
+}
+
+.footerLinks {
+  display: flex;
+  justify-content: space-around;
+  gap: 80px;
+  margin-top: 20px;
+}
+
+.footerSection h4 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 10px;
+}
+
+.footerSection ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footerSection li {
+  color: #666;
+  font-size: 18px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.footerSection li:hover {
+  text-decoration: underline;
+}
+
+.footerBottom {
+  background-color: #345;
+  color: #fff;
+  /* padding: 15px 0; */
+  display: flex;
+  padding-inline: 10vw;
+  text-align: center;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.socialIcons {
+  display: flex;
+  gap: 10px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.paymentIcons img {
+  width: 40px;
+  height: auto;
+  margin-left: 10px;
+}

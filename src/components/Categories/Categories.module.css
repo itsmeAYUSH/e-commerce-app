@@ -15,10 +15,6 @@
   white-space: nowrap !important;
 }
 
-.items {
-  display: flex;
-  padding-inline: 10vw;
-}
 /*  */
 .items {
   display: flex;

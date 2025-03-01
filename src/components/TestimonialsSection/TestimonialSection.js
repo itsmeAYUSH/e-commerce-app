@@ -31,6 +31,30 @@ const testimonials = [
   },
 ];
 
+const blogPosts = [
+  {
+    title: "First Time Home Owner Ideas",
+    author: "Kristin Watson",
+    date: "Apr 19, 24",
+    image:
+      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1080&fit=crop",
+  },
+  {
+    title: "How To Keep Your Furniture Clean",
+    author: "Robert Fox",
+    date: "Apr 20, 24",
+    image:
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1080&fit=crop",
+  },
+  {
+    title: "Small Space Furniture Apartment Ideas",
+    author: "Kristin Watson",
+    date: "Dec 20, 24",
+    image:
+      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1080&fit=crop",
+  },
+];
+
 const TestimonialSection = () => {
   const [index, setIndex] = useState(0);
   const totalTestimonials = testimonials.length;
@@ -53,7 +77,8 @@ const TestimonialSection = () => {
   };
 
   return (
-    <React.Fragment>
+    <div>
+      {/* testimonial section */}
       <div className={styles.categories}>
         <h2>
           Don't take our words,<br></br>See what our clients say
@@ -93,7 +118,51 @@ const TestimonialSection = () => {
           ))}
         </div>
       </div>
-    </React.Fragment>
+      {/* Blog section */}
+      {/* <div>
+        <div className={styles.categories}>
+          <h2>Explore Our Latest Blog</h2>
+          <div>
+            <Button className={styles.btn}>
+              View All Post
+              <EastIcon />
+            </Button>
+          </div>
+        </div>
+        <div className={styles.blogSection}>
+          <img
+            alt="blog"
+            src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1080&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            height="300"
+            width="300"
+          ></img>
+        </div>
+      </div> */}
+      <div className={styles.blogContainer}>
+        <div className={styles.header}>
+          <h2>Explore Our Latest Blog</h2>
+          <Button className={styles.btn} variant="contained" color="warning">
+            View All Posts <EastIcon />
+          </Button>
+        </div>
+        <div className={styles.blogGrid}>
+          {blogPosts.map((post, index) => (
+            <div key={index} className={styles.blogCard}>
+              <img
+                src={post.image}
+                alt={post.title}
+                className={styles.blogImage}
+              />
+              <h3 className={styles.blogTitle}>{post.title}</h3>
+              <p className={styles.blogPara}>
+                by <span className={styles.author}>{post.author}</span> on {""}
+                <span className={styles.date}>{post.date}</span>
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
 
