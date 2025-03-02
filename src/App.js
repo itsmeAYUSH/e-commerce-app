@@ -7,6 +7,8 @@ import Categories from './components/Categories/Categories';
 import Trending from './components/Trending/Trending';
 import TestimonialSection from './components/TestimonialsSection/TestimonialSection';
 import Footer from './components/Footer/Footer';
+import QuestionAnswer from './components/QuestionAnswer/QuestionAnswer';
+import NewsLetter from './components/NewsLetter/NewsLetter';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
       <Categories/>
       <Trending/>
       <TestimonialSection/>
+      <QuestionAnswer/>
+      <NewsLetter/>
       <Footer/>
     </div>
   );

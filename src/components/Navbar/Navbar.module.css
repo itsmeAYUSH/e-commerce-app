@@ -1,83 +1,93 @@
 .Navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 50px;
-    background-color: #2D5356;
-    color: #ffffff;
-    padding: 0 10vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  background-color: #2d5356;
+  color: #ffffff;
+  padding: 0 10vw;
+}
+
+/* Flex container for links and icons */
+.flex {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+/* Navigation links */
+.link {
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.link:hover {
+  border-bottom: 2px solid #d09423;
+  transition: border-bottom 0.3s ease-in-out;
+}
+
+/* Icons */
+.icon {
+  cursor: pointer;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .Navbar {
+    padding: 0 5vw;
   }
-  
-  /* Flex container for links and icons */
+}
+
+@media (max-width: 768px) {
+  .Navbar {
+    flex-direction: column;
+    height: auto;
+    padding: 10px 5vw;
+    text-align: center;
+  }
+
   .flex {
-    display: flex;
-    align-items: center;
-    gap: 30px;
+    flex-direction: column;
+    gap: 10px;
   }
-  
-  /* Navigation links */
+
   .link {
-    text-decoration: none;
-    color: #ffffff;
-    font-size: 14px;
-    cursor: pointer;
+    font-size: 16px;
   }
-  
-  .link:hover {
-    border-bottom: 2px solid #D09423;
-    transition: border-bottom 0.3s ease-in-out;
-  }
-  
-  /* Icons */
+
   .icon {
-    cursor: pointer;
+    font-size: 18px !important;
   }
-  
-  /* Responsive Design */
-  @media (max-width: 1024px) {
-    .Navbar {
-      padding: 0 5vw; 
-    }
+}
+
+@media (max-width: 480px) {
+  .Navbar {
+    padding: 10px 3vw;
   }
-  
-  @media (max-width: 768px) {
-    .Navbar {
-      flex-direction: column;
-      height: auto;
-      padding: 10px 5vw;
-      text-align: center;
-    }
-  
-    .flex {
-      flex-direction: column;
-      gap: 10px;
-    }
-  
-    .link {
-      font-size: 16px;
-    }
-  
-    .icon {
-      font-size: 18px !important;
-    }
+
+  .flex {
+    flex-direction: column;
+    gap: 8px;
   }
-  
-  @media (max-width: 480px) {
-    .Navbar {
-      padding: 10px 3vw;
-    }
-  
-    .flex {
-      flex-direction: column;
-      gap: 8px;
-    }
-  
-    .link {
-      font-size: 14px;
-    }
-  
-    .icon {
-      font-size: 16px !important;
-    }
+
+  .link {
+    font-size: 14px;
   }
-  
+
+  .icon {
+    font-size: 16px !important;
+  }
+}
+.footerLogo h2 {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  display: flex;
+  justify-content: center;
+}
+
+.footerLogo span {
+  color: #d4a019;
+}

@@ -53,25 +53,37 @@
 }
 
 .footerBottom {
-  background-color: #345;
+  background-color: #2d5356;
   color: #fff;
   /* padding: 15px 0; */
   display: flex;
   padding-inline: 10vw;
-  text-align: center;
-  justify-content: space-around;
+  /* text-align: center; */
+  justify-content: space-between;
   align-items: center;
 }
 
-.socialIcons {
-  display: flex;
+/* .socialIcons { */
+  /* display: flex;
   gap: 10px;
-  font-size: 18px;
-  cursor: pointer;
-}
+  font-size: 18px; */
+/* } */
 
 .paymentIcons img {
   width: 40px;
   height: auto;
   margin-left: 10px;
+  cursor: pointer;
+}
+.line{
+  border: #e7e7e7 1px solid;
+}
+.icons {
+  cursor: pointer;
+  margin-right: 10px;
+  font-size: 15px !important;
+  border: 1px solid #ffffff;
+  border-radius: 50%;
+  padding: 5px;
+  cursor: pointer;
 }

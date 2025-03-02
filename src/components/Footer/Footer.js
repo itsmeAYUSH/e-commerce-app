@@ -1,20 +1,19 @@
 import React from "react";
 import styles from "./Footer.module.css";
-import { FaInstagram, FaFacebook, FaTimes } from "react-icons/fa";
-// import visaLogo from "./assets/visa.png";
-// import mastercardLogo from "./assets/mastercard.png";
-// import almaLogo from "./assets/alma.png";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import XIcon from "@mui/icons-material/X";
 
 const Footer = () => {
   return (
     <footer className={styles.footerContainer}>
-      <hr></hr>
+      <hr className={styles.line}></hr>
       <div className={styles.footerLogo}>
         <h2>
           Furni<span>Flex</span>.
         </h2>
       </div>
-      <hr></hr>
+      <hr className={styles.line}></hr>
       <div className={styles.footerTop}>
         <div className={styles.footerLinks}>
           <div className={styles.footerSection}>
@@ -47,15 +46,15 @@ const Footer = () => {
       </div>
       <div className={styles.footerBottom}>
         <p>Copyright@2024 FurniFlex. All Rights Reserved.</p>
-        <div className={styles.socialIcons}>
-          <FaInstagram />
-          <FaTimes />
-          <FaFacebook />
+        <div>
+        <FacebookIcon className={styles.icons} />
+        <InstagramIcon className={styles.icons} />
+        <XIcon className={styles.icons} />
         </div>
         <div className={styles.paymentIcons}>
-          {/* <img src={visaLogo} alt="Visa" />
-          <img src={mastercardLogo} alt="MasterCard" />
-          <img src={almaLogo} alt="Alma" /> */}
+          <img src="/images/upi.png" alt="UPI" />
+          <img src="/images/mastercard.png" alt="MasterCard" />
+          <img src="/images/visa.jpg" alt="Visa" />
         </div>
       </div>
     </footer>
