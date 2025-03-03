@@ -108,38 +108,3 @@
   align-items: center;
   gap: 8px;
 }
-
-.blogGrid {
-  display: flex;
-  justify-content: space-between;
-  /* gap: 20px; */
-}
-
-.blogCard {
-  background: #f9f9f9;
-  border-radius: 12px;
-  overflow: hidden;
-  width: 350px;
-  /* padding: 15px; */
-  text-align: left;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.blogImage {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 10px;
-}
-.date {
-  color: #d09423;
-  font-weight: bold;
-}
-.author {
-  font-weight: bold;
-}
-.blogTitle,
-.blogPara {
-  padding-inline: 15px;
-}

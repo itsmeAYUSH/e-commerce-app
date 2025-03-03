@@ -2,6 +2,13 @@ import React from "react";
 import Button from "@mui/material/Button";
 import styles from "./Homepage.module.css";
 import EastRoundedIcon from "@mui/icons-material/EastRounded";
+import Collection from "../Collection/Collection";
+import Categories from "../Categories/Categories";
+import Trending from "../Trending/Trending";
+import TestimonialSection from "../TestimonialsSection/TestimonialSection";
+import QuestionAnswer from "../QuestionAnswer/QuestionAnswer";
+import NewsLetter from "../NewsLetter/NewsLetter";
+import Footer from "../Footer/Footer";
 
 const Homepage = () => {
   return (
@@ -37,6 +44,13 @@ const Homepage = () => {
           </div>
         </div>
       </div>
+      {/* <Collection />
+      <Categories />
+      <Trending />
+      <TestimonialSection />
+      <QuestionAnswer />
+      <NewsLetter />
+      <Footer /> */}
     </div>
   );
 };

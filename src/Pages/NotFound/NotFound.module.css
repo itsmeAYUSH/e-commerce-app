@@ -1,0 +1,13 @@
+.backBtn {
+  background-color: transparent;
+  color: #d09423 !important;
+}
+.notFound,
+.notFound h2 {
+  text-align: center !important;
+  justify-content: center !important;
+}
+.notFoundImg{
+  padding-top: 50px;
+  height: 50vh;
+}

@@ -119,26 +119,7 @@ const TestimonialSection = () => {
         </div>
       </div>
       {/* Blog section */}
-      {/* <div>
-        <div className={styles.categories}>
-          <h2>Explore Our Latest Blog</h2>
-          <div>
-            <Button className={styles.btn}>
-              View All Post
-              <EastIcon />
-            </Button>
-          </div>
-        </div>
-        <div className={styles.blogSection}>
-          <img
-            alt="blog"
-            src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1080&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            height="300"
-            width="300"
-          ></img>
-        </div>
-      </div> */}
-      <div className={styles.blogContainer}>
+      {/* <div className={styles.blogContainer}>
         <div className={styles.header}>
           <h2>Explore Our Latest Blog</h2>
           <Button className={styles.btn} variant="contained" color="warning">
@@ -161,7 +142,7 @@ const TestimonialSection = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

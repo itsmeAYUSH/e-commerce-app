@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./Navbar.module.css";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
@@ -7,15 +7,18 @@ import LocalMallRoundedIcon from "@mui/icons-material/LocalMallRounded";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+
   return (
     <div className={styles.Navbar}>
-      {/* <div className={styles.log}>FurniFlex.</div> */}
-      <div className={styles.footerLogo}>
+      {/* Logo Section */}
+      <div className={styles.footerLogo} onClick={() => navigate("/")}>
         <h2>
           Furni<span>Flex</span>.
         </h2>
       </div>
 
+      {/* Navigation Links */}
       <div className={styles.flex}>
         <Link to="/" className={styles.link}>
           Home
@@ -37,11 +40,24 @@ const Navbar = () => {
         </Link>
       </div>
 
+      {/* Icons with Navigation */}
       <div className={styles.flex}>
-        <SearchRoundedIcon className={styles.icon} />
-        <FavoriteRoundedIcon className={styles.icon} />
-        <LocalMallRoundedIcon className={styles.icon} />
-        <AccountCircleRoundedIcon className={styles.icon} />
+        <SearchRoundedIcon
+          className={styles.icon}
+          onClick={() => navigate("/search")}
+        />
+        <FavoriteRoundedIcon
+          className={styles.icon}
+          onClick={() => navigate("/wishlist")}
+        />
+        <LocalMallRoundedIcon
+          className={styles.icon}
+          onClick={() => navigate("/cart")}
+        />
+        <AccountCircleRoundedIcon
+          className={styles.icon}
+          onClick={() => navigate("/profile")}
+        />
       </div>
     </div>
   );
