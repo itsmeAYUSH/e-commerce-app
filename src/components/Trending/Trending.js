@@ -9,7 +9,6 @@ import {
   CardContent,
   Typography,
   IconButton,
-  Badge,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -18,8 +17,10 @@ import { styled } from "@mui/system";
 import Button from "@mui/material/Button";
 import "./Trending.css";
 import EastRoundedIcon from "@mui/icons-material/EastRounded";
+import { useNavigate } from "react-router-dom";
 
 const categories = [
+  "All",
   "Bed Room",
   "Living Room",
   "Dining Room",
@@ -33,14 +34,16 @@ const products = [
     name: "Luxe Lounge Sofa",
     price: "$235.99",
     discount: "-20%",
+    category: "Living Room",
     image:
-      "https://images.pexels.com/photos/11112731/pexels-photo-11112731.jpeg", // Replace with actual image
+      "https://images.pexels.com/photos/11112731/pexels-photo-11112731.jpeg",
   },
   {
     id: 2,
     name: "Comfort Haven Sofa",
     price: "$250.99",
     discount: "-10%",
+    category: "Living Room",
     image:
       "https://images.pexels.com/photos/11112731/pexels-photo-11112731.jpeg",
   },
@@ -49,30 +52,34 @@ const products = [
     name: "Round Wicker Chair",
     price: "$180.99",
     discount: "-25%",
+    category: "Outdoor",
     image:
       "https://images.pexels.com/photos/11112731/pexels-photo-11112731.jpeg",
   },
   {
     id: 4,
-    name: "Round Wicker Chair",
-    price: "$180.99",
-    discount: "-25%",
+    name: "Elegant Dining Table",
+    price: "$320.50",
+    discount: "-15%",
+    category: "Dining Room",
     image:
       "https://images.pexels.com/photos/11112731/pexels-photo-11112731.jpeg",
   },
   {
     id: 5,
-    name: "Round Wicker Chair",
-    price: "$180.99",
-    discount: "-25%",
+    name: "Classic Bed Frame",
+    price: "$500.00",
+    discount: "-5%",
+    category: "Bed Room",
     image:
       "https://images.pexels.com/photos/11112731/pexels-photo-11112731.jpeg",
   },
   {
     id: 6,
-    name: "Round Wicker Chair",
-    price: "$180.99",
-    discount: "-25%",
+    name: "Indoor Swing Chair",
+    price: "$199.99",
+    discount: "-12%",
+    category: "Indoor",
     image:
       "https://images.pexels.com/photos/11112731/pexels-photo-11112731.jpeg",
   },
@@ -101,7 +108,7 @@ const WishlistButton = styled(IconButton)(({ isFavorite }) => ({
 
 const ProductCard = ({ product }) => {
   const [favorite, setFavorite] = useState(false);
-
+  
   return (
     <Card
       sx={{
@@ -130,7 +137,7 @@ const ProductCard = ({ product }) => {
           color: "#FEFCE6",
           textAlign: "center",
         }}
-      >
+        >
         <Typography variant="h6" fontWeight="bold">
           {product.name}
         </Typography>
@@ -150,22 +157,32 @@ const ProductCard = ({ product }) => {
 };
 
 const App = () => {
-  const [selectedTab, setSelectedTab] = useState(1); // Default to "Living Room"
+  const navigate = useNavigate();
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
-  return (
+  const filteredProducts =
+    selectedCategory === "All"
+      ? products
+      : products.filter((product) => product.category === selectedCategory);
+
+      return (
     <React.Fragment>
       <div className="trendingSec">
         <h2>Trending Products for You</h2>
-        <Button className="view-all-btn">View All Products <EastRoundedIcon /></Button>
+        <Button className="view-all-btn" onClick={() => navigate("/products")}>
+          View All Products <EastRoundedIcon />
+        </Button>
       </div>
 
       <Container>
         {/* Category Navigation */}
         <Tabs
-          value={selectedTab}
-          onChange={(event, newValue) => setSelectedTab(newValue)}
-          textColor="inherit" // Prevents default color override
-          indicatorColor="secondary" // Custom color for the indicator line
+          value={categories.indexOf(selectedCategory)}
+          onChange={(event, newValue) =>
+            setSelectedCategory(categories[newValue])
+          }
+          textColor="inherit"
+          indicatorColor="secondary"
           sx={{
             marginBottom: "20px",
             fontSize: "18px",
@@ -173,12 +190,12 @@ const App = () => {
               backgroundColor: "#0D665C",
             },
             "& .MuiTab-root": {
-              color: "#555", // Default tab text color
+              color: "#555",
               fontWeight: "bold",
               textTransform: "none",
             },
             "& .Mui-selected": {
-              color: "#0D665C", // Selected tab text color
+              color: "#0D665C",
             },
           }}
         >
@@ -192,12 +209,18 @@ const App = () => {
         </Tabs>
 
         {/* Product Grid */}
-        <Grid container spacing={3} justifyContent="center">
-          {products.map((product) => (
-            <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
-              <ProductCard product={product} />
-            </Grid>
-          ))}
+        <Grid container spacing={3} justifyContent="start">
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => (
+              <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
+                <ProductCard product={product} />
+              </Grid>
+            ))
+          ) : (
+            <Typography variant="h6" textAlign="center" width="100%">
+              No products available in this category.
+            </Typography>
+          )}
         </Grid>
       </Container>
     </React.Fragment>

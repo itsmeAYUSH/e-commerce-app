@@ -118,31 +118,6 @@ const TestimonialSection = () => {
           ))}
         </div>
       </div>
-      {/* Blog section */}
-      {/* <div className={styles.blogContainer}>
-        <div className={styles.header}>
-          <h2>Explore Our Latest Blog</h2>
-          <Button className={styles.btn} variant="contained" color="warning">
-            View All Posts <EastIcon />
-          </Button>
-        </div>
-        <div className={styles.blogGrid}>
-          {blogPosts.map((post, index) => (
-            <div key={index} className={styles.blogCard}>
-              <img
-                src={post.image}
-                alt={post.title}
-                className={styles.blogImage}
-              />
-              <h3 className={styles.blogTitle}>{post.title}</h3>
-              <p className={styles.blogPara}>
-                by <span className={styles.author}>{post.author}</span> on {""}
-                <span className={styles.date}>{post.date}</span>
-              </p>
-            </div>
-          ))}
-        </div>
-      </div> */}
     </div>
   );
 };

@@ -21,6 +21,11 @@ const questions = [
     answer:
       "We offer a hassle-free return and exchange policy within 30 days of delivery. Items must be in their original condition and packaging. Custom or clearance items may not be eligible for returns. Please contact our support team to initiate a return or exchange.",
   },
+  {
+    question: "How do I contact customer support for assistance?",
+    answer:
+      "You can contact our customer support team via email at furniflex@furniflex.com or call us at +001234567890 or even visit us at Saki Naka, Andheri, Mumbai, Maharashtra. Our support team is available Monday to Friday from 9 AM to 6 PM (EST). You can also reach us through the live chat option on our website.",
+  },
 ];
 
 const QuestionAnswer = () => {

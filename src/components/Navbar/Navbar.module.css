@@ -8,14 +8,12 @@
   padding: 0 10vw;
 }
 
-/* Flex container for links and icons */
 .flex {
   display: flex;
   align-items: center;
   gap: 30px;
 }
 
-/* Navigation links */
 .link {
   text-decoration: none;
   color: #ffffff;
@@ -28,12 +26,10 @@
   transition: border-bottom 0.3s ease-in-out;
 }
 
-/* Icons */
 .icon {
   cursor: pointer;
 }
 
-/* Responsive Design */
 @media (max-width: 1024px) {
   .Navbar {
     padding: 0 5vw;
@@ -80,14 +76,15 @@
     font-size: 16px !important;
   }
 }
-.footerLogo h2 {
+.HeaderLogo h2 {
   font-size: 28px;
   font-weight: bold;
   color: #333;
   display: flex;
   justify-content: center;
+  cursor: pointer;
 }
 
-.footerLogo span {
+.HeaderLogo span {
   color: #d4a019;
 }

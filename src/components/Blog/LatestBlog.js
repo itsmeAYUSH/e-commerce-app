@@ -1,7 +1,8 @@
 import React from "react";
-import styles from "./Blog.module.css";
+import styles from "./LatestBlog.module.css";
 import { Button } from "@mui/material";
 import EastIcon from "@mui/icons-material/East";
+import { useNavigate } from "react-router-dom";
 
 const blogPosts = [
   {
@@ -26,12 +27,13 @@ const blogPosts = [
       "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1080&fit=crop",
   },
 ];
-const Blog = () => {
+const LatestBlog = () => {
+  const navigate = useNavigate();
   return (
     <div className={styles.blogContainer}>
       <div className={styles.header}>
         <h2>Explore Our Latest Blog</h2>
-        <Button className={styles.btn} variant="contained" color="warning">
+        <Button className={styles.btn} variant="contained" color="warning" onClick={() => navigate("/blog")}>
           View All Posts <EastIcon />
         </Button>
       </div>
@@ -54,4 +56,4 @@ const Blog = () => {
     </div>
   );
 };
-export default Blog;
+export default LatestBlog;

@@ -7,6 +7,10 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import XIcon from "@mui/icons-material/X";
 
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import CallRoundedIcon from "@mui/icons-material/CallRounded";
+import BusinessIcon from "@mui/icons-material/Business";
+
 const ContactUs = () => {
   return (
     <div>
@@ -28,22 +32,24 @@ const ContactUs = () => {
 
           <div className={styles.contactInfo}>
             <div className={styles.infoItem}>
-              <span className={styles.icon}>📧</span>
-              <p>furniflex@gmail.com</p>
+              <span className={styles.icons}>
+                <MailOutlineIcon />
+              </span>
+              <p>furniflex@furniflex.com</p>
             </div>
             <div className={styles.infoItem}>
-              <span className={styles.icon}>📞</span>
+              <span className={styles.icons}>
+                <CallRoundedIcon />
+              </span>
               <p>+001234567890</p>
             </div>
             <div className={styles.infoItem}>
-              <span className={styles.icon}>📠</span>
-              <p>(401) 279-9587</p>
+              <span className={styles.icons}>
+                <BusinessIcon />
+              </span>
+              <p>Saki Naka, Andheri, Mumbai, Maharashtra</p>
             </div>
-            <div className={styles.infoItem}>
-              <span className={styles.icon}>🏢</span>
-              <p>Sakinaka Andhari, Mumbai</p>
-            </div>
-            <h1>Follow Us</h1>
+            <h2>Stay Connected!</h2>
             <div>
               <FacebookIcon className={styles.icons} />
               <InstagramIcon className={styles.icons} />
@@ -72,7 +78,7 @@ const ContactUs = () => {
               className={styles.input}
             />
             <textarea
-              placeholder="Messages"
+              placeholder="Message"
               className={styles.textarea}
             ></textarea>
             <Button type="submit" className={styles.submitButton}>

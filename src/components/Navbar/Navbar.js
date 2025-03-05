@@ -12,7 +12,7 @@ const Navbar = () => {
   return (
     <div className={styles.Navbar}>
       {/* Logo Section */}
-      <div className={styles.footerLogo} onClick={() => navigate("/")}>
+      <div className={styles.HeaderLogo} onClick={() => navigate("/")}>
         <h2>
           Furni<span>Flex</span>.
         </h2>

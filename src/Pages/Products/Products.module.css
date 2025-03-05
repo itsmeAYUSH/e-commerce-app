@@ -1,25 +1,118 @@
-.container {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 50px;
-    background-color: #ffffff;
-    padding-inline: 10vw;
-  }
-  
-  .contactHeader {
-    /* text-align: center;
-    font-size: 2rem;
-    font-weight: bold;
-    color: #f36e0d;
-    margin-bottom: 20px; */
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 40vh;
-    background-color: #2d5356;
-  }
-  .contactHeader h2{
-      color: #ffffff;
-  }
+.contactHeader {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40vh;
+  background-color: #2d5356;
+}
+.contactHeader h2 {
+  color: #ffffff;
+}
+
+.productPage {
+  display: flex;
+  padding-inline: 10vw;
+  gap: 2rem;
+}
+
+.filterOptions {
+  flex: 1;
+  border-right: 1px solid #ddd;
+  padding-right: 2rem;
+}
+
+.filterOptions h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.filterOptions ul {
+  list-style: none;
+  padding: 0;
+}
+
+.filterOptions li {
+  margin: 0.5rem 0;
+  cursor: pointer;
+}
+
+.radioGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.radioGroup input[type="radio"] {
+  margin-right: 0.5rem;
+}
+
+.priceRange {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 15vw;
+}
+
+.productGrid {
+  flex: 3;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2rem;
+}
+
+.productCard {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: center;
+  padding: 1rem;
+  position: relative;
+}
+
+.productImage {
+  width: 100%;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
+.discountBadge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background-color: #ff5252;
+  color: #fff;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.price {
+  font-weight: bold;
+  color: #2d5356;
+}
+
+.originalPrice {
+  text-decoration: line-through;
+  color: #999;
+  margin-bottom: 1rem;
+}
+
+.addToCart {
+  background-color: #2d5356;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.addToCart:hover {
+  background-color: #1b3a3b;
+}
+.productHead{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
