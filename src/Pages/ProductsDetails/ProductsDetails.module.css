@@ -1,0 +1,37 @@
+.prodDetailsHeader {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40vh;
+  background-color: #2d5356;
+}
+.prodDetailsHeader h2 {
+  color: #ffffff;
+}
+.backLink {
+  cursor: pointer;
+  color: #d09423 !important;
+  margin-block: 30px !important;
+}
+.addCartBtn,
+.buyNowBtn {
+  background-color: #2d5356 !important;
+  color: #ffffff !important;
+  padding: 10px 25px !important;
+  border-radius: 25px !important;
+  overflow: visible;
+  border: none;
+  white-space: nowrap;
+}
+.buyNowBtn {
+  background-color: #d09423 !important;
+}
+.prodDetailsHeader {
+  margin-bottom: 16px;
+  text-align: left;
+  font-size: 24px;
+}
+.container {
+  padding-inline: 10vw;
+}

@@ -9,7 +9,7 @@ import TestimonialSection from "./components/TestimonialsSection/TestimonialSect
 import Footer from "./components/Footer/Footer";
 import QuestionAnswer from "./components/QuestionAnswer/QuestionAnswer";
 import NewsLetter from "./components/NewsLetter/NewsLetter";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Products from "./Pages/Products/Products";
 import AboutUs from "./Pages/AboutUs/AboutUs";
 import ContactUs from "./Pages/ContactUs/ContactUs";
@@ -18,7 +18,10 @@ import NotFound from "./Pages/NotFound/NotFound";
 import Blog from "./Pages/Blog/Blog";
 import OfflineNotice from "./components/OfflineNotice/OfflineNotice";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
-
+import ProductDetail from "./Pages/ProductsDetails/ProductsDetails";
+import Cart from "./Pages/Cart/Cart";
+import { products } from "./util/data";
+import { useState } from "react";
 const HomePages = () => {
   return (
     <div>
@@ -37,6 +40,17 @@ const HomePages = () => {
 };
 
 const App = () => {
+  const [cartItems,setCartItems] = useState([
+    { name: "Nova Nest Chair", price: 180.99, quantity: 1 },
+    { name: "Luna Luxe Chair", price: 129.99, quantity: 2 },
+    { name: "Arm Serenade Chair", price: 333.99, quantity: 1 },
+  ]);
+  const updateQuantity = (index, newQuantity) => {
+    const updatedCartItems = [...cartItems];
+    updatedCartItems[index].quantity = newQuantity;
+    setCartItems(updatedCartItems);
+  };
+
   return (
     <div>
       <Header />
@@ -49,6 +63,19 @@ const App = () => {
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/products" element={<Products />} />
         <Route path="/blog" element={<Blog />} />
+        {/* <Route path="/product/:id"> */}
+        {/* <ProductDetail products={products} /></Route> */}
+        <Route
+          path="/product/:id"
+          element={<ProductDetail products={products} />}
+        />
+        <Route
+          path="cart"
+          element={
+            <Cart cartItems={cartItems} updateQuantity={updateQuantity} />
+          }
+        />
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

@@ -45,7 +45,7 @@ const Footer = () => {
         </div>
       </div>
       <div className={styles.footerBottom}>
-        <p>Copyright@2024 FurniFlex. All Rights Reserved.</p>
+        <p>Copyright@2025 FurniFlex. All Rights Reserved.</p>
         <div>
         <FacebookIcon className={styles.icons} />
         <InstagramIcon className={styles.icons} />

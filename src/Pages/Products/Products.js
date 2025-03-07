@@ -22,7 +22,9 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { styled } from "@mui/system";
+import { Link } from "react-router-dom";
 import styles from "./Products.module.css";
+import {products} from '../../util/data';
 
 const DiscountBadge = styled("div")({
   position: "absolute",
@@ -45,7 +47,6 @@ const WishlistButton = styled(IconButton)(({ isFavorite }) => ({
   color: isFavorite ? "#F36E0D" : "#B0B0B0",
 }));
 
-
 const ProductCard = ({ product }) => {
   const [favorite, setFavorite] = useState(false);
 
@@ -56,6 +57,7 @@ const ProductCard = ({ product }) => {
         borderRadius: "15px",
         overflow: "hidden",
         boxShadow: 3,
+        cursor: "pointer",
       }}
     >
       <DiscountBadge>{product.discount}</DiscountBadge>
@@ -65,74 +67,47 @@ const ProductCard = ({ product }) => {
       >
         {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
       </WishlistButton>
-      <CardMedia
-        component="img"
-        height="180"
-        image={product.image}
-        alt={product.name}
-      />
-      <CardContent
-        sx={{
-          backgroundColor: "#2d5356",
-          color: "#FEFCE6",
-          textAlign: "center",
-        }}
-      >
-        <Typography variant="h6" fontWeight="bold">
-          {product.name}
-        </Typography>
-        <Typography variant="body1">{product.price}</Typography>
-        <IconButton
+      <Link to={`/product/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+        <CardMedia
+          component="img"
+          height="180"
+          image={product.image}
+          alt={product.name}
+        />
+        <CardContent
           sx={{
-            backgroundColor: "#fff",
-            borderRadius: "50%",
-            marginTop: "10px",
+            backgroundColor: "#2d5356",
+            color: "#FEFCE6",
+            textAlign: "center",
           }}
         >
-          <ShoppingCartIcon sx={{ color: "#F36E0D" }} />
-        </IconButton>
-      </CardContent>
+          <Typography variant="h6" fontWeight="bold">
+            {product.name}
+          </Typography>
+          <Typography variant="body1">{product.price}</Typography>
+          <IconButton
+            sx={{
+              backgroundColor: "#fff",
+              borderRadius: "50%",
+              marginTop: "10px",
+            }}
+          >
+            <ShoppingCartIcon sx={{ color: "#F36E0D" }} />
+          </IconButton>
+        </CardContent>
+      </Link>
     </Card>
   );
 };
 
 const Products = () => {
-  const products = [
-    {
-      id: 1,
-      name: "Zenith Zephyr Chair",
-      price: "$235.99",
-      originalPrice: "$255.99",
-      discount: "-20%",
-      image:
-        "https://plus.unsplash.com/premium_photo-1705169612592-32610774a5d0?q=80&w=2040&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      color: "red",
-      inStock: true,
-      category: "Living Room",
-      material: "Wood",
-    },
-    {
-      id: 2,
-      name: "Crestline Cozy Chair",
-      price: "$200.99",
-      originalPrice: "$215.99",
-      discount: "-20%",
-      image:
-        "https://plus.unsplash.com/premium_photo-1705169612592-32610774a5d0?q=80&w=2040&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      color: "green",
-      inStock: true,
-      category: "Office",
-      material: "Cloth",
-    },
-    // Add more products with color, inStock, category, and material properties
-  ];
 
   const [priceRange, setPriceRange] = useState([50, 300]);
   const [selectedColors, setSelectedColors] = useState([]);
   const [availability, setAvailability] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedMaterial, setSelectedMaterial] = useState("");
-  const [sortOrder, setSortOrder] = useState("asc"); // Default sort order
+  const [sortOrder, setSortOrder] = useState("asc"); 
 
   const handlePriceRangeChange = (event, newValue) => {
     setPriceRange(newValue);

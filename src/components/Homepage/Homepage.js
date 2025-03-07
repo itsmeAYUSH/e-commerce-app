@@ -2,15 +2,10 @@ import React from "react";
 import Button from "@mui/material/Button";
 import styles from "./Homepage.module.css";
 import EastRoundedIcon from "@mui/icons-material/EastRounded";
-import Collection from "../Collection/Collection";
-import Categories from "../Categories/Categories";
-import Trending from "../Trending/Trending";
-import TestimonialSection from "../TestimonialsSection/TestimonialSection";
-import QuestionAnswer from "../QuestionAnswer/QuestionAnswer";
-import NewsLetter from "../NewsLetter/NewsLetter";
-import Footer from "../Footer/Footer";
+import { useNavigate } from "react-router-dom";
 
 const Homepage = () => {
+  const navigate = useNavigate();
   return (
     <div className={styles.homepage}>
       <div className={styles.container}>
@@ -23,7 +18,7 @@ const Homepage = () => {
         </p>
         {/* <button>Shop now</button> */}
         <div className={styles.flex}>
-          <Button className={styles.btn12}>
+          <Button className={styles.btn12} onClick={() => navigate("/products")}>
             Shop now <EastRoundedIcon />{" "}
           </Button>
           <div className={styles.followIg}>Follow Instagram</div>
