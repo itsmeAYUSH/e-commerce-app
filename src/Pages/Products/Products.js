@@ -47,7 +47,7 @@ const WishlistButton = styled(IconButton)(({ isFavorite }) => ({
   color: isFavorite ? "#F36E0D" : "#B0B0B0",
 }));
 
-const ProductCard = ({ product }) => {
+export const ProductCard = ({ product }) => {
   const [favorite, setFavorite] = useState(false);
 
   return (

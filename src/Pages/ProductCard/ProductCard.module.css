@@ -1,0 +1,51 @@
+/* ProductCard.module.css */
+.productCard {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: center;
+  padding: 1rem;
+  position: relative;
+}
+
+.productImage {
+  width: 100%;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
+.discountBadge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background-color: #ff5252;
+  color: #fff;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.price {
+  font-weight: bold;
+  color: #2d5356;
+}
+
+.originalPrice {
+  text-decoration: line-through;
+  color: #999;
+  margin-bottom: 1rem;
+}
+
+.addToCart {
+  background-color: #2d5356;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.addToCart:hover {
+  background-color: #1b3a3b;
+}

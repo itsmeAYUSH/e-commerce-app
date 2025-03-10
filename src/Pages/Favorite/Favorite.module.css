@@ -1,0 +1,15 @@
+.favoritesHeader {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40vh;
+  background-color: #2d5356;
+}
+
+.favoritesHeader h2 {
+  color: #ffffff;
+}
+.favoritesContainer{
+    margin-top: 50px;
+}

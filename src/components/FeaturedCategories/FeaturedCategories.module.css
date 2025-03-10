@@ -4,18 +4,19 @@
   justify-content: space-between;
   padding-top: 80px;
   align-items: center;
-
 }
+
 .btn {
-  background-color: #D09423 !important;
+  background-color: #d09423 !important;
   color: #ffffff !important;
-  border-radius: 25px !important; 
-  overflow: visible !important; 
+  border-radius: 25px !important;
+  overflow: visible !important;
   border: none !important;
   white-space: nowrap !important;
+  margin: 0 10px; /* Add some margin for spacing */
 }
 
-/*  */
+/* Items Section */
 .items {
   display: flex;
   justify-content: center;
@@ -30,14 +31,15 @@
   align-items: center;
   text-align: center;
   width: 200px;
-  opacity: 0.5;
+  opacity: 1;
   transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  cursor: pointer;
 }
 
-.item.active {
+/* .item.active {
   opacity: 1;
   transform: scale(1.1);
-}
+} */
 
 .imageContainer {
   width: 150px;
@@ -47,10 +49,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
 }
 
 .image {
-  width: 100px;
+  width: 150px;
   height: auto;
   border-radius: 50%;
 }
@@ -72,14 +75,16 @@
   transition: background-color 0.3s;
 }
 
-.activeDot {
+/* .activeDot {
   background-color: #003b46;
   width: 50px;
-  border-radius: 25px; 
+  border-radius: 25px;
   overflow: visible;
   border: none;
   white-space: nowrap;
-}
-.description{
-    font-size: 10px;
+} */
+
+.description {
+  font-size: 12px; /* Adjusted font size for better readability */
+  color: #333; /* Change text color for better contrast */
 }

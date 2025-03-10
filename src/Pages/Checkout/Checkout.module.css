@@ -1,4 +1,4 @@
-.cartHeader {
+.checkoutHeader {
   width: 100%;
   display: flex;
   justify-content: center;
@@ -7,11 +7,11 @@
   background-color: #2d5356;
 }
 
-.cartHeader h2 {
+.checkoutHeader h2 {
   color: #ffffff;
 }
 
-.cartContainer {
+.checkoutContainer {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -19,11 +19,14 @@
   margin-top: 8vh;
 }
 
-.tableContainer {
+.formContainer {
   flex: 1;
   margin-right: 20px;
+  background: #ffffff;
   border-radius: 8px;
-  overflow: hidden;
+  border: 1px solid #cfd8dc;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
 }
 
 .orderSummary {
@@ -37,26 +40,21 @@
   justify-content: space-between;
 }
 
-.tableRowHeader {
-  background-color: #2d5356;
+.textField {
+  margin-bottom: 15px;
 }
 
-.tableCellHeader {
-  color: #fff !important;
-  text-align: center !important;
-  width: 100% !important;
-}
-
-.tableRowBody {
-  background-color: #f5f5f5;
-}
-
-.centeredButtonCell {
+.row {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  gap: 15px;
 }
 
-.btnCheckout {
+.row .textField {
+  flex: 1;
+}
+
+.confirmButton {
   background-color: #d19a2e !important;
   color: white !important;
   border: none !important;
@@ -69,31 +67,6 @@
   margin-block: 20px !important;
 }
 
-.btnCheckout:hover {
+.confirmButton:hover {
   background-color: #b88325;
-}
-
-.circularButton {
-  width: 30px !important;
-  height: 30px !important;
-  border-radius: 50% !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  min-width: 0 !important;
-  background-color: #f9f9f9;
-}
-
-.circularButton:hover {
-  background-color: #e0e0e0;
-}
-
-.circularButton:disabled {
-  opacity: 0.5;
-}
-
-.btnRemove {
-  border-radius: 4px !important;
-  padding: 5px 10px !important;
-  cursor: pointer !important;
 }

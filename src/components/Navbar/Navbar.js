@@ -48,7 +48,7 @@ const Navbar = () => {
         />
         <FavoriteRoundedIcon
           className={styles.icon}
-          onClick={() => navigate("/wishlist")}
+          onClick={() => navigate("/favorite")}
         />
         <LocalMallRoundedIcon
           className={styles.icon}

@@ -12,8 +12,10 @@ import styles from "./ProductsDetails.module.css";
 import WestIcon from "@mui/icons-material/West";
 import Footer from "../../components/Footer/Footer";
 import Collection from "../../components/Collection/Collection";
+import { useNavigate } from "react-router-dom";
 
 const ProductDetail = ({ products }) => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const product = products.find((p) => p.id === parseInt(id));
 
@@ -26,6 +28,10 @@ const ProductDetail = ({ products }) => {
   const price = parseFloat(product.price.replace(/[$,]/g, ""));
   const savings = originalPrice - price;
 
+  const backToProductBtnHandler = () => {
+    navigate("/products");
+  };
+
   return (
     <div>
       {/* Product Details Header */}
@@ -33,7 +39,7 @@ const ProductDetail = ({ products }) => {
         <h2>Products/Product Details</h2>
       </div>
       <div className={styles.container}>
-        <Button className={styles.backLink}>
+        <Button className={styles.backLink} onClick={backToProductBtnHandler}>
           <WestIcon />
           Back to product
         </Button>

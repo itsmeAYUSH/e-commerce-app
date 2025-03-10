@@ -38,3 +38,9 @@
   margin: auto;
   border-radius: 25px; 
 }
+.aboutUsdescription{
+  padding-inline: 10vw;
+  letter-spacing: 1px;
+  color: #2d5356;
+  padding-top: 80px;
+}

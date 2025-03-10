@@ -3,7 +3,7 @@ import Collection from "./components/Collection/Collection";
 import Header from "./components/Header/Header";
 import Homepage from "./components/Homepage/Homepage";
 import Navbar from "./components/Navbar/Navbar";
-import Categories from "./components/Categories/Categories";
+import FeaturedCategories from "./components/FeaturedCategories/FeaturedCategories";
 import Trending from "./components/Trending/Trending";
 import TestimonialSection from "./components/TestimonialsSection/TestimonialSection";
 import Footer from "./components/Footer/Footer";
@@ -20,15 +20,19 @@ import OfflineNotice from "./components/OfflineNotice/OfflineNotice";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import ProductDetail from "./Pages/ProductsDetails/ProductsDetails";
 import Cart from "./Pages/Cart/Cart";
+import Favorite from "./Pages/Favorite/Favorite";
+import Categories from "./Pages/Categories/Categories";
+import Checkout from "./Pages/Checkout/Checkout";
 import { products } from "./util/data";
 import { useState } from "react";
+import Errors from "./components/Errors/Errors";
 const HomePages = () => {
   return (
     <div>
       <OfflineNotice />
       <Homepage />
       <Collection />
-      <Categories />
+      <FeaturedCategories />
       <Trending />
       <TestimonialSection />
       <LatestBlog />
@@ -40,7 +44,7 @@ const HomePages = () => {
 };
 
 const App = () => {
-  const [cartItems,setCartItems] = useState([
+  const [cartItems, setCartItems] = useState([
     { name: "Nova Nest Chair", price: 180.99, quantity: 1 },
     { name: "Luna Luxe Chair", price: 129.99, quantity: 2 },
     { name: "Arm Serenade Chair", price: 333.99, quantity: 1 },
@@ -59,10 +63,13 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomePages />} />
         <Route path="/products" element={<Products />} />
+        <Route path="/favorite" element={<Favorite />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/products" element={<Products />} />
+        <Route path="/categories" element={<Categories />} />
         <Route path="/blog" element={<Blog />} />
+        <Route path="/Checkout" element={<Checkout />} />
         {/* <Route path="/product/:id"> */}
         {/* <ProductDetail products={products} /></Route> */}
         <Route
