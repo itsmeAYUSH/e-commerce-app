@@ -1,7 +1,8 @@
 import React from "react";
 import styles from "./Favorite.module.css";
 import { Container, Grid, Typography } from "@mui/material";
-import { ProductCard } from "../../Pages/Products/Products";
+// import { ProductCard } from "../../Pages/Products/Products";
+import ProductCard from "../ProductCard/ProductCard";
 import { products } from "../../util/data";
 
 const Favorite = ({ favorites = products }) => {

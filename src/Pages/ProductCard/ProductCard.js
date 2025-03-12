@@ -34,7 +34,6 @@ const WishlistButton = styled(IconButton)(({ isFavorite }) => ({
   borderRadius: "50%",
   color: isFavorite ? "#F36E0D" : "#B0B0B0",
 }));
-
 const ProductCard = ({ product }) => {
   const [favorite, setFavorite] = useState(false);
 
@@ -56,7 +55,7 @@ const ProductCard = ({ product }) => {
         {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
       </WishlistButton>
       <Link
-        to={`/product/${product.id}`}
+        to={`/product/${product._id}`}
         style={{ textDecoration: "none", color: "inherit" }}
       >
         <CardMedia

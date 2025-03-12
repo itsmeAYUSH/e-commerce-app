@@ -23,8 +23,10 @@ import Cart from "./Pages/Cart/Cart";
 import Favorite from "./Pages/Favorite/Favorite";
 import Categories from "./Pages/Categories/Categories";
 import Checkout from "./Pages/Checkout/Checkout";
-import { products } from "./util/data";
-import { useState } from "react";
+// import { products } from "./util/data";
+import { useState, useEffect } from "react";
+import LinearProgress from "@mui/material/LinearProgress";
+import Loader from '../src/components/Loader/Loader';
 import Errors from "./components/Errors/Errors";
 const HomePages = () => {
   return (
@@ -54,9 +56,29 @@ const App = () => {
     updatedCartItems[index].quantity = newQuantity;
     setCartItems(updatedCartItems);
   };
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/products");
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
+        }
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   return (
     <div>
+      {/* <LinearProgress /> */}
+      <Loader/>
       <Header />
       <Navbar />
       <ScrollToTop />
@@ -72,6 +94,10 @@ const App = () => {
         <Route path="/Checkout" element={<Checkout />} />
         {/* <Route path="/product/:id"> */}
         {/* <ProductDetail products={products} /></Route> */}
+        {/* <Route
+          path="/product/:id"
+          element={<ProductDetail products={products} />}
+        /> */}
         <Route
           path="/product/:id"
           element={<ProductDetail products={products} />}

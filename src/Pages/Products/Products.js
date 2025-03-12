@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import LinearProgress from "@mui/material/LinearProgress";
 import {
   Container,
   Grid,
@@ -24,7 +25,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { styled } from "@mui/system";
 import { Link } from "react-router-dom";
 import styles from "./Products.module.css";
-import {products} from '../../util/data';
+import ProductCard from "../ProductCard/ProductCard";
+import Loader from "../../components/Loader/Loader";
 
 const DiscountBadge = styled("div")({
   position: "absolute",
@@ -47,67 +49,91 @@ const WishlistButton = styled(IconButton)(({ isFavorite }) => ({
   color: isFavorite ? "#F36E0D" : "#B0B0B0",
 }));
 
-export const ProductCard = ({ product }) => {
-  const [favorite, setFavorite] = useState(false);
+// export const ProductCard = ({ product }) => {
+//   const [favorite, setFavorite] = useState(false);
 
-  return (
-    <Card
-      sx={{
-        position: "relative",
-        borderRadius: "15px",
-        overflow: "hidden",
-        boxShadow: 3,
-        cursor: "pointer",
-      }}
-    >
-      <DiscountBadge>{product.discount}</DiscountBadge>
-      <WishlistButton
-        onClick={() => setFavorite(!favorite)}
-        isFavorite={favorite}
-      >
-        {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-      </WishlistButton>
-      <Link to={`/product/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-        <CardMedia
-          component="img"
-          height="180"
-          image={product.image}
-          alt={product.name}
-        />
-        <CardContent
-          sx={{
-            backgroundColor: "#2d5356",
-            color: "#FEFCE6",
-            textAlign: "center",
-          }}
-        >
-          <Typography variant="h6" fontWeight="bold">
-            {product.name}
-          </Typography>
-          <Typography variant="body1">{product.price}</Typography>
-          <IconButton
-            sx={{
-              backgroundColor: "#fff",
-              borderRadius: "50%",
-              marginTop: "10px",
-            }}
-          >
-            <ShoppingCartIcon sx={{ color: "#F36E0D" }} />
-          </IconButton>
-        </CardContent>
-      </Link>
-    </Card>
-  );
-};
+//   return (
+//     <Card
+//       sx={{
+//         position: "relative",
+//         borderRadius: "15px",
+//         overflow: "hidden",
+//         boxShadow: 3,
+//         cursor: "pointer",
+//       }}
+//     >
+//       <DiscountBadge>{product.discount}</DiscountBadge>
+//       <WishlistButton
+//         onClick={() => setFavorite(!favorite)}
+//         isFavorite={favorite}
+//       >
+//         {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+//       </WishlistButton>
+//       <Link
+//         to={`/product/${product._id}`}
+//         style={{ textDecoration: "none", color: "inherit" }}
+//       >
+//         <CardMedia
+//           component="img"
+//           height="180"
+//           image={product.image}
+//           alt={product.name}
+//         />
+//         <CardContent
+//           sx={{
+//             backgroundColor: "#2d5356",
+//             color: "#FEFCE6",
+//             textAlign: "center",
+//           }}
+//         >
+//           <Typography variant="h6" fontWeight="bold">
+//             {product.name}
+//           </Typography>
+//           <Typography variant="body1">{product.price}</Typography>
+//           <IconButton
+//             sx={{
+//               backgroundColor: "#fff",
+//               borderRadius: "50%",
+//               marginTop: "10px",
+//             }}
+//           >
+//             <ShoppingCartIcon sx={{ color: "#F36E0D" }} />
+//           </IconButton>
+//         </CardContent>
+//       </Link>
+//     </Card>
+//   );
+// };
 
 const Products = () => {
-
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [priceRange, setPriceRange] = useState([50, 300]);
   const [selectedColors, setSelectedColors] = useState([]);
   const [availability, setAvailability] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedMaterial, setSelectedMaterial] = useState("");
-  const [sortOrder, setSortOrder] = useState("asc"); 
+  const [sortOrder, setSortOrder] = useState("asc");
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/products");
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
+        }
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const handlePriceRangeChange = (event, newValue) => {
     setPriceRange(newValue);
@@ -138,9 +164,11 @@ const Products = () => {
     setSelectedCategory("");
     setSelectedMaterial("");
   };
-
   const filteredProducts = products.filter((product) => {
-    const price = parseFloat(product.price.replace(/[^0-9.-]+/g, ""));
+    // Check if product.price is defined and is a string
+    const price = product.price
+      ? parseFloat(product.price.replace(/[^0-9.-]+/g, ""))
+      : 0; // Default to 0 if price is undefined
     const isInPriceRange = price >= priceRange[0] && price <= priceRange[1];
     const isColorMatch =
       selectedColors.length === 0 || selectedColors.includes(product.color);
@@ -177,11 +205,23 @@ const Products = () => {
     }
   });
 
+  if (loading) {
+    // <LinearProgress/>
+    // setLoading = true;
+  }
+  if (error)
+    return (
+      <Typography variant="h6" color="error">
+        {error}
+      </Typography>
+    );
+
   return (
     <div>
       <div className={styles.contactHeader}>
         <h2>Products</h2>
       </div>
+      <Loader />
       <div className={styles.productPage}>
         <div className={styles.filterOptions}>
           <h2>Filter Option</h2>
@@ -341,7 +381,7 @@ const Products = () => {
           <Grid container spacing={3} justifyContent="start">
             {sortedProducts.length > 0 ? (
               sortedProducts.map((product) => (
-                <Grid item key={product.id} xs={12} sm={6} md={4} lg={4}>
+                <Grid item key={product._id} xs={12} sm={6} md={4} lg={4}>
                   <ProductCard product={product} />
                 </Grid>
               ))

@@ -17,13 +17,14 @@ import { useNavigate } from "react-router-dom";
 const ProductDetail = ({ products }) => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const product = products.find((p) => p.id === parseInt(id));
+  // const product = products.find((p) => p.id === parseInt(id));
+  const product = products.find((p) => p._id === id);
 
   if (!product) {
     return <Typography variant="h6">Product not found.</Typography>;
   }
 
-  // Remove dollar sign and parse to float
+  //  parse to float
   const originalPrice = parseFloat(product.originalPrice.replace(/[$,]/g, ""));
   const price = parseFloat(product.price.replace(/[$,]/g, ""));
   const savings = originalPrice - price;
