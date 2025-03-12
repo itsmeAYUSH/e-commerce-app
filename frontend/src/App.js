@@ -25,8 +25,7 @@ import Categories from "./Pages/Categories/Categories";
 import Checkout from "./Pages/Checkout/Checkout";
 // import { products } from "./util/data";
 import { useState, useEffect } from "react";
-import LinearProgress from "@mui/material/LinearProgress";
-import Loader from '../src/components/Loader/Loader';
+import Loader from "./components/Loader/Loader";
 import Errors from "./components/Errors/Errors";
 const HomePages = () => {
   return (
@@ -51,15 +50,19 @@ const App = () => {
     { name: "Luna Luxe Chair", price: 129.99, quantity: 2 },
     { name: "Arm Serenade Chair", price: 333.99, quantity: 1 },
   ]);
+
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const updateQuantity = (index, newQuantity) => {
     const updatedCartItems = [...cartItems];
     updatedCartItems[index].quantity = newQuantity;
     setCartItems(updatedCartItems);
   };
-  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true);
       try {
         const response = await fetch("http://localhost:5000/api/products");
         if (!response.ok) {
@@ -69,6 +72,8 @@ const App = () => {
         setProducts(data);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -77,40 +82,35 @@ const App = () => {
 
   return (
     <div>
-      {/* <LinearProgress /> */}
-      <Loader/>
-      <Header />
-      <Navbar />
-      <ScrollToTop />
-      <Routes>
-        <Route path="/" element={<HomePages />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/favorite" element={<Favorite />} />
-        <Route path="/about" element={<AboutUs />} />
-        <Route path="/contact" element={<ContactUs />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/categories" element={<Categories />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/Checkout" element={<Checkout />} />
-        {/* <Route path="/product/:id"> */}
-        {/* <ProductDetail products={products} /></Route> */}
-        {/* <Route
-          path="/product/:id"
-          element={<ProductDetail products={products} />}
-        /> */}
-        <Route
-          path="/product/:id"
-          element={<ProductDetail products={products} />}
-        />
-        <Route
-          path="cart"
-          element={
-            <Cart cartItems={cartItems} updateQuantity={updateQuantity} />
-          }
-        />
-
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      {loading && <Loader />}
+      {!loading && (
+        <>
+          <Header />
+          <Navbar />
+          <ScrollToTop />
+          <Routes>
+            <Route path="/" element={<HomePages />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/favorite" element={<Favorite />} />
+            <Route path="/about" element={<AboutUs />} />
+            <Route path="/contact" element={<ContactUs />} />
+            <Route path="/categories" element={<Categories />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/Checkout" element={<Checkout />} />
+            <Route
+              path="/product/:id"
+              element={<ProductDetail products={products} />}
+            />
+            <Route
+              path="cart"
+              element={
+                <Cart cartItems={cartItems} updateQuantity={updateQuantity} />
+              }
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </>
+      )}
     </div>
   );
 };
