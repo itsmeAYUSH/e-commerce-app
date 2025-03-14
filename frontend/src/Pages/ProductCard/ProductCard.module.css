@@ -49,3 +49,10 @@
 .addToCart:hover {
   background-color: #1b3a3b;
 }
+.productName {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1; /* Number of lines to show */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

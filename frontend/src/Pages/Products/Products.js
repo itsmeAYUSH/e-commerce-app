@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from "react";
-import LinearProgress from "@mui/material/LinearProgress";
 import {
   Container,
   Grid,
-  Card,
-  CardMedia,
-  CardContent,
   Typography,
-  IconButton,
   Accordion,
   AccordionSummary,
   AccordionDetails,
@@ -17,93 +12,13 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  Pagination,
 } from "@mui/material";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { styled } from "@mui/system";
-import { Link } from "react-router-dom";
 import styles from "./Products.module.css";
 import ProductCard from "../ProductCard/ProductCard";
 import Loader from "../../components/Loader/Loader";
-
-const DiscountBadge = styled("div")({
-  position: "absolute",
-  top: "10px",
-  left: "10px",
-  backgroundColor: "#2d5356",
-  color: "#fff",
-  padding: "5px 10px",
-  borderRadius: "20px",
-  fontSize: "12px",
-  fontWeight: "bold",
-});
-
-const WishlistButton = styled(IconButton)(({ isFavorite }) => ({
-  position: "absolute",
-  top: "10px",
-  right: "10px",
-  backgroundColor: "#fff",
-  borderRadius: "50%",
-  color: isFavorite ? "#F36E0D" : "#B0B0B0",
-}));
-
-// export const ProductCard = ({ product }) => {
-//   const [favorite, setFavorite] = useState(false);
-
-//   return (
-//     <Card
-//       sx={{
-//         position: "relative",
-//         borderRadius: "15px",
-//         overflow: "hidden",
-//         boxShadow: 3,
-//         cursor: "pointer",
-//       }}
-//     >
-//       <DiscountBadge>{product.discount}</DiscountBadge>
-//       <WishlistButton
-//         onClick={() => setFavorite(!favorite)}
-//         isFavorite={favorite}
-//       >
-//         {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-//       </WishlistButton>
-//       <Link
-//         to={`/product/${product._id}`}
-//         style={{ textDecoration: "none", color: "inherit" }}
-//       >
-//         <CardMedia
-//           component="img"
-//           height="180"
-//           image={product.image}
-//           alt={product.name}
-//         />
-//         <CardContent
-//           sx={{
-//             backgroundColor: "#2d5356",
-//             color: "#FEFCE6",
-//             textAlign: "center",
-//           }}
-//         >
-//           <Typography variant="h6" fontWeight="bold">
-//             {product.name}
-//           </Typography>
-//           <Typography variant="body1">{product.price}</Typography>
-//           <IconButton
-//             sx={{
-//               backgroundColor: "#fff",
-//               borderRadius: "50%",
-//               marginTop: "10px",
-//             }}
-//           >
-//             <ShoppingCartIcon sx={{ color: "#F36E0D" }} />
-//           </IconButton>
-//         </CardContent>
-//       </Link>
-//     </Card>
-//   );
-// };
+import Footer from "../../components/Footer/Footer";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -115,9 +30,12 @@ const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedMaterial, setSelectedMaterial] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 12;
 
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true);
       try {
         const response = await fetch("http://localhost:5000/api/products");
         if (!response.ok) {
@@ -149,14 +67,6 @@ const Products = () => {
     setAvailability(event.target.value);
   };
 
-  const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value);
-  };
-
-  const handleMaterialChange = (event) => {
-    setSelectedMaterial(event.target.value);
-  };
-
   const clearFilters = () => {
     setPriceRange([50, 300]);
     setSelectedColors([]);
@@ -164,11 +74,11 @@ const Products = () => {
     setSelectedCategory("");
     setSelectedMaterial("");
   };
+
   const filteredProducts = products.filter((product) => {
-    // Check if product.price is defined and is a string
     const price = product.price
       ? parseFloat(product.price.replace(/[^0-9.-]+/g, ""))
-      : 0; // Default to 0 if price is undefined
+      : 0;
     const isInPriceRange = price >= priceRange[0] && price <= priceRange[1];
     const isColorMatch =
       selectedColors.length === 0 || selectedColors.includes(product.color);
@@ -177,9 +87,11 @@ const Products = () => {
       (availability === "inStock" && product.inStock) ||
       (availability === "outOfStock" && !product.inStock);
     const isCategoryMatch =
-      !selectedCategory || product.category === selectedCategory;
+      selectedCategory.length === 0 ||
+      selectedCategory.includes(product.category);
     const isMaterialMatch =
-      !selectedMaterial || product.material === selectedMaterial;
+      selectedMaterial.length === 0 ||
+      selectedMaterial.includes(product.material);
 
     return (
       isInPriceRange &&
@@ -190,7 +102,6 @@ const Products = () => {
     );
   });
 
-  // Sort products based on selected criteria
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     if (sortOrder === "asc") {
       return (
@@ -205,23 +116,47 @@ const Products = () => {
     }
   });
 
-  if (loading) {
-    // <LinearProgress/>
-    // setLoading = true;
-  }
-  if (error)
+  if (error) {
     return (
       <Typography variant="h6" color="error">
         {error}
       </Typography>
     );
+  }
+
+  const toggleCategory = (category) => {
+    setSelectedCategory((prev) =>
+      prev.includes(category)
+        ? prev.filter((c) => c !== category)
+        : [...prev, category]
+    );
+  };
+
+  const toggleMaterial = (material) => {
+    setSelectedMaterial((prev) =>
+      prev.includes(material)
+        ? prev.filter((m) => m !== material)
+        : [...prev, material]
+    );
+  };
+
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = sortedProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
 
   return (
     <div>
       <div className={styles.contactHeader}>
         <h2>Products</h2>
       </div>
-      <Loader />
+      {loading && <Loader />}
       <div className={styles.productPage}>
         <div className={styles.filterOptions}>
           <h2>Filter Option</h2>
@@ -242,11 +177,9 @@ const Products = () => {
                   <li key={category}>
                     <label>
                       <input
-                        type="radio"
-                        name="category"
-                        value={category}
-                        checked={selectedCategory === category}
-                        onChange={handleCategoryChange}
+                        type="checkbox"
+                        checked={selectedCategory.includes(category)}
+                        onChange={() => toggleCategory(category)}
                       />
                       {category}
                     </label>
@@ -296,11 +229,9 @@ const Products = () => {
                   <li key={material}>
                     <label>
                       <input
-                        type="radio"
-                        name="material"
-                        value={material}
-                        checked={selectedMaterial === material}
-                        onChange={handleMaterialChange}
+                        type="checkbox"
+                        checked={selectedMaterial.includes(material)}
+                        onChange={() => toggleMaterial(material)}
                       />
                       {material}
                     </label>
@@ -355,15 +286,18 @@ const Products = () => {
               </ul>
             </AccordionDetails>
           </Accordion>
-          <Button variant="outlined" onClick={clearFilters}>
+          <Button
+            variant="outlined"
+            onClick={clearFilters}
+            sx={{ marginBlock: 5 }}
+          >
             Clear All Filters
           </Button>
         </div>
-        {/* Display Products */}
         <Container>
           <div className={styles.productHead}>
             <h2>
-              Showing {sortedProducts.length} of {products.length} Products.
+              Showing {currentProducts.length} of {products.length} Products.
             </h2>
             <FormControl variant="outlined" sx={{ minWidth: 120 }}>
               <InputLabel id="sort-label">Sort By</InputLabel>
@@ -379,8 +313,8 @@ const Products = () => {
             </FormControl>
           </div>
           <Grid container spacing={3} justifyContent="start">
-            {sortedProducts.length > 0 ? (
-              sortedProducts.map((product) => (
+            {currentProducts.length > 0 ? (
+              currentProducts.map((product) => (
                 <Grid item key={product._id} xs={12} sm={6} md={4} lg={4}>
                   <ProductCard product={product} />
                 </Grid>
@@ -394,8 +328,17 @@ const Products = () => {
               </Typography>
             )}
           </Grid>
+          <Pagination
+            className={styles.pagination}
+            count={Math.ceil(sortedProducts.length / productsPerPage)}
+            page={currentPage}
+            onChange={handlePageChange}
+            color="primary"
+            // sx={{ marginTop: 2, display: "flex", justifyContent: "center" }}
+          />
         </Container>
       </div>
+      <Footer />
     </div>
   );
 };

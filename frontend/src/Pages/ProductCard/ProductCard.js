@@ -1,4 +1,3 @@
-// ProductCard.js
 import React, { useState } from "react";
 import {
   Card,
@@ -6,6 +5,7 @@ import {
   CardContent,
   Typography,
   IconButton,
+  Tooltip,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -34,6 +34,7 @@ const WishlistButton = styled(IconButton)(({ isFavorite }) => ({
   borderRadius: "50%",
   color: isFavorite ? "#F36E0D" : "#B0B0B0",
 }));
+
 const ProductCard = ({ product }) => {
   const [favorite, setFavorite] = useState(false);
 
@@ -71,9 +72,11 @@ const ProductCard = ({ product }) => {
             textAlign: "center",
           }}
         >
-          <Typography variant="h6" fontWeight="bold">
-            {product.name}
-          </Typography>
+          <Tooltip title={product.name} arrow>
+            <Typography variant="h6" fontWeight="bold" className={styles.productName}>
+              {product.name}
+            </Typography>
+          </Tooltip>
           <Typography variant="body1">{product.price}</Typography>
           <IconButton
             sx={{

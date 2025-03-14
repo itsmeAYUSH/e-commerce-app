@@ -7,6 +7,6 @@ const router = express.Router();
 // Define routes
 router.get("/", getAllProducts);
 router.post("/", addProduct); // Optional: for adding products
-// router.post("/bulk", addBulkProducts); // New route for bulk insertion
+router.post("/bulk", addBulkProducts); // New route for bulk insertion
 
 module.exports = router;

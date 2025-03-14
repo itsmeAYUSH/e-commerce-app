@@ -46,7 +46,16 @@
 .radioGroup input[type="radio"] {
   margin-right: 0.5rem;
 }
-
+.radioGroup label {
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.radioGroup label:hover {
+  color: #2d5356;
+}
 .priceRange {
   display: flex;
   align-items: center;
@@ -111,8 +120,14 @@
 .addToCart:hover {
   background-color: #1b3a3b;
 }
-.productHead{
+.productHead {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.pagination {
+  margin-top: 2;
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
 }
