@@ -194,22 +194,25 @@ const Products = () => {
             </AccordionSummary>
             <AccordionDetails>
               <div className={styles.priceRange}>
-                <span>${priceRange[0]}</span>
+                <span>₹{priceRange[0]}</span>
                 <Slider
+                 className={styles.slider}
                   value={priceRange}
                   onChange={handlePriceRangeChange}
                   valueLabelDisplay="auto"
+                  size="small"
+                  color="green"
                   min={50}
                   max={300}
                 />
-                <span>${priceRange[1]}</span>
+                <span>₹{priceRange[1]}</span>
               </div>
-              <Button
+              {/* <Button
                 variant="contained"
                 onClick={() => console.log("Applying price range:", priceRange)}
               >
                 Go
-              </Button>
+              </Button> */}
             </AccordionDetails>
           </Accordion>
           <Accordion>

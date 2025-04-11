@@ -6,12 +6,20 @@ import Collection from "../../components/Collection/Collection";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import XIcon from "@mui/icons-material/X";
-
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import CallRoundedIcon from "@mui/icons-material/CallRounded";
 import BusinessIcon from "@mui/icons-material/Business";
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 
 const ContactUs = () => {
+  const mapCenter = {
+    lat: 19.076, // Replace with your latitude
+    lng: 72.8777, // Replace with your longitude
+  };
+  const mapContainerStyle = {
+    height: "400px",
+    width: "100%",
+  };
   return (
     <div>
       {/* Contact Header */}
@@ -86,6 +94,18 @@ const ContactUs = () => {
             </Button>
           </form>
         </div>
+      </div>
+      {/* Google Map Section */}
+      <div className={styles.mapContainer}>
+        <LoadScript googleMapsApiKey="AlzaSyKJXTavHD01DYf8iIrcbQ4sm4CYnoLYDcj">
+          <GoogleMap
+            mapContainerStyle={mapContainerStyle}
+            center={mapCenter}
+            zoom={15}
+          >
+            <Marker position={mapCenter} />
+          </GoogleMap>
+        </LoadScript>
       </div>
       <Collection />
       <Footer />

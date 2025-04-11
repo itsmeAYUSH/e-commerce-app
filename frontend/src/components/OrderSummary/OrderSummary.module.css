@@ -1,0 +1,26 @@
+.orderSummary {
+  width: 20vw;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #cfd8dc;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.btnCheckout {
+  background-color: #d19a2e !important;
+  color: white !important;
+  border: none !important;
+  padding: 10px 20px !important;
+  font-size: 14px !important;
+  border-radius: 25px !important;
+  cursor: pointer !important;
+  transition: background 0.3s ease !important;
+  align-self: center !important;
+  margin-block: 20px !important;
+}
+
+.btnCheckout:hover {
+  background-color: #b88325;
+}

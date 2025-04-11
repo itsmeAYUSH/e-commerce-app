@@ -62,6 +62,10 @@
   gap: 0.5rem;
   width: 15vw;
 }
+.slider{
+  color: #d4a019;
+  margin-inline: 10px;
+}
 
 .productGrid {
   flex: 3;

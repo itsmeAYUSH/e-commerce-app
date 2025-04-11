@@ -3,8 +3,8 @@ export const products = [
   {
     id: 1,
     name: "Zenith Zephyr Chair",
-    price: "$235.99",
-    originalPrice: "$255.99",
+    price: "₹235.99",
+    originalPrice: "₹255.99",
     discount: "-20%",
     image:
       "https://plus.unsplash.com/premium_photo-1705169612592-32610774a5d0?q=80&w=2040&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -16,8 +16,8 @@ export const products = [
   {
     id: 2,
     name: "Crestline Cozy Chair",
-    price: "$200.99",
-    originalPrice: "$215.99",
+    price: "₹200.99",
+    originalPrice: "₹215.99",
     discount: "-20%",
     image:
       "https://images.pexels.com/photos/11112731/pexels-photo-11112731.jpeg",
@@ -29,8 +29,8 @@ export const products = [
   {
     id: 3,
     name: "Modern Oak Dining Table",
-    price: "$499.99",
-    originalPrice: "$549.99",
+    price: "₹499.99",
+    originalPrice: "₹549.99",
     discount: "-9%",
     image:
       "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg",
@@ -42,8 +42,8 @@ export const products = [
   {
     id: 4,
     name: "Classic Leather Sofa",
-    price: "$899.99",
-    originalPrice: "$999.99",
+    price: "₹899.99",
+    originalPrice: "₹999.99",
     discount: "-10%",
     image:
       "https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg",
@@ -55,8 +55,8 @@ export const products = [
   {
     id: 5,
     name: "Elegant Coffee Table",
-    price: "$150.00",
-    originalPrice: "$180.00",
+    price: "₹150.00",
+    originalPrice: "₹180.00",
     discount: "-17%",
     image:
       "https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg",
@@ -68,8 +68,8 @@ export const products = [
   {
     id: 6,
     name: "Stylish Office Desk",
-    price: "$299.99",
-    originalPrice: "$329.99",
+    price: "₹299.99",
+    originalPrice: "₹329.99",
     discount: "-9%",
     image:
       "https://images.pexels.com/photos/3184295/pexels-photo-3184295.jpeg",
@@ -81,8 +81,8 @@ export const products = [
   {
     id: 7,
     name: "Contemporary Bed Frame",
-    price: "$450.00",
-    originalPrice: "$500.00",
+    price: "₹450.00",
+    originalPrice: "₹500.00",
     discount: "-10%",
     image:
       "https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg",
@@ -94,8 +94,8 @@ export const products = [
   {
     id: 8,
     name: "Rustic Bookshelf",
-    price: "$250.00",
-    originalPrice: "$275.00",
+    price: "₹250.00",
+    originalPrice: "₹275.00",
     discount: "-9%",
     image:
       "https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg",
@@ -107,8 +107,8 @@ export const products = [
   {
     id: 9,
     name: "Outdoor Patio Set",
-    price: "$600.00",
-    originalPrice: "$650.00",
+    price: "₹600.00",
+    originalPrice: "₹650.00",
     discount: "-8%",
     image:
       "https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg",
@@ -120,8 +120,8 @@ export const products = [
   {
     id: 10,
     name: "Vintage Accent Chair",
-    price: "$180.00",
-    originalPrice: "$200.00",
+    price: "₹180.00",
+    originalPrice: "₹200.00",
     discount: "-10%",
     image:
       "https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg",
@@ -133,8 +133,8 @@ export const products = [
   {
     id: 11,
     name: "Industrial Style Coffee Table",
-    price: "$220.00",
-    originalPrice: "$240.00",
+    price: "₹220.00",
+    originalPrice: "₹240.00",
     discount: "-8%",
     image:
       "https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg",
@@ -146,8 +146,8 @@ export const products = [
   {
     id: 12,
     name: "Minimalist Nightstand",
-    price: "$120.00",
-    originalPrice: "$140.00",
+    price: "₹120.00",
+    originalPrice: "₹140.00",
     discount: "-14%",
     image:
       "https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg",
@@ -159,8 +159,8 @@ export const products = [
   {
     id: 13,
     name: "Elegant Dining Chair",
-    price: "$150.00",
-    originalPrice: "$170.00",
+    price: "₹150.00",
+    originalPrice: "₹170.00",
     discount: "-12%",
     image:
       "https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg",
@@ -172,8 +172,8 @@ export const products = [
   {
     id: 14,
     name: "Classic Wooden Bench",
-    price: "$300.00",
-    originalPrice: "$350.00",
+    price: "₹300.00",
+    originalPrice: "₹350.00",
     discount: "-14%",
     image:
       "https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg",
@@ -185,8 +185,8 @@ export const products = [
   {
     id: 15,
     name: "Sleek TV Stand",
-    price: "$400.00",
-    originalPrice: "$450.00",
+    price: "₹400.00",
+    originalPrice: "₹450.00",
     discount: "-11%",
     image:
       "https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg",

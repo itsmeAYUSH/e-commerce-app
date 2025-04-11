@@ -31,30 +31,6 @@ const testimonials = [
   },
 ];
 
-const blogPosts = [
-  {
-    title: "First Time Home Owner Ideas",
-    author: "Kristin Watson",
-    date: "Apr 19, 24",
-    image:
-      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1080&fit=crop",
-  },
-  {
-    title: "How To Keep Your Furniture Clean",
-    author: "Robert Fox",
-    date: "Apr 20, 24",
-    image:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1080&fit=crop",
-  },
-  {
-    title: "Small Space Furniture Apartment Ideas",
-    author: "Kristin Watson",
-    date: "Dec 20, 24",
-    image:
-      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1080&fit=crop",
-  },
-];
-
 const TestimonialSection = () => {
   const [index, setIndex] = useState(0);
   const totalTestimonials = testimonials.length;
@@ -77,13 +53,13 @@ const TestimonialSection = () => {
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       {/* testimonial section */}
-      <div className={styles.categories}>
+      <div className={styles.header}>
         <h2>
           Don't take our words,<br></br>See what our clients say
         </h2>
-        <div>
+        <div className={styles.navigation}>
           <Button className={styles.btn} onClick={handlePrev}>
             <WestIcon />
           </Button>
@@ -92,31 +68,33 @@ const TestimonialSection = () => {
           </Button>
         </div>
       </div>
-      <div className={styles["testimonial-section"]}>
-        <div className={styles["testimonial-container"]}>
-          {testimonials.map((testimonial, i) => (
-            <div
-              key={testimonial.id}
-              className={`${styles["testimonial-card"]} ${
-                i === index ? styles.active : ""
-              }`}
-            >
-              <img
-                alt={`Portrait of ${testimonial.name}`}
-                height="300"
-                src={testimonial.image}
-                width="300"
-              />
-              <div className={styles["text-container"]}>
-                <p>{testimonial.text}</p>
-                <div>
+
+      <div className={styles.testimonialSection}>
+        {testimonials.map((testimonial, i) => (
+          <div
+            key={testimonial.id}
+            className={`${styles.testimonialCard} ${
+              i === index ? styles.active : ""
+            }`}
+          >
+            <div className={styles.cardContent}>
+              <div className={styles.imageContainer}>
+                <img
+                  src={testimonial.image}
+                  alt={`Portrait of ${testimonial.name}`}
+                  className={styles.testimonialImage}
+                />
+              </div>
+              <div className={styles.textContent}>
+                <p className={styles.testimonialText}>{testimonial.text}</p>
+                <div className={styles.authorInfo}>
                   <p className={styles.name}>{testimonial.name}</p>
-                  <p className={styles.location}>- {testimonial.location}</p>
+                  <p className={styles.location}>{testimonial.location}</p>
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );

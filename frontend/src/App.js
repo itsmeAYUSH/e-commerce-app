@@ -9,7 +9,7 @@ import TestimonialSection from "./components/TestimonialsSection/TestimonialSect
 import Footer from "./components/Footer/Footer";
 import QuestionAnswer from "./components/QuestionAnswer/QuestionAnswer";
 import NewsLetter from "./components/NewsLetter/NewsLetter";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, NavLink } from "react-router-dom";
 import Products from "./Pages/Products/Products";
 import AboutUs from "./Pages/AboutUs/AboutUs";
 import ContactUs from "./Pages/ContactUs/ContactUs";
@@ -24,7 +24,7 @@ import Favorite from "./Pages/Favorite/Favorite";
 import Categories from "./Pages/Categories/Categories";
 import Checkout from "./Pages/Checkout/Checkout";
 // import { products } from "./util/data";
-import { useState, useEffect } from "react";
+import { useState, useEffect, act } from "react";
 import Loader from "./components/Loader/Loader";
 import Errors from "./components/Errors/Errors";
 const HomePages = () => {

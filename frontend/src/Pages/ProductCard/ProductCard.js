@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useFavorites } from "../../store/FavoritesContext"; // Import Favorites context
+import { useCart } from "../../store/CartContext"; // Import Cart context
 import {
   Card,
   CardMedia,
@@ -6,6 +8,7 @@ import {
   Typography,
   IconButton,
   Tooltip,
+  Snackbar,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -36,7 +39,50 @@ const WishlistButton = styled(IconButton)(({ isFavorite }) => ({
 }));
 
 const ProductCard = ({ product }) => {
-  const [favorite, setFavorite] = useState(false);
+  const { state, addFavorite, removeFavorite } = useFavorites();
+  const { addItem } = useCart(); // Import addItem function from the cart context
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  // Sync local `isFavorite` with global favorites context
+  const isFavorite = state.favorites.some((fav) => fav._id === product._id);
+
+  const handleFavoriteToggle = () => {
+    if (isFavorite) {
+      removeFavorite(product);
+      setSnackbarMessage("Removed from favorites!");
+    } else {
+      addFavorite(product);
+      setSnackbarMessage("Added to favorites!");
+    }
+    setSnackbarOpen(true);
+  };
+
+  const handleAddToCart = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+
+    // Safely parse the price - handle both string and number cases
+    const price =
+      typeof product.price === "string"
+        ? parseFloat(product.price.replace(/[^0-9.]/g, ""))
+        : Number(product.price);
+
+    const itemToAdd = {
+      id: product._id,
+      name: product.name,
+      price: price || 0, // Fallback to 0 if parsing fails
+      quantity: 1,
+      // image: product.image,
+    };
+
+    addItem(itemToAdd);
+    setSnackbarMessage("Added to cart!");
+    setSnackbarOpen(true);
+  };
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
 
   return (
     <Card
@@ -49,12 +95,10 @@ const ProductCard = ({ product }) => {
       }}
     >
       <DiscountBadge>{product.discount}</DiscountBadge>
-      <WishlistButton
-        onClick={() => setFavorite(!favorite)}
-        isFavorite={favorite}
-      >
-        {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+      <WishlistButton onClick={handleFavoriteToggle} isFavorite={isFavorite}>
+        {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
       </WishlistButton>
+
       <Link
         to={`/product/${product._id}`}
         style={{ textDecoration: "none", color: "inherit" }}
@@ -73,22 +117,37 @@ const ProductCard = ({ product }) => {
           }}
         >
           <Tooltip title={product.name} arrow>
-            <Typography variant="h6" fontWeight="bold" className={styles.productName}>
+            <Typography
+              variant="h6"
+              fontWeight="bold"
+              className={styles.productName}
+            >
               {product.name}
             </Typography>
           </Tooltip>
-          <Typography variant="body1">{product.price}</Typography>
+          <Typography variant="body1">₹{product.price}</Typography>
+
+          {/* Cart Button INSIDE Link but prevents navigation */}
           <IconButton
             sx={{
               backgroundColor: "#fff",
               borderRadius: "50%",
               marginTop: "10px",
             }}
+            onClick={handleAddToCart}
           >
             <ShoppingCartIcon sx={{ color: "#F36E0D" }} />
           </IconButton>
         </CardContent>
       </Link>
+
+      {/* Snackbar for notification */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        message={snackbarMessage}
+      />
     </Card>
   );
 };

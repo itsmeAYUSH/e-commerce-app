@@ -53,7 +53,14 @@ const Navbar = () => {
         <LocalMallRoundedIcon
           className={styles.icon}
           onClick={() => navigate("/cart")}
-        />
+        ></LocalMallRoundedIcon>
+
+        {/* <IconButton onClick={() => navigate("/cart")}>
+          <Badge badgeContent={cartCount} color="primary">
+            <LocalMallRoundedIcon className={styles.icon} />
+          </Badge>
+        </IconButton>
+         */}
         <AccountCircleRoundedIcon
           className={styles.icon}
           onClick={() => navigate("/profile")}

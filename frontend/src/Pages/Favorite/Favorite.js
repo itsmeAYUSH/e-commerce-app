@@ -1,11 +1,13 @@
 import React from "react";
 import styles from "./Favorite.module.css";
 import { Container, Grid, Typography } from "@mui/material";
-// import { ProductCard } from "../../Pages/Products/Products";
-import ProductCard from "../ProductCard/ProductCard";
-import { products } from "../../util/data";
+import ProductCard from "../ProductCard/ProductCard"; // Adjust the path as necessary
+import { useFavorites } from "../../store/FavoritesContext"; // Import the useFavorites hook
 
-const Favorite = ({ favorites = products }) => {
+const Favorite = () => {
+  const { state } = useFavorites(); // Get favorites from context
+  const { favorites } = state;
+
   return (
     <div>
       <div className={styles.favoritesHeader}>
@@ -22,7 +24,7 @@ const Favorite = ({ favorites = products }) => {
           <Grid container spacing={3} justifyContent="start">
             {favorites.map((product) => (
               <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
-                <ProductCard product={product} isFavorite={true} />
+                <ProductCard product={product} />
               </Grid>
             ))}
           </Grid>

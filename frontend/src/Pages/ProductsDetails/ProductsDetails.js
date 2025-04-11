@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   Typography,
@@ -7,30 +7,51 @@ import {
   CardContent,
   Button,
   Grid,
+  Snackbar,
 } from "@mui/material";
 import styles from "./ProductsDetails.module.css";
 import WestIcon from "@mui/icons-material/West";
 import Footer from "../../components/Footer/Footer";
 import Collection from "../../components/Collection/Collection";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../../store/CartContext";
 
 const ProductDetail = ({ products }) => {
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
-  // const product = products.find((p) => p.id === parseInt(id));
+  const { addItem } = useCart(); // Get the addItem function from context
+
   const product = products.find((p) => p._id === id);
 
   if (!product) {
     return <Typography variant="h6">Product not found.</Typography>;
   }
 
-  //  parse to float
+  // Parse to float
   const originalPrice = parseFloat(product.originalPrice.replace(/[$,]/g, ""));
   const price = parseFloat(product.price.replace(/[$,]/g, ""));
   const savings = originalPrice - price;
 
+
   const backToProductBtnHandler = () => {
     navigate("/products");
+  };
+
+  const handleAddToCart = () => {
+    const itemToAdd = {
+      id: product._id,
+      name: product.name,
+      price: price,
+      quantity: 1, 
+      // image: product.image, 
+    };
+    addItem(itemToAdd); 
+    setSnackbarOpen(true);
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
   };
 
   return (
@@ -61,19 +82,19 @@ const ProductDetail = ({ products }) => {
                 <Typography variant="h4">{product.name}</Typography>
                 {savings > 0 ? (
                   <Typography variant="h6" color="error">
-                    Saved ${savings.toFixed(2)}
+                    Saved ₹{savings.toFixed(2)}
                   </Typography>
                 ) : (
                   <Typography variant="h6" color="error">
                     No savings available
                   </Typography>
                 )}
-                <Typography variant="h5">${price.toFixed(2)}</Typography>
+                <Typography variant="h5">₹{price.toFixed(2)}</Typography>
                 <Typography
                   variant="body1"
                   style={{ textDecoration: "line-through" }}
                 >
-                  ${originalPrice.toFixed(2)}
+                  ₹{originalPrice.toFixed(2)}
                 </Typography>
                 <Typography variant="body1">
                   Product Code: {product.code}
@@ -82,17 +103,15 @@ const ProductDetail = ({ products }) => {
                   In Stock: {product.inStock ? "Yes" : "No"}
                 </Typography>
                 <Button
-                  // variant="outlined"
                   style={{ marginTop: "16px" }}
                   className={styles.buyNowBtn}
                 >
                   Buy Now
                 </Button>
                 <Button
-                  // variant="contained"
-                  // color="primary"
                   style={{ marginLeft: "8px", marginTop: "16px" }}
                   className={styles.addCartBtn}
+                  onClick={handleAddToCart} // Add to cart functionality
                 >
                   Add to Cart
                 </Button>
@@ -103,6 +122,14 @@ const ProductDetail = ({ products }) => {
       </div>
       <Collection />
       <Footer />
+
+      {/* Snackbar for notification */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        message="Added to cart!"
+      />
     </div>
   );
 };

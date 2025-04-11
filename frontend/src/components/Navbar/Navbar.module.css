@@ -6,6 +6,9 @@
   background-color: #2d5356;
   color: #ffffff;
   padding: 0 10vw;
+  position: sticky;
+  top: 0;
+  z-index: 5;
 }
 
 .flex {
