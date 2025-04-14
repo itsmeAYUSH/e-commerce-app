@@ -15,6 +15,8 @@
   color: #333;
   display: flex;
   justify-content: center;
+  text-align: center;
+  margin: 20px 0;
 }
 
 .footerLogo span {
@@ -26,6 +28,12 @@
   justify-content: space-around;
   gap: 80px;
   margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.footerSection {
+  min-width: 150px;
+  margin-bottom: 20px;
 }
 
 .footerSection h4 {
@@ -55,35 +63,131 @@
 .footerBottom {
   background-color: #2d5356;
   color: #fff;
-  /* padding: 15px 0; */
+  padding: 20px 10vw;
   display: flex;
-  padding-inline: 10vw;
-  /* text-align: center; */
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  gap: 20px;
 }
 
-/* .socialIcons { */
-  /* display: flex;
+.socialIcons {
+  display: flex;
+  gap: 15px;
+}
+
+.paymentIcons {
+  display: flex;
   gap: 10px;
-  font-size: 18px; */
-/* } */
+  align-items: center;
+}
 
 .paymentIcons img {
   width: 40px;
   height: auto;
-  margin-left: 10px;
   cursor: pointer;
 }
-.line{
+
+.line {
   border: #e7e7e7 1px solid;
+  margin: 0 10vw;
 }
+
 .icons {
   cursor: pointer;
-  margin-right: 10px;
   font-size: 15px !important;
   border: 1px solid #ffffff;
   border-radius: 50%;
   padding: 5px;
-  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.icons:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive styles */
+@media (max-width: 1200px) {
+  .footerLinks {
+    gap: 40px;
+  }
+  
+  .line {
+    margin: 0 5vw;
+  }
+}
+
+@media (max-width: 992px) {
+  .footerLogo h2 {
+    font-size: 32px;
+  }
+  
+  .footerSection h4 {
+    font-size: 18px;
+  }
+  
+  .footerSection li {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .footerContainer {
+    padding-top: 60px;
+  }
+  
+  .footerLinks {
+    flex-direction: column;
+    gap: 30px;
+    padding: 0 20px;
+  }
+  
+  .footerSection {
+    text-align: center;
+  }
+  
+  .footerBottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+    padding: 20px;
+  }
+  
+  .socialIcons {
+    order: 1;
+    margin: 10px 0;
+  }
+  
+  .paymentIcons {
+    order: 2;
+    margin-top: 10px;
+  }
+  
+  .footerBottom p {
+    order: 3;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .footerLogo h2 {
+    font-size: 28px;
+  }
+  
+  .footerSection h4 {
+    font-size: 16px;
+  }
+  
+  .footerSection li {
+    font-size: 14px;
+  }
+  
+  .paymentIcons img {
+    width: 30px;
+  }
+  
+  .icons {
+    font-size: 14px !important;
+    padding: 4px;
+  }
 }

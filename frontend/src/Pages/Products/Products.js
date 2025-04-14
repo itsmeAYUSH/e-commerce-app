@@ -27,12 +27,13 @@ const Products = () => {
   const [priceRange, setPriceRange] = useState([50, 300]);
   const [selectedColors, setSelectedColors] = useState([]);
   const [availability, setAvailability] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedMaterial, setSelectedMaterial] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState([]); // Changed to array
+  const [selectedMaterial, setSelectedMaterial] = useState([]); // Changed to array
   const [sortOrder, setSortOrder] = useState("asc");
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 12;
 
+  // Parse prices once when data is loaded
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
@@ -42,7 +43,17 @@ const Products = () => {
           throw new Error("Failed to fetch products");
         }
         const data = await response.json();
-        setProducts(data);
+
+        // Parse prices once and consistently
+        const processedData = data.map((product) => ({
+          ...product,
+          // Store both original price string and parsed numeric value
+          parsedPrice: parseFloat(product.price.replace(/[^0-9.-]+/g, "")) || 0,
+          // Clean price string by removing $ sign
+          displayPrice: product.price.replace(/[^0-9.]/g, ""),
+        }));
+
+        setProducts(processedData);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -55,40 +66,47 @@ const Products = () => {
 
   const handlePriceRangeChange = (event, newValue) => {
     setPriceRange(newValue);
+    setCurrentPage(1); // Reset to first page when filters change
   };
 
   const toggleColor = (color) => {
     setSelectedColors((prev) =>
       prev.includes(color) ? prev.filter((c) => c !== color) : [...prev, color]
     );
+    setCurrentPage(1);
   };
 
   const handleAvailabilityChange = (event) => {
     setAvailability(event.target.value);
+    setCurrentPage(1);
   };
 
   const clearFilters = () => {
     setPriceRange([50, 300]);
     setSelectedColors([]);
     setAvailability("");
-    setSelectedCategory("");
-    setSelectedMaterial("");
+    setSelectedCategory([]);
+    setSelectedMaterial([]);
+    setCurrentPage(1);
   };
 
   const filteredProducts = products.filter((product) => {
-    const price = product.price
-      ? parseFloat(product.price.replace(/[^0-9.-]+/g, ""))
-      : 0;
-    const isInPriceRange = price >= priceRange[0] && price <= priceRange[1];
+    const isInPriceRange =
+      product.parsedPrice >= priceRange[0] &&
+      product.parsedPrice <= priceRange[1];
+
     const isColorMatch =
       selectedColors.length === 0 || selectedColors.includes(product.color);
+
     const isAvailabilityMatch =
       !availability ||
       (availability === "inStock" && product.inStock) ||
       (availability === "outOfStock" && !product.inStock);
+
     const isCategoryMatch =
       selectedCategory.length === 0 ||
       selectedCategory.includes(product.category);
+
     const isMaterialMatch =
       selectedMaterial.length === 0 ||
       selectedMaterial.includes(product.material);
@@ -103,17 +121,9 @@ const Products = () => {
   });
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
-    if (sortOrder === "asc") {
-      return (
-        parseFloat(a.price.replace(/[^0-9.-]+/g, "")) -
-        parseFloat(b.price.replace(/[^0-9.-]+/g, ""))
-      );
-    } else {
-      return (
-        parseFloat(b.price.replace(/[^0-9.-]+/g, "")) -
-        parseFloat(a.price.replace(/[^0-9.-]+/g, ""))
-      );
-    }
+    return sortOrder === "asc"
+      ? a.parsedPrice - b.parsedPrice
+      : b.parsedPrice - a.parsedPrice;
   });
 
   if (error) {
@@ -130,6 +140,7 @@ const Products = () => {
         ? prev.filter((c) => c !== category)
         : [...prev, category]
     );
+    setCurrentPage(1);
   };
 
   const toggleMaterial = (material) => {
@@ -138,6 +149,7 @@ const Products = () => {
         ? prev.filter((m) => m !== material)
         : [...prev, material]
     );
+    setCurrentPage(1);
   };
 
   const indexOfLastProduct = currentPage * productsPerPage;
@@ -159,7 +171,7 @@ const Products = () => {
       {loading && <Loader />}
       <div className={styles.productPage}>
         <div className={styles.filterOptions}>
-          <h2>Filter Option</h2>
+          <h2>Filter Options</h2>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography>Category</Typography>
@@ -196,23 +208,17 @@ const Products = () => {
               <div className={styles.priceRange}>
                 <span>₹{priceRange[0]}</span>
                 <Slider
-                 className={styles.slider}
+                  className={styles.slider}
                   value={priceRange}
                   onChange={handlePriceRangeChange}
                   valueLabelDisplay="auto"
                   size="small"
-                  color="green"
+                  color="primary"
                   min={50}
                   max={300}
                 />
                 <span>₹{priceRange[1]}</span>
               </div>
-              {/* <Button
-                variant="contained"
-                onClick={() => console.log("Applying price range:", priceRange)}
-              >
-                Go
-              </Button> */}
             </AccordionDetails>
           </Accordion>
           <Accordion>
@@ -300,7 +306,8 @@ const Products = () => {
         <Container>
           <div className={styles.productHead}>
             <h2>
-              Showing {currentProducts.length} of {products.length} Products.
+              Showing {currentProducts.length} of {filteredProducts.length}{" "}
+              Products
             </h2>
             <FormControl variant="outlined" sx={{ minWidth: 120 }}>
               <InputLabel id="sort-label">Sort By</InputLabel>
@@ -319,7 +326,12 @@ const Products = () => {
             {currentProducts.length > 0 ? (
               currentProducts.map((product) => (
                 <Grid item key={product._id} xs={12} sm={6} md={4} lg={4}>
-                  <ProductCard product={product} />
+                  <ProductCard
+                    product={{
+                      ...product,
+                      price: product.displayPrice, // Use the cleaned price string
+                    }}
+                  />
                 </Grid>
               ))
             ) : (
@@ -337,7 +349,6 @@ const Products = () => {
             page={currentPage}
             onChange={handlePageChange}
             color="primary"
-            // sx={{ marginTop: 2, display: "flex", justifyContent: "center" }}
           />
         </Container>
       </div>

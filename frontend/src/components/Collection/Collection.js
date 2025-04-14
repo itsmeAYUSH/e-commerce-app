@@ -3,7 +3,7 @@ import styles from "./Collection.module.css";
 import LocalShippingRoundedIcon from "@mui/icons-material/LocalShippingRounded";
 import ShoppingBagRoundedIcon from "@mui/icons-material/ShoppingBagRounded";
 import SupportAgentRoundedIcon from "@mui/icons-material/SupportAgentRounded";
-import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded"; // For "Hassle Free Returns"
+import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
 
 const Collection = () => {
   return (
@@ -37,18 +37,6 @@ const Collection = () => {
           <div className={styles.text}>Hassle Free Returns</div>
         </div>
       </div>
-      {/* collestions-card */}
-      {/* <div className={styles.Collection}>
-        <div className={styles.CollectionCards}>
-          <div className={styles.title}> furniture design ideas</div>
-          <h2>Center table</h2>
-          <p>Square table</p>
-          <h2>Round table</h2>
-          <h2>Wooden table</h2>
-          <h2>Glass table</h2>
-          <div className={styles.followIg}>View All</div>
-        </div>
-      </div> */}
     </React.Fragment>
   );
 };

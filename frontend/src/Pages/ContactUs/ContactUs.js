@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./ContactUs.module.css";
 import Button from "@mui/material/Button";
 import Footer from "../../components/Footer/Footer";
@@ -9,19 +9,91 @@ import XIcon from "@mui/icons-material/X";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import CallRoundedIcon from "@mui/icons-material/CallRounded";
 import BusinessIcon from "@mui/icons-material/Business";
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import { Snackbar, Alert, CircularProgress } from "@mui/material";
 
 const ContactUs = () => {
-  const mapCenter = {
-    lat: 19.076, // Replace with your latitude
-    lng: 72.8777, // Replace with your longitude
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
-  const mapContainerStyle = {
-    height: "400px",
-    width: "100%",
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      // Make sure this URL points to your actual backend server
+      const response = await fetch("http://localhost:5000/api/contact/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      // Check response type before trying to parse as JSON
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Failed to send message");
+        }
+
+        // Success handling
+        setSnackbar({
+          open: true,
+          message: "Message sent successfully! We'll get back to you soon.",
+          severity: "success",
+        });
+
+        // Clear form
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          message: "",
+        });
+      } else {
+        // Not JSON response, handle as text
+        const textResponse = await response.text();
+        console.error("Received non-JSON response:", textResponse);
+        throw new Error("Server returned an unexpected response");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setSnackbar({
+        open: true,
+        message: error.message || "Failed to send message. Please try again.",
+        severity: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar((prev) => ({ ...prev, open: false }));
+  };
+
   return (
-    <div>
+    <div className={styles.mainContainer}>
       {/* Contact Header */}
       <div className={styles.contactHeader}>
         <h2>Contact Us</h2>
@@ -43,13 +115,13 @@ const ContactUs = () => {
               <span className={styles.icons}>
                 <MailOutlineIcon />
               </span>
-              <p>furniflex@furniflex.com</p>
+              <p>furniflex123@gmail.com</p>
             </div>
             <div className={styles.infoItem}>
               <span className={styles.icons}>
                 <CallRoundedIcon />
               </span>
-              <p>+001234567890</p>
+              <p>+91 1234567890</p>
             </div>
             <div className={styles.infoItem}>
               <span className={styles.icons}>
@@ -58,7 +130,7 @@ const ContactUs = () => {
               <p>Saki Naka, Andheri, Mumbai, Maharashtra</p>
             </div>
             <h2>Stay Connected!</h2>
-            <div>
+            <div className={styles.socialIcons}>
               <FacebookIcon className={styles.icons} />
               <InstagramIcon className={styles.icons} />
               <XIcon className={styles.icons} />
@@ -70,45 +142,108 @@ const ContactUs = () => {
         <div className={styles.rightSection}>
           <h2 className={styles.formTitle}>Send us a message</h2>
           <p className={styles.formDescription}>
-            Your email address will not be published.Required fields are marked
+            Your email address will not be published. Required fields are marked
           </p>
 
-          <form className={styles.contactForm}>
-            <input type="text" placeholder="Name" className={styles.input} />
+          <form className={styles.contactForm} onSubmit={handleSubmit}>
+            <input
+              type="text"
+              name="name"
+              placeholder="Name"
+              className={styles.input}
+              required
+              value={formData.name}
+              onChange={handleChange}
+            />
             <input
               type="email"
+              name="email"
               placeholder="Email Address"
               className={styles.input}
+              required
+              value={formData.email}
+              onChange={handleChange}
             />
             <input
               type="tel"
+              name="phone"
               placeholder="Phone Number"
               className={styles.input}
+              value={formData.phone}
+              onChange={handleChange}
             />
             <textarea
+              name="message"
               placeholder="Message"
               className={styles.textarea}
+              required
+              rows="5"
+              value={formData.message}
+              onChange={handleChange}
             ></textarea>
-            <Button type="submit" className={styles.submitButton}>
-              Submit
+            <Button
+              type="submit"
+              variant="contained"
+              className={styles.submitButton}
+              fullWidth
+              disabled={loading}
+            >
+              {loading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Submit"
+              )}
             </Button>
           </form>
         </div>
       </div>
-      {/* Google Map Section */}
-      <div className={styles.mapContainer}>
-        <LoadScript googleMapsApiKey="AlzaSyKJXTavHD01DYf8iIrcbQ4sm4CYnoLYDcj">
-          <GoogleMap
-            mapContainerStyle={mapContainerStyle}
-            center={mapCenter}
-            zoom={15}
-          >
-            <Marker position={mapCenter} />
-          </GoogleMap>
-        </LoadScript>
+
+      {/* Map Section - Now properly centered */}
+      <div className={styles.mapWrapper}>
+        <div className={styles.mapContainer}>
+          <iframe
+            title="Furniflex Location"
+            width="100%"
+            height="400"
+            frameBorder="0"
+            scrolling="no"
+            marginHeight="0"
+            marginWidth="0"
+            src="https://www.openstreetmap.org/export/embed.html?bbox=72.886275,19.079664,72.906475,19.099664&layer=mapnik&marker=19.089664,72.886375"
+            style={{ border: 0 }}
+            allowFullScreen
+          ></iframe>
+          <div className={styles.mapLinkContainer}>
+            <a
+              href="https://www.openstreetmap.org/?mlat=19.089664&amp;mlon=72.886375#map=15/19.089664/72.886375"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.mapLink}
+            >
+              View Larger Map
+            </a>
+          </div>
+        </div>
       </div>
+
       <Collection />
       <Footer />
+
+      {/* Snackbar for notifications */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

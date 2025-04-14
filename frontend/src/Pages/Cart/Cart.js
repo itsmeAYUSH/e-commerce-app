@@ -18,30 +18,22 @@ import OrderSummmary from "../../components/OrderSummary/OrderSummary";
 
 const Cart = () => {
   const navigate = useNavigate();
-  const { state, removeItem, addItem } = useCart(); // Import addItem from context
+  const { state, removeItem, addItem, updateItem } = useCart(); // Use updateItem instead
   const { items } = state;
 
-  // const calculateSubtotal = () => {
-  //   return items
-  //     .reduce((total, item) => total + item.price * item.quantity, 0)
-  //     .toFixed(2);
-  // };
-
   const handleQuantityChange = (index, change) => {
-    const newQuantity = (items[index].quantity|| 1) + change;
+    const item = items[index];
+    const newQuantity = (item.quantity || 1) + change;
+
     if (newQuantity <= 0) {
-      removeItem(items[index]); // Completely remove the item if quantity is 0
+      // Only remove the item if quantity reaches zero
+      removeItem(item);
     } else {
-      const updatedItem = { ...items[index], quantity: newQuantity };
-      removeItem(items[index]); // Remove the old item
-      addItem(updatedItem); // Add the updated item
+      // Update the item with the new quantity
+      const updatedItem = { ...item, quantity: newQuantity };
+      updateItem(updatedItem);
     }
   };
-
-  // const checkoutHandler = () => {
-  //   navigate("/checkout");
-  // };
-
   return (
     <div>
       <div className={styles.cartHeader}>
@@ -72,22 +64,19 @@ const Cart = () => {
                 {items.map((item, index) => (
                   <TableRow key={index} sx={{ backgroundColor: "#f5f5f5" }}>
                     <TableCell>{item.name}</TableCell>
-                    {/* <TableCell>₹{item.price.toFixed(2)}</TableCell> */}
-                    {/* <TableCell>₹{(parseFloat(item.price)* item.quantity).toFixed(2)}</TableCell> */}
-                    <TableCell>₹{(Number(item.price) * (item.quantity || 1)).toFixed(2)}</TableCell>
-
+                    <TableCell>₹{Number(item.price).toFixed(2)}</TableCell>
                     <TableCell>
                       <div style={{ display: "flex", alignItems: "center" }}>
                         <Button
                           className={styles.circularButton}
                           variant="outlined"
                           onClick={() => handleQuantityChange(index, -1)}
-                          disabled={item.quantity <= 0}
+                          disabled={item.quantity <= 1} // Changed from <= 0 to <= 1
                         >
                           -
                         </Button>
                         <span style={{ margin: "0 10px" }}>
-                          {item.quantity}
+                          {item.quantity || 1}
                         </span>
                         <Button
                           className={styles.circularButton}
@@ -98,11 +87,12 @@ const Cart = () => {
                         </Button>
                       </div>
                     </TableCell>
-                    {/* <TableCell>
-                      ₹{(item.price * item.quantity).toFixed(2)}
-                    </TableCell> */}
-                    <TableCell>₹{(parseFloat(item.price) * item.quantity).toFixed(2)}</TableCell>
-
+                    <TableCell>
+                      ₹
+                      {(parseFloat(item.price) * (item.quantity || 1)).toFixed(
+                        2
+                      )}
+                    </TableCell>
                     <TableCell>
                       <Button
                         className={styles.circularButton}

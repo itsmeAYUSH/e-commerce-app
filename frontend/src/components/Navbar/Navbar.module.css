@@ -8,31 +8,193 @@
   padding: 0 10vw;
   position: sticky;
   top: 0;
-  z-index: 5;
+  z-index: 1000;
 }
 
-.flex {
+.HeaderLogo h2 {
+  font-size: 28px;
+  font-weight: bold;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.HeaderLogo span {
+  color: #d4a019;
+}
+
+/* Navigation Links */
+.navLinks {
   display: flex;
-  align-items: center;
   gap: 30px;
 }
 
 .link {
   text-decoration: none;
   color: #ffffff;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 5px 0;
+  position: relative;
 }
 
 .link:hover {
-  border-bottom: 2px solid #d09423;
-  transition: border-bottom 0.3s ease-in-out;
+  color: #d09423;
+}
+
+.link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #d09423;
+  transition: width 0.3s ease;
+}
+
+.link:hover::after {
+  width: 100%;
+}
+
+/* Icons */
+.icons {
+  display: flex;
+  align-items: center;
+  gap: 25px;
 }
 
 .icon {
   cursor: pointer;
+  font-size: 24px;
+  color: #ffffff;
+  transition: all 0.3s ease;
 }
 
+.icon:hover {
+  color: #d09423;
+  transform: scale(1.1);
+}
+
+/* Search functionality */
+.searchContainer {
+  position: relative;
+}
+
+.searchForm {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.searchInput {
+  padding: 10px 40px 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  font-size: 14px;
+  width: 250px;
+  transition: all 0.3s ease;
+  background-color: white;
+  color: #333;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #d09423;
+  box-shadow: 0 0 8px rgba(208, 148, 35, 0.3);
+}
+
+.searchButton {
+  background: none;
+  border: none;
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.searchButton svg {
+  font-size: 20px;
+  color: #555;
+}
+
+/* Suggestions dropdown */
+.suggestionsList {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 350px;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  padding: 0;
+  margin: 8px 0 0 0;
+  list-style: none;
+}
+
+.suggestionItem {
+  padding: 12px 15px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  transition: all 0.2s ease;
+}
+
+.suggestionItem:hover {
+  background-color: #f5f5f5;
+}
+
+.suggestionContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.productName {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.productCategory {
+  font-size: 12px;
+  color: #777;
+}
+
+.productPrice {
+  font-weight: 600;
+  color: #d09423;
+}
+
+.noResults,
+.loadingResults {
+  padding: 15px;
+  text-align: center;
+  color: #777;
+  background-color: white;
+  border-radius: 8px;
+  margin-top: 8px;
+  border: 1px solid #eee;
+}
+
+/* Mobile Menu Toggle */
+.mobileMenuToggle {
+  display: none;
+  cursor: pointer;
+}
+
+.menuIcon {
+  font-size: 28px;
+  color: #ffffff;
+}
+
+/* Mobile Responsive Styles */
 @media (max-width: 1024px) {
   .Navbar {
     padding: 0 5vw;
@@ -41,53 +203,96 @@
 
 @media (max-width: 768px) {
   .Navbar {
-    flex-direction: column;
+    flex-wrap: wrap;
     height: auto;
-    padding: 10px 5vw;
+    padding: 15px 5vw;
+    position: relative;
+  }
+
+  .mobileMenuToggle {
+    display: block;
+    order: 1;
+  }
+
+  .HeaderLogo {
+    order: 0;
+    width: calc(100% - 40px);
     text-align: center;
+    margin-bottom: 15px;
   }
 
-  .flex {
+  .navLinks,
+  .icons {
+    display: none;
+    width: 100%;
+    order: 2;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
+    padding: 20px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  .link {
-    font-size: 16px;
+  .navLinks.mobileMenuOpen,
+  .icons.mobileMenuOpen {
+    display: flex;
   }
 
-  .icon {
-    font-size: 18px !important;
+  .icons.mobileMenuOpen {
+    flex-direction: row;
+    justify-content: center;
+    padding-bottom: 15px;
+  }
+
+  .searchContainer {
+    width: 100%;
+  }
+
+  .searchForm {
+    width: 100%;
+  }
+
+  .searchInput {
+    width: 100%;
+  }
+
+  .suggestionsList {
+    width: 100%;
   }
 }
 
 @media (max-width: 480px) {
   .Navbar {
-    padding: 10px 3vw;
+    padding: 15px 3vw;
   }
 
-  .flex {
-    flex-direction: column;
-    gap: 8px;
+  .HeaderLogo h2 {
+    font-size: 24px;
+  }
+
+  .navLinks {
+    gap: 12px;
   }
 
   .link {
-    font-size: 14px;
+    font-size: 15px;
+    padding: 8px 0;
+  }
+
+  .icons {
+    gap: 20px;
   }
 
   .icon {
-    font-size: 16px !important;
+    font-size: 22px;
   }
 }
-.HeaderLogo h2 {
-  font-size: 28px;
-  font-weight: bold;
-  color: #333;
-  display: flex;
-  justify-content: center;
-  cursor: pointer;
+
+.badge {
+  position: relative;
 }
 
-.HeaderLogo span {
-  color: #d4a019;
+@media (max-width: 768px) {
+  .badge {
+    margin: 10px 0;
+  }
 }

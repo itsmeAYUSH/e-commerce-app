@@ -1,5 +1,4 @@
 .favoritesHeader {
-  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10,6 +9,117 @@
 .favoritesHeader h2 {
   color: #ffffff;
 }
-.favoritesContainer{
-    margin-top: 50px;
+.favoritesContainer {
+  margin-top: 50px;
+}
+.favoritesPage {
+  padding: 20px 0;
+  min-height: 70vh;
+}
+
+.favoritesHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 0 20px;
+}
+
+.backButton {
+  margin-right: 15px;
+  color: #d19a2e;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #333;
+}
+
+.favoriteCount {
+  margin-left: 10px;
+}
+
+.favoriteIcon {
+  color: #d19a2e;
+}
+
+.favoritesContainer {
+  padding: 20px;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+  text-align: center;
+}
+
+.emptyIcon {
+  font-size: 60px;
+  color: #d19a2e;
+  margin-bottom: 20px;
+}
+
+.emptyText {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.shopButton {
+  background-color: #d19a2e;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.shopButton:hover {
+  background-color: #b88325;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .favoritesHeader {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+
+  .backButton {
+    align-self: flex-start;
+    margin-right: 0;
+  }
+
+  .title {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .favoritesContainer {
+    padding: 10px;
+  }
+}
+.browseAllSection {
+  text-align: center;
+  margin-top: 2rem;
+}
+.browseAllButton {
+  background-color: #2d5356 !important;
+  color: white !important;
+  padding: 0.8rem 2.5rem !important;
+  font-size: 1rem !important;
+  text-transform: none !important;
+  border-radius: 30px !important;
+  transition: all 0.3s ease !important;
+}
+
+.browseAllButton:hover {
+  background-color: #d09423 !important;
+  transform: translateY(-2px);
 }

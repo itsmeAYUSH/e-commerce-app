@@ -40,7 +40,7 @@ const WishlistButton = styled(IconButton)(({ isFavorite }) => ({
 
 const ProductCard = ({ product }) => {
   const { state, addFavorite, removeFavorite } = useFavorites();
-  const { addItem } = useCart(); // Import addItem function from the cart context
+  const { addItem } = useCart();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
@@ -121,11 +121,14 @@ const ProductCard = ({ product }) => {
               variant="h6"
               fontWeight="bold"
               className={styles.productName}
+              textAlign={"left"}
             >
               {product.name}
             </Typography>
           </Tooltip>
-          <Typography variant="body1">₹{product.price}</Typography>
+          <Typography variant="body1" textAlign={"left"}>
+            ₹{product.price}
+          </Typography>
 
           {/* Cart Button INSIDE Link but prevents navigation */}
           <IconButton

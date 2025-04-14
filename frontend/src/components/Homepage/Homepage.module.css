@@ -20,10 +20,10 @@
   gap: 60px;
 }
 .title {
-  background-color: rgba(255, 255, 255, 0.1); 
+  background-color: rgba(255, 255, 255, 0.1);
   color: white;
   padding: 10px 20px;
-  border-radius: 25px; 
+  border-radius: 25px;
   font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 5px;
@@ -43,12 +43,267 @@
   font-size: 15px;
 }
 .btn12 {
-  /* color: #D09423; */
   background-color: #d09423 !important;
   color: #ffffff !important;
   padding: 10px 25px !important;
-  border-radius: 25px !important; 
-  overflow: visible; 
-  border: none; 
+  border-radius: 25px !important;
+  overflow: visible;
+  border: none;
   white-space: nowrap;
+}
+
+/* New styles for room showcase */
+.mainContent {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+}
+
+.roomShowcase {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  position: relative;
+}
+
+.roomPreview {
+  width: 100%;
+  height: 400px;
+  position: relative;
+  perspective: 1000px;
+  overflow: hidden;
+}
+
+.roomCard {
+  position: absolute;
+  width: 90%;
+  height: 350px;
+  border-radius: 16px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  overflow: hidden;
+}
+
+.activeRoomCard {
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+}
+
+.roomInfo {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  color: white;
+  transition: all 0.4s ease;
+}
+
+.roomInfo h3 {
+  margin: 0 0 5px 0;
+  font-size: 24px;
+  font-weight: 600;
+  transition: transform 0.3s ease;
+}
+
+.roomInfo p {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.activeRoomCard .roomInfo h3 {
+  color: #d09423;
+  transform: translateY(-5px);
+}
+
+.roomSpotlight {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at center,
+    rgba(208, 148, 35, 0.2) 0%,
+    transparent 70%
+  );
+  animation: spotlight 8s infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes spotlight {
+  0% {
+    opacity: 0.3;
+    background-position: 30% 70%;
+  }
+  50% {
+    opacity: 0.5;
+    background-position: 70% 30%;
+  }
+  100% {
+    opacity: 0.3;
+    background-position: 30% 70%;
+  }
+}
+
+.roomControls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 20px;
+}
+
+.roomControlBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.roomControlBtn:hover {
+  background-color: #d09423;
+  transform: translateY(-2px);
+}
+
+.roomIndicators {
+  display: flex;
+  gap: 10px;
+}
+
+.roomIndicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.activeIndicator {
+  width: 24px;
+  background-color: #d09423;
+  border-radius: 4px;
+}
+
+/* Responsive styles */
+@media (max-width: 1200px) {
+  .mainContent {
+    flex-direction: column;
+  }
+
+  .container {
+    width: 80vw;
+    text-align: center;
+  }
+
+  .stats {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: 90vw;
+    padding: 20px;
+  }
+
+  .container h1 {
+    font-size: 32px;
+    margin: 15px 0;
+  }
+
+  .title {
+    font-size: 12px;
+    letter-spacing: 3px;
+    padding: 8px 15px;
+  }
+
+  .flex {
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+
+  .followIg {
+    margin-top: 10px;
+  }
+
+  .stats {
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 30px;
+  }
+
+  .stats div {
+    text-align: center;
+  }
+
+  .roomPreview {
+    height: 300px;
+  }
+
+  .roomCard {
+    height: 250px;
+  }
+
+  .roomInfo h3 {
+    font-size: 18px;
+  }
+
+  .roomInfo p {
+    font-size: 12px;
+  }
+
+  .roomControls {
+    gap: 10px;
+  }
+
+  .roomControlBtn {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container h1 {
+    font-size: 28px;
+  }
+
+  .container p {
+    font-size: 14px;
+  }
+
+  .btn12 {
+    padding: 8px 20px !important;
+    font-size: 14px !important;
+  }
+
+  .roomPreview {
+    height: 250px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  .roomCard {
+    height: 220px;
+    width: 95%;
+  }
+
+  .roomInfo {
+    padding: 15px;
+  }
 }

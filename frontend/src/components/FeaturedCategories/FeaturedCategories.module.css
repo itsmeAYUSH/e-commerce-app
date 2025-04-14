@@ -1,90 +1,208 @@
-.categories {
+/* FeaturedCategories.module.css */
+
+/* Base styles */
+.productSliderContainer {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  margin-top: 50px;
+}
+
+.sliderHeader {
   display: flex;
-  padding-inline: 10vw;
   justify-content: space-between;
-  padding-top: 80px;
   align-items: center;
+  margin-bottom: 2rem;
 }
 
-.btn {
-  background-color: #d09423 !important;
-  color: #ffffff !important;
-  border-radius: 25px !important;
-  overflow: visible !important;
-  border: none !important;
-  white-space: nowrap !important;
-  margin: 0 10px; /* Add some margin for spacing */
+.sliderTitle {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #1f2937;
 }
 
-/* Items Section */
-.items {
+.sliderSubtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-top: 0.5rem;
+}
+
+/* Navigation buttons */
+.navButton {
   display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 20px;
-  padding-inline: 10vw;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid #e5e7eb;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.navButton:hover:not(:disabled) {
+  background-color: #f3f4f6;
+}
+
+.navButton:disabled {
+  color: #d1d5db;
+  cursor: not-allowed;
+}
+
+.navButtonsContainer {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* Progress bar */
+.progressContainer {
+  width: 100%;
+  height: 4px;
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  margin-bottom: 1rem;
+}
+
+.progressBar {
+  height: 100%;
+  background-color: #f59e0b;
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+/* Slider cards container */
+.sliderContainer {
+  position: relative;
+  width: 100%;
+}
+
+.cardsContainer {
+  display: flex;
+  overflow-x: auto;
+  gap: 1.5rem;
+  padding-bottom: 1rem;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.cardsContainer::-webkit-scrollbar {
+  display: none;
+}
+
+/* Card styles */
+.categoryCard {
+  flex-shrink: 0;
+  width: 256px;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+  background-color: white;
+}
+
+.categoryCard:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.cardImageContainer {
+  height: 192px;
   overflow: hidden;
 }
 
-.item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  width: 200px;
-  opacity: 1;
-  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-  cursor: pointer;
+.cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
 }
 
-/* .item.active {
-  opacity: 1;
+.categoryCard:hover .cardImage {
   transform: scale(1.1);
-} */
+}
 
-.imageContainer {
-  width: 150px;
-  height: 150px;
-  background-color: #f3f3f3;
-  border-radius: 50%;
+.cardContent {
+  padding: 1rem;
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.cardFooter {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+  margin-top: 0.5rem;
 }
 
-.image {
-  width: 150px;
-  height: auto;
-  border-radius: 50%;
+.productCount {
+  font-size: 0.875rem;
+  color: #6b7280;
 }
 
-/* Dots Navigation */
-.dots {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
+.exploreLink {
+  display: inline-flex;
+  align-items: center;
+  color: #d97706;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
 }
 
-.dot {
-  width: 10px;
-  height: 10px;
-  margin: 0 5px;
-  background-color: lightgray;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: background-color 0.3s;
+.exploreLink:hover {
+  color: #b45309;
 }
 
-/* .activeDot {
-  background-color: #003b46;
-  width: 50px;
-  border-radius: 25px;
-  overflow: visible;
-  border: none;
-  white-space: nowrap;
-} */
+.exploreIcon {
+  margin-left: 0.25rem;
+  transition: transform 0.2s ease;
+}
 
-.description {
-  font-size: 12px; /* Adjusted font size for better readability */
-  color: #333; /* Change text color for better contrast */
+.categoryCard:hover .exploreIcon {
+  transform: translateX(4px);
+}
+
+/* Shadow indicators */
+.shadowIndicatorLeft,
+.shadowIndicatorRight {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 32px;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.shadowIndicatorLeft {
+  left: 0;
+  background: linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+}
+
+.shadowIndicatorRight {
+  right: 0;
+  background: linear-gradient(to left, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .progressContainer {
+    display: none;
+  }
+  
+  .sliderHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .navButtonsContainer {
+    align-self: flex-end;
+  }
 }

@@ -1,12 +1,15 @@
 import React from "react";
 import styles from "./Favorite.module.css";
-import { Container, Grid, Typography } from "@mui/material";
+import { Container, Grid, Typography, Button } from "@mui/material";
 import ProductCard from "../ProductCard/ProductCard"; // Adjust the path as necessary
 import { useFavorites } from "../../store/FavoritesContext"; // Import the useFavorites hook
+import { useNavigate } from "react-router-dom";
+import Footer from "../../components/Footer/Footer";
 
 const Favorite = () => {
   const { state } = useFavorites(); // Get favorites from context
   const { favorites } = state;
+  const navigate = useNavigate();
 
   return (
     <div>
@@ -29,7 +32,17 @@ const Favorite = () => {
             ))}
           </Grid>
         )}
+        <div className={styles.browseAllSection}>
+          <Button
+            variant="contained"
+            className={styles.browseAllButton}
+            onClick={() => navigate("/products")}
+          >
+            Browse All Products
+          </Button>
+        </div>
       </Container>
+      <Footer />
     </div>
   );
 };

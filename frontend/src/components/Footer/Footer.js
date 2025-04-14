@@ -46,15 +46,15 @@ const Footer = () => {
       </div>
       <div className={styles.footerBottom}>
         <p>Copyright@2025 FurniFlex. All Rights Reserved.</p>
-        <div>
-        <FacebookIcon className={styles.icons} />
-        <InstagramIcon className={styles.icons} />
-        <XIcon className={styles.icons} />
+        <div className={styles.socialIcons}>
+          <FacebookIcon className={styles.icons} />
+          <InstagramIcon className={styles.icons} />
+          <XIcon className={styles.icons} />
         </div>
         <div className={styles.paymentIcons}>
-          <img src="/images/upi.png" alt="UPI" />
-          <img src="/images/mastercard.png" alt="MasterCard" />
-          <img src="/images/visa.jpg" alt="Visa" />
+          <img src="/images/upi.png" alt="UPI" loading="lazy" />
+          <img src="/images/mastercard.png" alt="MasterCard" loading="lazy" />
+          <img src="/images/visa.jpg" alt="Visa" loading="lazy" />
         </div>
       </div>
     </footer>
