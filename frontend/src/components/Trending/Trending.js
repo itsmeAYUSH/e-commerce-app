@@ -82,9 +82,9 @@ const App = () => {
             },
           }}
         >
-          {categories.map((category, index) => (
+          {categories.map((category) => (
             <Tab
-              key={index}
+              key={category} // Changed to use category as key since it's unique
               label={category}
               sx={{ textTransform: "none", fontWeight: "bold" }}
             />
@@ -107,8 +107,18 @@ const App = () => {
         <Grid container spacing={3} justifyContent="start">
           {displayedProducts.length > 0 ? (
             displayedProducts.map((product) => (
-              <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
-                <ProductCard product={product} />
+              <Grid
+                item
+                key={product._id || product.id}
+                xs={12}
+                sm={6}
+                md={4}
+                lg={3}
+              >
+                <ProductCard
+                  product={product}
+                  isFavorite={product.isFavorite} // Make sure this is handled in ProductCard
+                />
               </Grid>
             ))
           ) : (

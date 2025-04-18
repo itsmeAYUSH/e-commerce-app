@@ -9,7 +9,7 @@ import {
   Button,
   Paper,
 } from "@mui/material";
-import styles from "./Cart.module.css"; // Import the CSS Module
+import styles from "./Cart.module.css";
 import Footer from "../../components/Footer/Footer";
 import Collection from "../../components/Collection/Collection";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +18,7 @@ import OrderSummmary from "../../components/OrderSummary/OrderSummary";
 
 const Cart = () => {
   const navigate = useNavigate();
-  const { state, removeItem, addItem, updateItem } = useCart(); // Use updateItem instead
+  const { state, removeItem, addItem, updateItem } = useCart(); 
   const { items } = state;
 
   const handleQuantityChange = (index, change) => {

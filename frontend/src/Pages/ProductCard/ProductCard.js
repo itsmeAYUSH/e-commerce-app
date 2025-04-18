@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useFavorites } from "../../store/FavoritesContext"; // Import Favorites context
-import { useCart } from "../../store/CartContext"; // Import Cart context
+import { useFavorites } from "../../store/FavoritesContext";
+import { useCart } from "../../store/CartContext";
 import {
   Card,
   CardMedia,
@@ -29,25 +29,18 @@ const DiscountBadge = styled("div")({
   fontWeight: "bold",
 });
 
-const WishlistButton = styled(IconButton)(({ isFavorite }) => ({
-  position: "absolute",
-  top: "10px",
-  right: "10px",
-  backgroundColor: "#fff",
-  borderRadius: "50%",
-  color: isFavorite ? "#F36E0D" : "#B0B0B0",
-}));
-
 const ProductCard = ({ product }) => {
   const { state, addFavorite, removeFavorite } = useFavorites();
   const { addItem } = useCart();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
-  // Sync local `isFavorite` with global favorites context
   const isFavorite = state.favorites.some((fav) => fav._id === product._id);
 
-  const handleFavoriteToggle = () => {
+  const handleFavoriteToggle = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
     if (isFavorite) {
       removeFavorite(product);
       setSnackbarMessage("Removed from favorites!");
@@ -62,7 +55,6 @@ const ProductCard = ({ product }) => {
     event.stopPropagation();
     event.preventDefault();
 
-    // Safely parse the price - handle both string and number cases
     const price =
       typeof product.price === "string"
         ? parseFloat(product.price.replace(/[^0-9.]/g, ""))
@@ -71,15 +63,16 @@ const ProductCard = ({ product }) => {
     const itemToAdd = {
       id: product._id,
       name: product.name,
-      price: price || 0, // Fallback to 0 if parsing fails
+      price: price || 0,
       quantity: 1,
-      // image: product.image,
+      image: product.image,
     };
 
     addItem(itemToAdd);
     setSnackbarMessage("Added to cart!");
     setSnackbarOpen(true);
   };
+
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
@@ -94,10 +87,21 @@ const ProductCard = ({ product }) => {
         cursor: "pointer",
       }}
     >
-      <DiscountBadge>{product.discount}</DiscountBadge>
-      <WishlistButton onClick={handleFavoriteToggle} isFavorite={isFavorite}>
+      {product.discount && <DiscountBadge>{product.discount}</DiscountBadge>}
+
+      <IconButton
+        sx={{
+          position: "absolute",
+          top: "10px",
+          right: "10px",
+          backgroundColor: "#fff",
+          borderRadius: "50%",
+          color: isFavorite ? "#F36E0D" : "#B0B0B0",
+        }}
+        onClick={handleFavoriteToggle}
+      >
         {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-      </WishlistButton>
+      </IconButton>
 
       <Link
         to={`/product/${product._id}`}
@@ -130,7 +134,6 @@ const ProductCard = ({ product }) => {
             ₹{product.price}
           </Typography>
 
-          {/* Cart Button INSIDE Link but prevents navigation */}
           <IconButton
             sx={{
               backgroundColor: "#fff",
@@ -143,14 +146,6 @@ const ProductCard = ({ product }) => {
           </IconButton>
         </CardContent>
       </Link>
-
-      {/* Snackbar for notification */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-        message={snackbarMessage}
-      />
     </Card>
   );
 };

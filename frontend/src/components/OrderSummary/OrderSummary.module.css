@@ -1,5 +1,6 @@
 .orderSummary {
-  width: 20vw;
+  width: 100%;
+  max-width: 400px;
   background: #ffffff;
   border-radius: 8px;
   border: 1px solid #cfd8dc;
@@ -7,20 +8,100 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  margin: 0 auto;
 }
+
+.buttonContainer {
+  padding: 0 15px 15px;
+  display: flex;
+  justify-content: center;
+}
+
 .btnCheckout {
   background-color: #d19a2e !important;
   color: white !important;
   border: none !important;
-  padding: 10px 20px !important;
-  font-size: 14px !important;
+  padding: 12px 24px !important;
+  font-size: clamp(0.875rem, 2vw, 1rem) !important;
   border-radius: 25px !important;
   cursor: pointer !important;
-  transition: background 0.3s ease !important;
-  align-self: center !important;
-  margin-block: 20px !important;
+  transition: all 0.3s ease !important;
+  margin: 20px 0 0 !important;
+  text-transform: none !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+  width: 100%;
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .btnCheckout:hover {
-  background-color: #b88325;
+  background-color: #b88325 !important;
+  box-shadow: 0 4px 8px rgba(209, 154, 46, 0.3) !important;
+  transform: translateY(-1px);
+}
+
+/* Table styles */
+.TableContainer {
+  overflow-x: auto;
+}
+
+.Table {
+  min-width: 250px;
+  width: 100%;
+}
+
+.TableHead .TableRow {
+  background-color: #2d5356 !important;
+}
+
+.TableHead .TableCell {
+  color: #fff !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  padding: 12px !important;
+}
+
+.TableBody .TableRow:nth-of-type(odd) {
+  background-color: #f5f5f5;
+}
+
+.TableCell {
+  padding: 10px 16px !important;
+  font-size: clamp(0.8125rem, 1.5vw, 0.9375rem) !important;
+}
+
+.TableCell[align="right"] {
+  font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .orderSummary {
+    max-width: 350px;
+  }
+}
+
+@media (max-width: 768px) {
+  .orderSummary {
+    max-width: 100%;
+    margin-top: 20px;
+  }
+  
+  .btnCheckout {
+    padding: 10px 20px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .btnCheckout {
+    padding: 8px 16px !important;
+    font-size: 0.875rem !important;
+  }
+  
+  .TableCell {
+    padding: 8px 12px !important;
+  }
 }

@@ -26,7 +26,7 @@ import Checkout from "./Pages/Checkout/Checkout";
 // import { products } from "./util/data";
 import { useState, useEffect, act } from "react";
 import Loader from "./components/Loader/Loader";
-import Errors from "./components/Errors/Errors";
+// import Errors from "./components/Errors/Errors";
 const HomePages = () => {
   return (
     <div>

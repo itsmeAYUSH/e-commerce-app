@@ -1,28 +1,15 @@
-import React,{useState} from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Button,
-  Paper,
-  TextField,
-  Snackbar,
-  Alert,
-} from "@mui/material";
+import React, { useState } from "react";
+import { TextField, Snackbar, Alert } from "@mui/material";
 import styles from "./Checkout.module.css";
 import Footer from "../../components/Footer/Footer";
 import Collection from "../../components/Collection/Collection";
-import { useNavigate } from "react-router-dom";
 import OrderSummary from "../../components/OrderSummary/OrderSummary";
 import { useCart } from "../../store/CartContext";
+import RazorpayPayment from "../../components/RazorpayPayment/RazorpayPayment";
 
 const Checkout = () => {
   const { state } = useCart();
   const { items } = state;
-
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -38,6 +25,8 @@ const Checkout = () => {
   const [errors, setErrors] = useState({});
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("error");
+  const [showPayment, setShowPayment] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -52,6 +41,8 @@ const Checkout = () => {
     if (!formData.phoneNumber)
       newErrors.phoneNumber = "Phone Number is required";
     if (!formData.email) newErrors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
+      newErrors.email = "Email is invalid";
     if (!formData.country) newErrors.country = "Country is required";
     if (!formData.city) newErrors.city = "City is required";
     if (!formData.address) newErrors.address = "Address is required";
@@ -61,18 +52,40 @@ const Checkout = () => {
 
     if (Object.keys(newErrors).length > 0) {
       setSnackbarMessage("Please fill in all required fields.");
+      setSnackbarSeverity("error");
       setSnackbarOpen(true);
+      return false;
     }
 
-    return Object.keys(newErrors).length === 0;
+    return true;
+  };
+
+  const calculateTotal = () => {
+    return items
+      .reduce(
+        (total, item) => total + parseFloat(item.price) * (item.quantity || 1),
+        0
+      )
+      .toFixed(2);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("Form submitted", formData);
+
     if (validateForm()) {
-      console.log("Form Submitted", formData);
-      setSnackbarMessage("Form submitted successfully!");
-      setSnackbarOpen(true);
+      setShowPayment(true);
+    }
+  };
+
+  const handleConfirmPayment = () => {
+    const form = document.querySelector("form");
+    if (form) {
+      const submitEvent = new Event("submit", {
+        cancelable: true,
+        bubbles: true,
+      });
+      form.dispatchEvent(submitEvent);
     }
   };
 
@@ -188,12 +201,24 @@ const Checkout = () => {
                 />
               </div>
             </div>
+            {/* Hidden submit button to make form submission work */}
+            <button type="submit" style={{ display: "none" }}></button>
           </form>
         </div>
-        <OrderSummary items={items} />
+        <OrderSummary items={items} onConfirmPayment={handleConfirmPayment} />
       </div>
       <Collection />
       <Footer />
+
+      {showPayment && (
+        <RazorpayPayment
+          formData={formData}
+          amount={calculateTotal()}
+          onSuccess={() => setShowPayment(false)}
+          onError={() => setShowPayment(false)}
+        />
+      )}
+
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}
@@ -201,7 +226,7 @@ const Checkout = () => {
       >
         <Alert
           onClose={() => setSnackbarOpen(false)}
-          severity="error"
+          severity={snackbarSeverity}
           sx={{ width: "100%" }}
         >
           {snackbarMessage}

@@ -39,13 +39,16 @@ const ContactUs = () => {
 
     try {
       // Make sure this URL points to your actual backend server
-      const response = await fetch("http://localhost:5000/api/contact/send-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "http://localhost:5000/api/contact/send-email",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       // Check response type before trying to parse as JSON
       const contentType = response.headers.get("content-type");
@@ -198,7 +201,7 @@ const ContactUs = () => {
         </div>
       </div>
 
-      {/* Map Section - Now properly centered */}
+      {/* Map Section - Now with properly centered pin */}
       <div className={styles.mapWrapper}>
         <div className={styles.mapContainer}>
           <iframe
@@ -209,13 +212,13 @@ const ContactUs = () => {
             scrolling="no"
             marginHeight="0"
             marginWidth="0"
-            src="https://www.openstreetmap.org/export/embed.html?bbox=72.886275,19.079664,72.906475,19.099664&layer=mapnik&marker=19.089664,72.886375"
+            src="https://www.openstreetmap.org/export/embed.html?bbox=72.876275%2C19.079664%2C72.896475%2C19.099664&layer=mapnik&marker=19.089664%2C72.886375"
             style={{ border: 0 }}
             allowFullScreen
           ></iframe>
           <div className={styles.mapLinkContainer}>
             <a
-              href="https://www.openstreetmap.org/?mlat=19.089664&amp;mlon=72.886375#map=15/19.089664/72.886375"
+              href="https://www.openstreetmap.org/?mlat=19.089664&mlon=72.886375#map=15/19.089664/72.886375"
               target="_blank"
               rel="noopener noreferrer"
               className={styles.mapLink}
