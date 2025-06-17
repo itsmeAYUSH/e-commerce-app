@@ -9,6 +9,7 @@ import {
   Slider,
   Button,
   Select,
+ 
   MenuItem,
   InputLabel,
   FormControl,
@@ -27,12 +28,13 @@ const Products = () => {
   const [priceRange, setPriceRange] = useState([50, 300]);
   const [selectedColors, setSelectedColors] = useState([]);
   const [availability, setAvailability] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState([]);
-  const [selectedMaterial, setSelectedMaterial] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState([]); // Changed to array
+  const [selectedMaterial, setSelectedMaterial] = useState([]); // Changed to array
   const [sortOrder, setSortOrder] = useState("asc");
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 12;
 
+  // Parse prices once when data is loaded
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);

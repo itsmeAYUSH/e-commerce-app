@@ -42,10 +42,14 @@ const Navbar = () => {
         }
         const data = await response.json();
 
-        const processedData = data.map((product) => ({
+        const processedData = data.data.map((product) => ({
           ...product,
-          parsedPrice: parseFloat(product.price.replace(/[^0-9.-]+/g, "")) || 0,
-          displayPrice: product.price.replace(/[^0-9.]/g, ""),
+          parsedPrice: typeof product.price === 'string' 
+            ? parseFloat(product.price.replace(/[^0-9.]/g, "")) 
+            : Number(product.price),
+          displayPrice: typeof product.price === 'string' 
+            ? `₹${product.price.replace(/[^0-9.]/g, "")}`
+            : `₹${product.price}`
         }));
 
         setAllProducts(processedData);
@@ -67,7 +71,8 @@ const Navbar = () => {
     }
 
     const filteredProducts = allProducts.filter((product) =>
-      product.name.toLowerCase().startsWith(searchQuery.toLowerCase())
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (product.category && product.category.toLowerCase().includes(searchQuery.toLowerCase()))
     );
 
     setSuggestions(filteredProducts.slice(0, 8));
@@ -215,11 +220,11 @@ const Navbar = () => {
                     <div className={styles.suggestionContent}>
                       <span className={styles.productName}>{product.name}</span>
                       <span className={styles.productCategory}>
-                        {product.category}
+                        {product.category || 'Uncategorized'}
                       </span>
                     </div>
                     <span className={styles.productPrice}>
-                      ${product.displayPrice}
+                      {product.displayPrice}
                     </span>
                   </li>
                 ))}

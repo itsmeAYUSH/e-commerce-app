@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import styles from "./FeaturedCategories.module.css"; // Fixed the import extension
+import { Navigate, useNavigate } from "react-router-dom";
 
 // Sample data
 const categoryData = [
@@ -57,6 +58,7 @@ const FeaturedCategories = () => {
   const sliderRef = useRef(null);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [maxScroll, setMaxScroll] = useState(0);
+  const navigate = useNavigate();
 
   // Calculate maximum scroll width on mount and resize
   useEffect(() => {
@@ -186,9 +188,10 @@ const FeaturedCategories = () => {
                     {category.products} Products
                   </p>
                   <span className={styles.exploreLink}>
-                    <span>Explore</span>
+                    <span  onClick={() => navigate('/products')}
+                    style={{ cursor: 'pointer' }}>Explore</span>
                     <svg
-                      xmlns="http://www.w3.org/2000/svg"
+                      xmlns="http://www.w3.org/2000/svg"  
                       width="16"
                       height="16"
                       fill="none"

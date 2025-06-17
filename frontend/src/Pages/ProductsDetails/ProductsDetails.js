@@ -31,29 +31,41 @@ const ProductDetail = () => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
+        console.log('Fetching product with ID:', id);
+        
         const response = await fetch(`http://localhost:5000/api/products/${id}`);
+        const data = await response.json();
         
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          if (response.status === 404) {
+            console.log('Product not found, redirecting to products page');
+            setError('Product not found');
+            setTimeout(() => {
+              navigate('/products');
+            }, 2000);
+            return;
+          }
+          throw new Error(data.error || `HTTP error! status: ${response.status}`);
         }
 
-        const result = await response.json();
-        
-        if (!result.success) {
-          throw new Error(result.error || 'Product not found');
+        if (!data.success) {
+          throw new Error(data.error || 'Product not found');
         }
 
-        setProduct(result.data);
+        setProduct(data.data);
       } catch (err) {
         console.error('Error fetching product:', err);
         setError(err.message);
+        setTimeout(() => {
+          navigate('/products');
+        }, 2000);
       } finally {
         setLoading(false);
       }
     };
 
     fetchProduct();
-  }, [id]);
+  }, [id, navigate]);
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -72,6 +84,25 @@ const ProductDetail = () => {
     
     addItem(itemToAdd);
     setSnackbarOpen(true);
+  };
+
+  const handleBuyNow = () => {
+    if (!product) return;
+
+    const price = typeof product.price === 'string' 
+      ? parseFloat(product.price.replace(/[^0-9.]/g, "")) 
+      : Number(product.price);
+
+    const itemToAdd = {
+      id: product._id,
+      name: product.name,
+      price: price || 0,
+      quantity: 1,
+      image: product.image,
+    };
+    
+    addItem(itemToAdd);
+    navigate('/cart');
   };
 
   if (loading) {
@@ -112,12 +143,14 @@ const ProductDetail = () => {
     );
   }
 
-  // Calculate savings if originalPrice exists
-  const originalPrice = product.originalPrice 
-    ? parseFloat(String(product.originalPrice).replace(/[^0-9.]/g, "")) 
-    : null;
-  const price = parseFloat(String(product.price).replace(/[^0-9.]/g, ""));
-  const savings = originalPrice ? originalPrice - price : 0;
+  // Parse prices
+  const originalPrice = typeof product.originalPrice === 'string' 
+    ? parseFloat(product.originalPrice.replace(/[^0-9.]/g, "")) 
+    : Number(product.originalPrice);
+  const price = typeof product.price === 'string' 
+    ? parseFloat(product.price.replace(/[^0-9.]/g, "")) 
+    : Number(product.price);
+  const savings = originalPrice - price;
 
   return (
     <div>
@@ -151,7 +184,7 @@ const ProductDetail = () => {
                 
                 {product.discount && (
                   <Typography variant="subtitle1" color="error">
-                    {product.discount} OFF
+                    {product.discount}% OFF
                   </Typography>
                 )}
                 
@@ -206,8 +239,10 @@ const ProductDetail = () => {
                 <Button
                   style={{ marginTop: "16px" }}
                   className={styles.buyNowBtn}
+                  onClick={handleBuyNow}
+                  disabled={!product.inStock}
                 >
-                  Buy Now
+                  {product.inStock ? "Buy Now" : "Out of Stock"}
                 </Button>
                 
                 <Button

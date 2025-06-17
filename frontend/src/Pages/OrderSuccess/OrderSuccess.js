@@ -9,6 +9,8 @@ import {
 } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { styled } from '@mui/material/styles';
+import styles from "./OrderSuccess.module.css";
+
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(8),
@@ -37,20 +39,19 @@ const OrderSuccess = () => {
         </Typography>
         <Box sx={{ mt: 3 }}>
           <Button
-            variant="contained"
-            color="primary"
+          className={styles.btncontinueShopping}
             onClick={() => navigate('/')}
             sx={{ mr: 2 }}
           >
             Continue Shopping
           </Button>
-          <Button
-            variant="outlined"
-            color="primary"
+          {/* <Button
+                    className={styles.btnviewOrders}
+
             onClick={() => navigate('/profile')}
           >
             View Orders
-          </Button>
+          </Button> */}
         </Box>
       </StyledPaper>
     </Container>
