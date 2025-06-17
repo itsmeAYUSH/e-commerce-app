@@ -14,7 +14,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { styled } from "@mui/system";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./ProductCard.module.css";
 
 const DiscountBadge = styled("div")({
@@ -32,6 +32,7 @@ const DiscountBadge = styled("div")({
 const ProductCard = ({ product }) => {
   const { state, addFavorite, removeFavorite } = useFavorites();
   const { addItem } = useCart();
+  const navigate = useNavigate();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
@@ -73,46 +74,64 @@ const ProductCard = ({ product }) => {
     setSnackbarOpen(true);
   };
 
+  const handleCardClick = (event) => {
+    // Only navigate if the click wasn't on the favorite or cart buttons
+    if (!event.target.closest('button')) {
+      navigate(`/product/${product._id}`);
+    }
+  };
+
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
 
   return (
-    <Card
-      sx={{
-        position: "relative",
-        borderRadius: "15px",
-        overflow: "hidden",
-        boxShadow: 3,
-        cursor: "pointer",
-      }}
-    >
-      {product.discount && <DiscountBadge>{product.discount}</DiscountBadge>}
-
-      <IconButton
+    <>
+      <Card
         sx={{
-          position: "absolute",
-          top: "10px",
-          right: "10px",
-          backgroundColor: "#fff",
-          borderRadius: "50%",
-          color: isFavorite ? "#F36E0D" : "#B0B0B0",
+          position: "relative",
+          borderRadius: "15px",
+          overflow: "hidden",
+          boxShadow: 3,
+          cursor: "pointer",
+          "&:hover": {
+            boxShadow: 6,
+            transform: "translateY(-2px)",
+            transition: "all 0.2s ease-in-out"
+          }
         }}
-        onClick={handleFavoriteToggle}
+        onClick={handleCardClick}
       >
-        {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-      </IconButton>
+        {product.discount && <DiscountBadge>{product.discount}</DiscountBadge>}
 
-      <Link
-        to={`/product/${product._id}`}
-        style={{ textDecoration: "none", color: "inherit" }}
-      >
+        <IconButton
+          sx={{
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+            backgroundColor: "#fff",
+            borderRadius: "50%",
+            color: isFavorite ? "#F36E0D" : "#B0B0B0",
+            zIndex: 2,
+            "&:hover": {
+              backgroundColor: "#f5f5f5"
+            }
+          }}
+          onClick={handleFavoriteToggle}
+        >
+          {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+        </IconButton>
+
         <CardMedia
           component="img"
           height="180"
           image={product.image}
           alt={product.name}
+          sx={{
+            objectFit: "cover"
+          }}
         />
+        
         <CardContent
           sx={{
             backgroundColor: "#2d5356",
@@ -126,10 +145,16 @@ const ProductCard = ({ product }) => {
               fontWeight="bold"
               className={styles.productName}
               textAlign={"left"}
+              sx={{
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap"
+              }}
             >
               {product.name}
             </Typography>
           </Tooltip>
+          
           <Typography variant="body1" textAlign={"left"}>
             ₹{product.price}
           </Typography>
@@ -139,14 +164,28 @@ const ProductCard = ({ product }) => {
               backgroundColor: "#fff",
               borderRadius: "50%",
               marginTop: "10px",
+              "&:hover": {
+                backgroundColor: "#f5f5f5"
+              }
             }}
             onClick={handleAddToCart}
           >
             <ShoppingCartIcon sx={{ color: "#F36E0D" }} />
           </IconButton>
         </CardContent>
-      </Link>
-    </Card>
+      </Card>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        message={snackbarMessage}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+      />
+    </>
   );
 };
 

@@ -5,7 +5,7 @@ import EastRoundedIcon from "@mui/icons-material/EastRounded";
 import WestRoundedIcon from "@mui/icons-material/WestRounded";
 import { useNavigate } from "react-router-dom";
 
-const Homepage = () => {
+const HomePage = () => {
   const navigate = useNavigate();
   const [activeRoom, setActiveRoom] = useState(0);
   const roomData = [
@@ -125,4 +125,4 @@ const Homepage = () => {
   );
 };
 
-export default Homepage;
+export default HomePage;

@@ -14,7 +14,7 @@ const categories = [
   "Indoor",
 ];
 
-const App = () => {
+const Trending = () => {
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [products, setProducts] = useState([]);
@@ -29,7 +29,7 @@ const App = () => {
           throw new Error("Failed to fetch products");
         }
         const data = await response.json();
-        setProducts(data);
+        setProducts(data.data || data); // Handles both response formats
       } catch (error) {
         setError(error.message);
       } finally {
@@ -51,9 +51,15 @@ const App = () => {
   return (
     <React.Fragment>
       <div className="trendingSec">
-        <h2>Trending Products for You</h2>
-        <Button className="view-all-btn" onClick={() => navigate("/products")}>
-          View All Products <EastRoundedIcon />
+        <h2>
+          Trending Products for You
+        </h2>
+        <Button 
+          className="view-all-btn" 
+          onClick={() => navigate("/products")}
+          endIcon={<EastRoundedIcon />}
+        >
+          View All Products
         </Button>
       </div>
 
@@ -81,10 +87,12 @@ const App = () => {
               color: "#0D665C",
             },
           }}
+          variant="scrollable"
+          scrollButtons="auto"
         >
           {categories.map((category) => (
             <Tab
-              key={category} // Changed to use category as key since it's unique
+              key={category}
               label={category}
               sx={{ textTransform: "none", fontWeight: "bold" }}
             />
@@ -104,7 +112,7 @@ const App = () => {
         )}
 
         {/* Product Grid */}
-        <Grid container spacing={3} justifyContent="start">
+        <Grid container spacing={3} className="products-grid">
           {displayedProducts.length > 0 ? (
             displayedProducts.map((product) => (
               <Grid
@@ -117,14 +125,16 @@ const App = () => {
               >
                 <ProductCard
                   product={product}
-                  isFavorite={product.isFavorite} // Make sure this is handled in ProductCard
+                  isFavorite={product.isFavorite}
                 />
               </Grid>
             ))
           ) : (
-            <Typography variant="h6" textAlign="center" width="100%">
-              No products available in this category.
-            </Typography>
+            !loading && (
+              <Typography variant="h6" textAlign="center" width="100%">
+                No products available in this category.
+              </Typography>
+            )
           )}
         </Grid>
       </Container>
@@ -132,4 +142,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Trending;

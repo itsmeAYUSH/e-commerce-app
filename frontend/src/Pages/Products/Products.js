@@ -27,13 +27,12 @@ const Products = () => {
   const [priceRange, setPriceRange] = useState([50, 300]);
   const [selectedColors, setSelectedColors] = useState([]);
   const [availability, setAvailability] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState([]); // Changed to array
-  const [selectedMaterial, setSelectedMaterial] = useState([]); // Changed to array
+  const [selectedCategory, setSelectedCategory] = useState([]);
+  const [selectedMaterial, setSelectedMaterial] = useState([]);
   const [sortOrder, setSortOrder] = useState("asc");
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 12;
 
-  // Parse prices once when data is loaded
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
@@ -42,19 +41,29 @@ const Products = () => {
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }
-        const data = await response.json();
+        const result = await response.json();
+        
+        // Check if the response has the expected structure
+        if (!result.success) {
+          throw new Error(result.error || "Failed to fetch products");
+        }
 
+        // Ensure we have an array of products
+        const productsData = Array.isArray(result.data) ? result.data : [];
+        
         // Parse prices once and consistently
-        const processedData = data.map((product) => ({
+        const processedData = productsData.map((product) => ({
           ...product,
           // Store both original price string and parsed numeric value
-          parsedPrice: parseFloat(product.price.replace(/[^0-9.-]+/g, "")) || 0,
+          parsedPrice: parseFloat(String(product.price).replace(/[^0-9.-]+/g, "")) || 0,
           // Clean price string by removing $ sign
-          displayPrice: product.price.replace(/[^0-9.]/g, ""),
+          displayPrice: String(product.price).replace(/[^0-9.]/g, ""),
         }));
 
+        console.log("Processed products:", processedData);
         setProducts(processedData);
       } catch (error) {
+        console.error("Error fetching products:", error);
         setError(error.message);
       } finally {
         setLoading(false);

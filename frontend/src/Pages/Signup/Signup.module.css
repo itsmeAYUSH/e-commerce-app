@@ -1,0 +1,29 @@
+/* components/Login.module.css */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 16px;
+  }
+  
+  .paper {
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .form {
+    width: 100%;
+    margin-top: 16px;
+  }
+  
+  .button {
+    margin: 24px 0 16px;
+  }
+  
+  .link {
+    margin-top: 16px;
+  }

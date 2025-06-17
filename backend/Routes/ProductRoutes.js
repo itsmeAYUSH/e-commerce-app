@@ -1,12 +1,23 @@
-// routes/productRoutes.js
 const express = require("express");
-const { getAllProducts, addProduct,addBulkProducts } = require("../Controllers/ProductController");
+const { 
+  getProducts,
+  getProductById,
+  addProduct, 
+  addBulkProducts
+} = require("../controllers/ProductController");
 
 const router = express.Router();
 
-// Define routes
-router.get("/", getAllProducts);
-router.post("/", addProduct); // Optional: for adding products
-router.post("/bulk", addBulkProducts); // New route for bulk insertion
+// GET /api/product
+router.get("/", getProducts);
+
+// GET /api/product/:id
+router.get("/:id", getProductById);
+
+// POST /api/product
+router.post("/", addProduct);
+
+// POST /api/product/bulk
+router.post("/bulk", addBulkProducts);
 
 module.exports = router;
