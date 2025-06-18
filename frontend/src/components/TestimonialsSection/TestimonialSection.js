@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styles from "./TestimonialSection.module.css";
 import { Button } from "@mui/material";
 import WestIcon from "@mui/icons-material/West";
@@ -35,22 +35,20 @@ const TestimonialSection = () => {
   const [index, setIndex] = useState(0);
   const totalTestimonials = testimonials.length;
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      handleNext();
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     setIndex((prevIndex) => (prevIndex + 1) % totalTestimonials);
-  };
+  }, [totalTestimonials]);
 
   const handlePrev = () => {
     setIndex((prevIndex) =>
       prevIndex === 0 ? totalTestimonials - 1 : prevIndex - 1
     );
   };
+
+  useEffect(() => {
+    const interval = setInterval(handleNext, 5000);
+    return () => clearInterval(interval);
+  }, [handleNext]);
 
   return (
     <div className={styles.container}>

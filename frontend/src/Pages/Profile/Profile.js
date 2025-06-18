@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../../store/AuthContext";
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../../Redux/Reducers/authSlice';
 import {
   Container,
   Grid,
@@ -42,7 +43,6 @@ import {
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
-  const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -78,35 +78,142 @@ const Profile = () => {
     isDefault: false,
   });
 
+  const user = useSelector(state => state.auth.user);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        if (!currentUser) {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          console.log('No token found, redirecting to login');
           navigate("/login");
           return;
         }
 
-        // Set initial editable user info
+        // Get user data from localStorage first
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        console.log('Stored user data:', storedUser);
+        
+        // Set initial editable user info from stored user data
         setEditableUserInfo({
-          firstName: currentUser.firstName,
-          lastName: currentUser.lastName,
-          email: currentUser.email,
-          phone: currentUser.phone || "",
+          firstName: storedUser?.name?.split(' ')[0] || '',
+          lastName: storedUser?.name?.split(' ')[1] || '',
+          email: storedUser?.email || '',
+          phone: storedUser?.phone || '',
         });
 
-        // Simulate loading other data
-        setTimeout(() => {
-          setLoading(false);
-        }, 1000);
+        // Fetch user profile data
+        console.log('Fetching user profile data...');
+        const response = await fetch(`http://localhost:5000/api/auth/me`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        console.log('Profile response status:', response.status);
+        
+        if (!response.ok) {
+          if (response.status === 401) {
+            console.log('Token invalid or expired');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            navigate("/login");
+            return;
+          }
+          const errorData = await response.json().catch(() => ({}));
+          console.error('Profile fetch error:', errorData);
+          throw new Error(errorData.message || 'Failed to fetch user data');
+        }
+
+        const data = await response.json();
+        console.log('Fetched profile data:', data);
+        console.log('User data from response:', data.user);
+        console.log('Phone number from response:', data.user?.phone);
+
+        // Update editable user info with fetched data
+        setEditableUserInfo(prevInfo => {
+          const newInfo = {
+            firstName: data.user?.name?.split(' ')[0] || prevInfo.firstName,
+            lastName: data.user?.name?.split(' ')[1] || prevInfo.lastName,
+            email: data.user?.email || prevInfo.email,
+            phone: data.user?.phone || prevInfo.phone,
+          };
+          console.log('Setting editable user info:', newInfo);
+          return newInfo;
+        });
+
+        // Update localStorage with latest user data
+        const updatedUserData = {
+          ...storedUser,
+          ...data.user
+        };
+        console.log('Updating localStorage with:', updatedUserData);
+        localStorage.setItem('user', JSON.stringify(updatedUserData));
+
+        // Fetch user's orders
+        console.log('Fetching user orders...');
+        const ordersResponse = await fetch(`http://localhost:5000/api/orders/user`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (ordersResponse.ok) {
+          const ordersData = await ordersResponse.json();
+          console.log('Fetched orders:', ordersData);
+          setOrders(ordersData || []);
+        } else {
+          console.error('Failed to fetch orders:', ordersResponse.status);
+        }
+
+        // Fetch user's favorites
+        console.log('Fetching user favorites...');
+        const favoritesResponse = await fetch(`http://localhost:5000/api/favorites`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (favoritesResponse.ok) {
+          const favoritesData = await favoritesResponse.json();
+          console.log('Fetched favorites:', favoritesData);
+          setFavorites(favoritesData || []);
+        } else {
+          console.error('Failed to fetch favorites:', favoritesResponse.status);
+        }
+
+        // Fetch user's addresses
+        console.log('Fetching user addresses...');
+        const addressesResponse = await fetch(`http://localhost:5000/api/addresses`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (addressesResponse.ok) {
+          const addressesData = await addressesResponse.json();
+          console.log('Fetched addresses:', addressesData);
+          setAddresses(addressesData || []);
+        } else {
+          console.error('Failed to fetch addresses:', addressesResponse.status);
+        }
+
+        setLoading(false);
       } catch (error) {
-        console.error("Error fetching user data:", error);
-        showSnackbar("Failed to load profile data", "error");
+        console.error("Detailed error in fetchUserData:", error);
+        showSnackbar(error.message || "Failed to load profile data", "error");
         setLoading(false);
       }
     };
 
     fetchUserData();
-  }, [currentUser, navigate]);
+  }, [navigate]);
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -139,14 +246,61 @@ const Profile = () => {
   const updateProfile = async () => {
     try {
       setLoading(true);
-      // Here you would typically make an API call to update the profile
-      // For now, we'll just simulate it
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const token = localStorage.getItem('token');
+      
+      const updateData = {
+        name: `${editableUserInfo.firstName} ${editableUserInfo.lastName}`,
+        email: editableUserInfo.email,
+        phone: editableUserInfo.phone
+      };
+      
+      console.log('Updating profile with data:', updateData);
+      
+      const response = await fetch(`http://localhost:5000/api/auth/me`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(updateData)
+      });
+
+      console.log('Update profile response status:', response.status);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Profile update error:', errorData);
+        throw new Error(errorData.message || 'Failed to update profile');
+      }
+
+      const updatedData = await response.json();
+      console.log('Updated profile data:', updatedData);
+      console.log('Updated user data:', updatedData.user);
+      
+      // Update local state
+      const newEditableInfo = {
+        firstName: updatedData.user?.name?.split(' ')[0] || '',
+        lastName: updatedData.user?.name?.split(' ')[1] || '',
+        email: updatedData.user?.email || '',
+        phone: updatedData.user?.phone || '',
+      };
+      console.log('Setting new editable info:', newEditableInfo);
+      setEditableUserInfo(newEditableInfo);
+
+      // Update localStorage with new data
+      const storedUser = JSON.parse(localStorage.getItem('user'));
+      const newUserData = {
+        ...storedUser,
+        ...updatedData.user
+      };
+      console.log('Updating localStorage with:', newUserData);
+      localStorage.setItem('user', JSON.stringify(newUserData));
 
       setEditMode(false);
       showSnackbar("Profile updated successfully");
     } catch (error) {
-      showSnackbar("Failed to update profile", "error");
+      console.error("Detailed error in updateProfile:", error);
+      showSnackbar(error.message || "Failed to update profile", "error");
     } finally {
       setLoading(false);
     }
@@ -154,15 +308,21 @@ const Profile = () => {
 
   const addAddress = async () => {
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await fetch(`http://localhost:5000/api/addresses`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(newAddress)
+      });
 
-      const newAddressData = {
-        ...newAddress,
-        _id: Math.random().toString(36).substr(2, 9),
-      };
+      if (!response.ok) {
+        throw new Error('Failed to add address');
+      }
 
-      setAddresses([...addresses, newAddressData]);
+      const addedAddress = await response.json();
+      setAddresses([...addresses, addedAddress]);
       setOpenAddressDialog(false);
       setNewAddress({
         name: "",
@@ -181,8 +341,16 @@ const Profile = () => {
 
   const deleteAddress = async (addressId) => {
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await fetch(`http://localhost:5000/api/addresses/${addressId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete address');
+      }
 
       setAddresses(addresses.filter((address) => address._id !== addressId));
       showSnackbar("Address deleted successfully");
@@ -193,8 +361,16 @@ const Profile = () => {
 
   const removeFavorite = async (productId) => {
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await fetch(`http://localhost:5000/api/favorites/${productId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to remove from favorites');
+      }
 
       setFavorites(favorites.filter((fav) => fav._id !== productId));
       showSnackbar("Removed from favorites");
@@ -203,10 +379,20 @@ const Profile = () => {
     }
   };
 
-  const handleLogout = () => {
-    logout();
-    showSnackbar("Logged out successfully");
-    navigate("/");
+  const handleLogout = async () => {
+    try {
+      // Clear local storage
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      
+      // Call logout from auth context
+      dispatch(logout());
+      
+      showSnackbar("Logged out successfully");
+      navigate("/");
+    } catch (error) {
+      showSnackbar("Failed to logout", "error");
+    }
   };
 
   const showSnackbar = (message, severity = "success") => {
@@ -224,7 +410,7 @@ const Profile = () => {
     });
   };
 
-  if (loading && !currentUser) {
+  if (loading) {
     return (
       <Box
         sx={{
@@ -263,15 +449,20 @@ const Profile = () => {
                   margin: "0 auto",
                 }}
               >
-                {currentUser?.firstName?.charAt(0)}
-                {currentUser?.lastName?.charAt(0)}
+                {editableUserInfo.firstName?.charAt(0)}
+                {editableUserInfo.lastName?.charAt(0)}
               </Avatar>
               <Typography variant="h5" sx={{ mt: 2 }}>
-                {currentUser?.firstName} {currentUser?.lastName}
+                {editableUserInfo.firstName} {editableUserInfo.lastName}
               </Typography>
               <Typography variant="body2" color="textSecondary">
-                {currentUser?.email}
+                {editableUserInfo.email}
               </Typography>
+              {editableUserInfo.phone && (
+                <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
+                  Phone: {editableUserInfo.phone}
+                </Typography>
+              )}
             </Box>
 
             <Divider sx={{ my: 2 }} />

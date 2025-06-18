@@ -24,9 +24,19 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, "Please add a password"],
+    required: function() {
+      return !this.isGoogleUser; // Password is required only for non-Google users
+    },
     minlength: [6, "Password must be at least 6 characters"],
     select: false // Don't include password in queries by default
+  },
+  photoURL: {
+    type: String,
+    default: '',
+  },
+  isGoogleUser: {
+    type: Boolean,
+    default: false,
   },
   role: {
     type: String,
@@ -37,6 +47,8 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+}, {
+  timestamps: true,
 });
 
 // Hash password before saving
