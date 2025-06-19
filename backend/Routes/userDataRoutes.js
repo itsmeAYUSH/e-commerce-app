@@ -13,7 +13,7 @@ const {
   addOrder,
   getOrderHistory,
   clearCart
-} = require('../controllers/userDataController');
+} = require('../Controllers/userDataController');
 
 // Favorites routes
 router.route('/favorites').get(protect, getFavorites);

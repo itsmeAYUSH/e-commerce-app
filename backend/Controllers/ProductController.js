@@ -1,4 +1,4 @@
-const Product = require("../models/Product.js");
+const Product = require("../Models/Product.js");
 const mongoose = require("mongoose");
 
 // Helper function to transform incoming product data
