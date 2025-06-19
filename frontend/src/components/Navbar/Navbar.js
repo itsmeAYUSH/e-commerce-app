@@ -18,7 +18,6 @@ const Navbar = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const searchRef = useRef(null);
   const navRef = useRef(null);
@@ -50,7 +49,7 @@ const Navbar = () => {
 
         setAllProducts(processedData);
       } catch (error) {
-        setError(error.message);
+        // setError(error.message);
       } finally {
         setLoading(false);
       }

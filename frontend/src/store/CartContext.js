@@ -56,6 +56,7 @@ export const CartProvider = ({ children }) => {
     } else {
       dispatch({ type: "SET_CART", payload: [] });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadCart = async () => {

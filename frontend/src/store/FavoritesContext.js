@@ -56,6 +56,7 @@ export const FavoritesProvider = ({ children }) => {
     } else {
       dispatch({ type: "SET_FAVORITES", payload: [] });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   const loadFavorites = async () => {
