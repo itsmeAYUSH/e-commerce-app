@@ -63,21 +63,7 @@ const ProductCard = ({ product }) => {
     event.stopPropagation();
     event.preventDefault();
 
-    // Safely parse the price - handle both string and number cases
-    const price =
-      typeof product.price === "string"
-        ? parseFloat(product.price.replace(/[^0-9.]/g, ""))
-        : Number(product.price);
-
-    const itemToAdd = {
-      id: product._id,
-      name: product.name,
-      price: price || 0, // Fallback to 0 if parsing fails
-      quantity: 1,
-      image: product.image,
-    };
-
-    addItem(itemToAdd);
+    addItem(product);
     showSnackbar(`${product.name} added to cart!`, "success");
   };
 

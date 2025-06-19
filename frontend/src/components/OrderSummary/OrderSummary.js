@@ -98,9 +98,15 @@ const OrderSummary = ({ items = [], onConfirmPayment }) => {
   const location = useLocation();
   const isCheckoutPage = location.pathname.includes('/checkout');
 
+  // Always use item.product?.price if available, fallback to item.price
   const calculateSubtotal = React.useCallback(() => {
     return items
-      .reduce((total, item) => total + parseFloat(item.price) * (item.quantity || 1), 0)
+      .reduce((total, item) => {
+        const price = item.product && item.product.price !== undefined
+          ? Number(item.product.price)
+          : Number(item.price);
+        return total + (isNaN(price) ? 0 : price) * (item.quantity || 1);
+      }, 0)
       .toFixed(2);
   }, [items]);
 

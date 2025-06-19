@@ -9,8 +9,7 @@ import RazorpayPayment from "../../components/RazorpayPayment/RazorpayPayment";
 import { useSnackbar } from "../../contexts/SnackbarContext";
 
 const Checkout = () => {
-  const { state } = useCart();
-  const { items } = state;
+  const { items } = useCart();
   const { showSnackbar } = useSnackbar();
   const [formData, setFormData] = useState({
     firstName: "",
@@ -60,10 +59,14 @@ const Checkout = () => {
   const calculateTotal = () => {
     return items
       .reduce(
-        (total, item) => total + parseFloat(item.price) * (item.quantity || 1),
+        (total, item) => {
+          const price = item.product && item.product.price !== undefined
+            ? Number(item.product.price)
+            : Number(item.price);
+          return total + (isNaN(price) ? 0 : price) * (item.quantity || 1);
+        },
         0
-      )
-      .toFixed(2);
+      );
   };
 
   const handleSubmit = (e) => {

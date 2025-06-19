@@ -138,29 +138,36 @@ const updateCart = async (req, res) => {
     const { productId, quantity } = req.body;
     const userId = req.user.id;
 
+    console.log('updateCart called:', { userId, productId, quantity });
+
     const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
     const cartItemIndex = user.cart.findIndex(item => 
       item.product.toString() === productId
     );
 
     if (quantity <= 0) {
-      // Remove item if quantity is 0 or negative
       if (cartItemIndex > -1) {
         user.cart.splice(cartItemIndex, 1);
       }
     } else if (cartItemIndex > -1) {
-      // Update quantity if item exists
       user.cart[cartItemIndex].quantity = quantity;
     } else {
-      // Add new item
       user.cart.push({ product: productId, quantity });
     }
+
+    console.log('Cart before save:', user.cart);
 
     await user.save();
 
     // Populate product details before sending response
     const populatedUser = await User.findById(userId).populate('cart.product');
     
+    console.log('Cart after save:', populatedUser.cart);
+
     res.json({
       success: true,
       cart: populatedUser.cart
