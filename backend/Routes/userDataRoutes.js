@@ -9,7 +9,10 @@ const {
   addShippingAddress,
   getShippingAddresses,
   updateShippingAddress,
-  deleteShippingAddress
+  deleteShippingAddress,
+  addOrder,
+  getOrderHistory,
+  clearCart
 } = require('../controllers/userDataController');
 
 // Favorites routes
@@ -20,6 +23,7 @@ router.route('/favorites/:productId').post(protect, toggleFavorite);
 router.route('/cart')
   .get(protect, getCart)
   .post(protect, updateCart);
+router.post('/cart/clear', protect, clearCart);
 
 // Shipping address routes
 router.route('/shipping-address')
@@ -29,5 +33,9 @@ router.route('/shipping-address')
 router.route('/shipping-address/:addressId')
   .put(protect, updateShippingAddress)
   .delete(protect, deleteShippingAddress);
+
+// Order history route
+router.post('/order', protect, addOrder);
+router.get('/order-history', protect, getOrderHistory);
 
 module.exports = router; 

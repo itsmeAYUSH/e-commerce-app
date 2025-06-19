@@ -2,8 +2,9 @@ import React, { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../store/CartContext";
 import { useSnackbar } from "../../contexts/SnackbarContext";
+import axios from "axios";
 
-const RazorpayPayment = ({ formData, amount, onSuccess, onError }) => {
+const RazorpayPayment = ({ formData, amount, items, onSuccess, onError }) => {
     const { clearCart } = useCart();
     const navigate = useNavigate();
     const { showSnackbar } = useSnackbar();
@@ -38,12 +39,47 @@ const RazorpayPayment = ({ formData, amount, onSuccess, onError }) => {
           theme: {
             color: "#2d5356",
           },
-          handler: function (response) {
+          handler: async function (response) {
             if (response.razorpay_payment_id) {
               showSnackbar(
                 `Payment Successful! Payment ID: ${response.razorpay_payment_id}`,
                 "success"
               );
+              // Save order history
+              try {
+                console.log('Order payload:', {
+                  orderId: response.razorpay_payment_id,
+                  products: (items || []).map(item => ({
+                    product: item.product?._id || item._id,
+                    quantity: item.quantity,
+                    price: item.product?.price || item.price
+                  })),
+                  totalAmount: amount,
+                  shippingAddress: formData,
+                  paymentMethod: 'razorpay',
+                  orderStatus: 'paid'
+                });
+                await axios.post(
+                  'http://localhost:5000/api/user/order',
+                  {
+                    orderId: response.razorpay_payment_id,
+                    products: (items || []).map(item => ({
+                      product: item.product?._id || item._id,
+                      quantity: item.quantity,
+                      price: item.product?.price || item.price
+                    })),
+                    totalAmount: amount,
+                    shippingAddress: formData,
+                    paymentMethod: 'razorpay',
+                    orderStatus: 'paid'
+                  },
+                  {
+                    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+                  }
+                );
+              } catch (err) {
+                console.error('Order history save failed:', err);
+              }
               setTimeout(() => {
                 clearCart();
                 document.body.style.overflow = 'auto';
@@ -105,7 +141,7 @@ const RazorpayPayment = ({ formData, amount, onSuccess, onError }) => {
           }
         };
       }
-    }, [amount, formData, clearCart, navigate, onSuccess, onError, showSnackbar]);
+    }, [amount, formData, items, clearCart, navigate, onSuccess, onError, showSnackbar]);
 
     return null;
 };

@@ -116,7 +116,10 @@ const toggleFavorite = async (req, res) => {
 // @access  Private
 const getFavorites = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).populate('favorites');
+    const user = await User.findById(req.user.id).populate({
+      path: 'favorites',
+      select: 'name price image category code'
+    });
     res.json({
       success: true,
       favorites: user.favorites
@@ -137,6 +140,11 @@ const updateCart = async (req, res) => {
   try {
     const { productId, quantity } = req.body;
     const userId = req.user.id;
+
+    if (!productId) {
+      console.error('updateCart error: Missing productId', { userId, productId, quantity });
+      return res.status(400).json({ success: false, message: 'Product ID is required' });
+    }
 
     console.log('updateCart called:', { userId, productId, quantity });
 
@@ -159,14 +167,14 @@ const updateCart = async (req, res) => {
       user.cart.push({ product: productId, quantity });
     }
 
-    console.log('Cart before save:', user.cart);
+    console.log('Cart before save:', JSON.stringify(user.cart, null, 2));
 
     await user.save();
 
     // Populate product details before sending response
     const populatedUser = await User.findById(userId).populate('cart.product');
     
-    console.log('Cart after save:', populatedUser.cart);
+    console.log('Cart after save:', JSON.stringify(populatedUser.cart, null, 2));
 
     res.json({
       success: true,
@@ -176,7 +184,8 @@ const updateCart = async (req, res) => {
     console.error('Update cart error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: 'Server error',
+      details: error.message
     });
   }
 };
@@ -340,6 +349,99 @@ const deleteShippingAddress = async (req, res) => {
   }
 };
 
+// @desc    Add order to user's order history
+// @route   POST /api/user/order
+// @access  Private
+const addOrder = async (req, res) => {
+  try {
+    console.log('addOrder called:', req.body, 'user:', req.user.id);
+    const userId = req.user.id;
+    const { orderId, products, totalAmount, shippingAddress, paymentMethod, orderStatus } = req.body;
+
+    // Validate required fields
+    if (!orderId || !Array.isArray(products) || products.length === 0 || !totalAmount) {
+      return res.status(400).json({ success: false, message: 'Missing required order fields' });
+    }
+    for (const p of products) {
+      if (!p.product || !p.quantity || !p.price) {
+        return res.status(400).json({ success: false, message: 'Each product must have product, quantity, and price' });
+      }
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      console.log('User not found');
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // Convert product to ObjectId and log
+    let productsWithObjectId;
+    try {
+      productsWithObjectId = products.map(p => ({
+        product: new mongoose.Types.ObjectId(p.product),
+        quantity: p.quantity,
+        price: p.price
+      }));
+    } catch (err) {
+      console.error('Error converting product to ObjectId:', err, products);
+      return res.status(400).json({ success: false, message: 'Invalid product ID in products', details: err.message });
+    }
+    console.log('productsWithObjectId:', productsWithObjectId);
+
+    user.orderHistory.push({
+      orderId,
+      products: productsWithObjectId,
+      totalAmount,
+      shippingAddress,
+      paymentMethod,
+      orderStatus: orderStatus || 'pending',
+      orderDate: new Date()
+    });
+
+    await user.save();
+
+    res.json({ success: true, orderHistory: user.orderHistory });
+  } catch (error) {
+    console.error('Add order error:', error);
+    res.status(500).json({ success: false, message: 'Server error', details: error.message });
+  }
+};
+
+// @desc    Get user's order history
+// @route   GET /api/user/order-history
+// @access  Private
+const getOrderHistory = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).populate('orderHistory.products.product');
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    res.json({ success: true, orderHistory: user.orderHistory });
+  } catch (error) {
+    console.error('Get order history error:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+// @desc    Clear user's cart
+// @route   POST /api/user/cart/clear
+// @access  Private
+const clearCart = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    user.cart = [];
+    await user.save();
+    res.json({ success: true, cart: user.cart });
+  } catch (error) {
+    console.error('Clear cart error:', error);
+    res.status(500).json({ success: false, message: 'Server error', details: error.message });
+  }
+};
+
 module.exports = {
   toggleFavorite,
   getFavorites,
@@ -348,5 +450,8 @@ module.exports = {
   addShippingAddress,
   getShippingAddresses,
   updateShippingAddress,
-  deleteShippingAddress
+  deleteShippingAddress,
+  addOrder,
+  getOrderHistory,
+  clearCart,
 }; 

@@ -105,7 +105,7 @@ const userSchema = new mongoose.Schema({
     paymentMethod: String,
     orderStatus: {
       type: String,
-      enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
+      enum: ['pending', 'paid', 'processing', 'shipped', 'delivered', 'cancelled'],
       default: 'pending'
     },
     orderDate: {

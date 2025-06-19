@@ -42,6 +42,7 @@ import {
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "../../contexts/SnackbarContext";
+import ProductCard from "../ProductCard/ProductCard";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -151,25 +152,23 @@ const Profile = () => {
         localStorage.setItem('user', JSON.stringify(updatedUserData));
 
         // Fetch user's orders
-        console.log('Fetching user orders...');
-        const ordersResponse = await fetch(`http://localhost:5000/api/orders/user`, {
+        console.log('Fetching user order history...');
+        const ordersResponse = await fetch(`http://localhost:5000/api/user/order-history`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         });
-        
         if (ordersResponse.ok) {
           const ordersData = await ordersResponse.json();
-          console.log('Fetched orders:', ordersData);
-          setOrders(ordersData || []);
+          setOrders(ordersData.orderHistory || []);
         } else {
-          console.error('Failed to fetch orders:', ordersResponse.status);
+          console.error('Failed to fetch order history:', ordersResponse.status);
         }
 
         // Fetch user's favorites
         console.log('Fetching user favorites...');
-        const favoritesResponse = await fetch(`http://localhost:5000/api/favorites`, {
+        const favoritesResponse = await fetch(`http://localhost:5000/api/user/favorites`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -179,14 +178,14 @@ const Profile = () => {
         if (favoritesResponse.ok) {
           const favoritesData = await favoritesResponse.json();
           console.log('Fetched favorites:', favoritesData);
-          setFavorites(favoritesData || []);
+          setFavorites(favoritesData.favorites || []);
         } else {
           console.error('Failed to fetch favorites:', favoritesResponse.status);
         }
 
         // Fetch user's addresses
         console.log('Fetching user addresses...');
-        const addressesResponse = await fetch(`http://localhost:5000/api/addresses`, {
+        const addressesResponse = await fetch(`http://localhost:5000/api/user/shipping-address`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -196,7 +195,7 @@ const Profile = () => {
         if (addressesResponse.ok) {
           const addressesData = await addressesResponse.json();
           console.log('Fetched addresses:', addressesData);
-          setAddresses(addressesData || []);
+          setAddresses(addressesData.addresses || []);
         } else {
           console.error('Failed to fetch addresses:', addressesResponse.status);
         }
@@ -253,7 +252,7 @@ const Profile = () => {
       
       console.log('Updating profile with data:', updateData);
       
-      const response = await fetch(`http://localhost:5000/api/auth/me`, {
+      const response = await fetch(`http://localhost:5000/api/auth/update-profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -272,27 +271,23 @@ const Profile = () => {
 
       const updatedData = await response.json();
       console.log('Updated profile data:', updatedData);
-      console.log('Updated user data:', updatedData.user);
-      
       // Update local state
       const newEditableInfo = {
-        firstName: updatedData.user?.name?.split(' ')[0] || '',
-        lastName: updatedData.user?.name?.split(' ')[1] || '',
-        email: updatedData.user?.email || '',
-        phone: updatedData.user?.phone || '',
+        firstName: updatedData.name?.split(' ')[0] || '',
+        lastName: updatedData.name?.split(' ')[1] || '',
+        email: updatedData.email || '',
+        phone: updatedData.phone || '',
       };
-      console.log('Setting new editable info:', newEditableInfo);
       setEditableUserInfo(newEditableInfo);
-
       // Update localStorage with new data
       const storedUser = JSON.parse(localStorage.getItem('user'));
       const newUserData = {
         ...storedUser,
-        ...updatedData.user
+        name: updatedData.name,
+        email: updatedData.email,
+        phone: updatedData.phone
       };
-      console.log('Updating localStorage with:', newUserData);
       localStorage.setItem('user', JSON.stringify(newUserData));
-
       setEditMode(false);
       showSnackbar("Profile updated successfully");
     } catch (error) {
@@ -305,7 +300,7 @@ const Profile = () => {
 
   const addAddress = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/addresses`, {
+      const response = await fetch(`http://localhost:5000/api/user/shipping-address`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -338,7 +333,7 @@ const Profile = () => {
 
   const deleteAddress = async (addressId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/addresses/${addressId}`, {
+      const response = await fetch(`http://localhost:5000/api/user/shipping-address/${addressId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -358,7 +353,7 @@ const Profile = () => {
 
   const removeFavorite = async (productId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/favorites/${productId}`, {
+      const response = await fetch(`http://localhost:5000/api/user/favorites/${productId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -629,47 +624,37 @@ const Profile = () => {
 
                 {orders.length > 0 ? (
                   orders.map((order) => (
-                    <Card
-                      key={order._id}
-                      sx={{ mb: 2, borderLeft: "3px solid #2d5356" }}
-                    >
+                    <Card key={order._id || order.orderId} sx={{ mb: 2, borderLeft: "3px solid #2d5356" }}>
                       <CardContent>
-                        <Grid container spacing={2}>
-                          <Grid item xs={12} md={4}>
-                            <Typography variant="subtitle1">
-                              Order #{order.orderNumber}
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary">
-                              {new Date(order.date).toLocaleDateString()}
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={12} md={4}>
-                            <Typography variant="body1">
-                              {order.items.length} item(s)
-                            </Typography>
-                            <Typography variant="body2">
-                              Total: ${order.total.toFixed(2)}
-                            </Typography>
-                          </Grid>
-                          <Grid
-                            item
-                            xs={12}
-                            md={4}
-                            sx={{ textAlign: { md: "right" } }}
-                          >
-                            <Button
-                              variant="outlined"
-                              size="small"
-                              onClick={() => navigate(`/orders/${order._id}`)}
-                              sx={{
-                                color: "#2d5356",
-                                borderColor: "#2d5356",
-                              }}
-                            >
-                              View Details
-                            </Button>
-                          </Grid>
-                        </Grid>
+                        <Typography variant="subtitle1">
+                          Order ID: {order.orderId}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          {order.orderDate ? new Date(order.orderDate).toLocaleString() : ""}
+                        </Typography>
+                        <Typography variant="body2">
+                          Status: {order.orderStatus}
+                        </Typography>
+                        <Typography variant="body2">
+                          Total: ${order.totalAmount}
+                        </Typography>
+                        <Box sx={{ mt: 2 }}>
+                          <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Products:</Typography>
+                          {order.products.map((item, idx) => (
+                            <Box key={idx} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                              <img
+                                src={item.product?.image}
+                                alt={item.product?.name}
+                                style={{ width: 60, height: 60, objectFit: 'cover', marginRight: 16, borderRadius: 8 }}
+                              />
+                              <Box>
+                                <Typography variant="body1">{item.product?.name}</Typography>
+                                <Typography variant="body2">Qty: {item.quantity}</Typography>
+                                <Typography variant="body2">Price: ${item.price}</Typography>
+                              </Box>
+                            </Box>
+                          ))}
+                        </Box>
                       </CardContent>
                     </Card>
                   ))
@@ -711,52 +696,7 @@ const Profile = () => {
                   <Grid container spacing={2}>
                     {favorites.map((product) => (
                       <Grid item xs={12} sm={6} md={4} key={product._id}>
-                        <Card>
-                          <Box
-                            sx={{
-                              position: "relative",
-                              pt: "100%",
-                              cursor: "pointer",
-                            }}
-                            onClick={() => navigate(`/products/${product._id}`)}
-                          >
-                            <Box
-                              component="img"
-                              src={product.image}
-                              alt={product.name}
-                              sx={{
-                                position: "absolute",
-                                top: 0,
-                                left: 0,
-                                width: "100%",
-                                height: "100%",
-                                objectFit: "cover",
-                              }}
-                            />
-                          </Box>
-                          <CardContent>
-                            <Typography gutterBottom variant="subtitle1">
-                              {product.name}
-                            </Typography>
-                            <Typography variant="body1" color="text.primary">
-                              ${product.price.toFixed(2)}
-                            </Typography>
-                            <Box
-                              sx={{
-                                display: "flex",
-                                justifyContent: "flex-end",
-                                mt: 1,
-                              }}
-                            >
-                              <IconButton
-                                onClick={() => removeFavorite(product._id)}
-                                sx={{ color: "#f36e0d" }}
-                              >
-                                <Delete />
-                              </IconButton>
-                            </Box>
-                          </CardContent>
-                        </Card>
+                        <ProductCard product={product} />
                       </Grid>
                     ))}
                   </Grid>

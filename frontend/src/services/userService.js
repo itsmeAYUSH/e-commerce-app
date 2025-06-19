@@ -102,6 +102,17 @@ export const updateCart = async (productId, quantity) => {
   }
 };
 
+// Bulk clear cart
+export const clearCartBulk = async () => {
+  try {
+    const response = await axiosInstance.post('/cart/clear');
+    return response.data.cart;
+  } catch (error) {
+    console.error('Clear cart error:', error);
+    throw error;
+  }
+};
+
 // Shipping Addresses
 export const getShippingAddresses = async () => {
   try {

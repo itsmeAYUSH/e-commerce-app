@@ -214,6 +214,7 @@ const Checkout = () => {
         <RazorpayPayment
           formData={formData}
           amount={calculateTotal()}
+          items={items}
           onSuccess={() => setShowPayment(false)}
           onError={() => setShowPayment(false)}
         />

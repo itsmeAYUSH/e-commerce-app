@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from "react";
-import { getCart, updateCart } from "../services/userService";
+import { getCart, updateCart, clearCartBulk } from "../services/userService";
 import { useSnackbar } from "../contexts/SnackbarContext";
 
 const CartContext = createContext();
@@ -151,10 +151,7 @@ export const CartProvider = ({ children }) => {
   const clearCart = async () => {
     try {
       dispatch({ type: "SET_LOADING" });
-      // Clear cart by setting quantity to 0 for all items
-      await Promise.all(
-        state.items.map(item => updateCart(item.product._id, 0))
-      );
+      await clearCartBulk();
       dispatch({ type: "CLEAR_CART" });
       showSnackbar("Cart cleared", "success");
     } catch (error) {

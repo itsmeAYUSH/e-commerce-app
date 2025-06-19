@@ -269,7 +269,7 @@ const googleAuth = async (req, res) => {
 const updateProfile = async (req, res) => {
   try {
     const { name, email, phone } = req.body;
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user.id);
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
