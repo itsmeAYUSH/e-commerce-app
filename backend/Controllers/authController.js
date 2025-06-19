@@ -293,6 +293,23 @@ const updateProfile = async (req, res) => {
   }
 };
 
+// @desc    Delete user account
+// @route   DELETE /api/auth/delete-account
+// @access  Private
+const deleteAccount = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findByIdAndDelete(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json({ success: true, message: 'Account deleted successfully' });
+  } catch (error) {
+    console.error('Delete account error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 module.exports = {
   signup,
   login,
@@ -300,5 +317,6 @@ module.exports = {
   verifyToken,
   register,
   googleAuth,
-  updateProfile
+  updateProfile,
+  deleteAccount
 };

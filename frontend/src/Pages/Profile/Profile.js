@@ -44,6 +44,22 @@ import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "../../contexts/SnackbarContext";
 import ProductCard from "../ProductCard/ProductCard";
 
+// Delete account API call
+const deleteAccountApi = async (token) => {
+  const response = await fetch('http://localhost:5000/api/auth/delete-account', {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || 'Failed to delete account');
+  }
+  return await response.json();
+};
+
 const Profile = () => {
   const navigate = useNavigate();
   const theme = useTheme();
@@ -57,6 +73,7 @@ const Profile = () => {
   const [addresses, setAddresses] = useState([]);
   const [openAddressDialog, setOpenAddressDialog] = useState(false);
   const [confirmLogoutDialog, setConfirmLogoutDialog] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const [editableUserInfo, setEditableUserInfo] = useState({
     firstName: "",
@@ -387,6 +404,24 @@ const Profile = () => {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('token');
+      await deleteAccountApi(token);
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      dispatch(logout());
+      showSnackbar('Account deleted successfully', 'success');
+      navigate('/');
+    } catch (error) {
+      showSnackbar(error.message || 'Failed to delete account', 'error');
+    } finally {
+      setLoading(false);
+      setOpenDeleteDialog(false);
+    }
+  };
+
   if (loading) {
     return (
       <Box
@@ -451,11 +486,13 @@ const Profile = () => {
               variant={isMobile ? "scrollable" : "fullWidth"}
               scrollButtons={isMobile ? "auto" : false}
               sx={{
+                justifyContent: "flex-start",
                 mb: 2,
                 "& .MuiTab-root": {
                   minWidth: "auto",
                   textTransform: "none",
                   alignItems: "flex-start",
+                  justifyContent: "left",
                   textAlign: "left",
                   minHeight: "50px",
                   borderLeft: isMobile ? "none" : "3px solid transparent",
@@ -484,11 +521,6 @@ const Profile = () => {
               <Tab
                 label="Favorites"
                 icon={<FavoriteBorder />}
-                iconPosition="start"
-              />
-              <Tab
-                label="Shipping Addresses"
-                icon={<LocationOn />}
                 iconPosition="start"
               />
               <Tab
@@ -727,112 +759,8 @@ const Profile = () => {
               </Box>
             )}
 
-            {/* Addresses Tab */}
-            {activeTab === 3 && (
-              <Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    mb: 3,
-                  }}
-                >
-                  <Typography variant="h5">Shipping Addresses</Typography>
-                  <Button
-                    startIcon={<Add />}
-                    variant="contained"
-                    onClick={() => setOpenAddressDialog(true)}
-                    sx={{ backgroundColor: "#2d5356" }}
-                  >
-                    Add New Address
-                  </Button>
-                </Box>
-
-                {addresses.length > 0 ? (
-                  <Grid container spacing={2}>
-                    {addresses.map((address) => (
-                      <Grid item xs={12} sm={6} key={address._id}>
-                        <Paper
-                          elevation={2}
-                          sx={{ p: 2, position: "relative" }}
-                        >
-                          {address.isDefault && (
-                            <Box
-                              sx={{
-                                position: "absolute",
-                                top: 8,
-                                right: 8,
-                                bgcolor: "#2d5356",
-                                color: "white",
-                                px: 1,
-                                borderRadius: 1,
-                                fontSize: "0.75rem",
-                              }}
-                            >
-                              Default
-                            </Box>
-                          )}
-                          <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                            {address.name}
-                          </Typography>
-                          <Typography variant="body2">
-                            {address.street}
-                          </Typography>
-                          <Typography variant="body2">
-                            {address.city}, {address.state} {address.zipCode}
-                          </Typography>
-                          <Typography variant="body2">
-                            {address.country}
-                          </Typography>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              justifyContent: "flex-end",
-                              mt: 1,
-                            }}
-                          >
-                            <IconButton
-                              size="small"
-                              onClick={() => deleteAddress(address._id)}
-                              sx={{ color: "#f36e0d" }}
-                            >
-                              <Delete fontSize="small" />
-                            </IconButton>
-                          </Box>
-                        </Paper>
-                      </Grid>
-                    ))}
-                  </Grid>
-                ) : (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      py: 4,
-                    }}
-                  >
-                    <LocationOn
-                      sx={{ fontSize: 60, color: "text.disabled", mb: 2 }}
-                    />
-                    <Typography variant="h6" color="textSecondary">
-                      No addresses saved
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      sx={{ mt: 1 }}
-                    >
-                      Add your shipping addresses for faster checkout
-                    </Typography>
-                  </Box>
-                )}
-              </Box>
-            )}
-
             {/* Account Security Tab */}
-            {activeTab === 4 && (
+            {activeTab === 3 && (
               <Box>
                 <Typography variant="h5" sx={{ mb: 3 }}>
                   Account Security
@@ -886,11 +814,39 @@ const Profile = () => {
                           backgroundColor: "rgba(243, 110, 13, 0.05)",
                         },
                       }}
+                      onClick={() => setOpenDeleteDialog(true)}
                     >
                       Delete
                     </Button>
                   </ListItem>
                 </List>
+                {/* Delete Account Confirmation Dialog */}
+                <Dialog
+                  open={openDeleteDialog}
+                  onClose={() => setOpenDeleteDialog(false)}
+                  maxWidth="xs"
+                  fullWidth
+                >
+                  <DialogTitle>Confirm Account Deletion</DialogTitle>
+                  <DialogContent>
+                    <Typography>Are you sure you want to permanently delete your account? This action cannot be undone.</Typography>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button
+                      onClick={() => setOpenDeleteDialog(false)}
+                      sx={{ color: "#2d5356" }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={handleDeleteAccount}
+                      variant="contained"
+                      sx={{ backgroundColor: "#f36e0d", "&:hover": { backgroundColor: "#d15c0a" } }}
+                    >
+                      Delete
+                    </Button>
+                  </DialogActions>
+                </Dialog>
               </Box>
             )}
           </Paper>
