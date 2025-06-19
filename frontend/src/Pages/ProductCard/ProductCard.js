@@ -39,21 +39,24 @@ const WishlistButton = styled(IconButton)(({ isFavorite }) => ({
 }));
 
 const ProductCard = ({ product }) => {
-  const { state, addFavorite, removeFavorite } = useFavorites();
+  const { favorites, toggleFavorite, loading } = useFavorites();
   const { addItem } = useCart();
   const { showSnackbar } = useSnackbar();
 
-  // Sync local `isFavorite` with global favorites context
-  const isFavorite = state.favorites.some((fav) => fav._id === product._id);
+  // Defensive: ensure favorites is always an array
+  const safeFavorites = Array.isArray(favorites) ? favorites : [];
+  const isFavorite = safeFavorites.some((fav) => fav && fav._id === product?._id);
 
-  const handleFavoriteToggle = () => {
-    if (isFavorite) {
-      removeFavorite(product);
-      showSnackbar("Removed from favorites!", "info");
-    } else {
-      addFavorite(product);
-      showSnackbar("Added to favorites!", "success");
+  const handleFavoriteToggle = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+
+    if (loading) return;
+    if (!product || !product._id) {
+      showSnackbar("Invalid product data", "error");
+      return;
     }
+    toggleFavorite(product);
   };
 
   const handleAddToCart = (event) => {
@@ -89,7 +92,11 @@ const ProductCard = ({ product }) => {
       }}
     >
       <DiscountBadge>-{product.discount}%</DiscountBadge>
-      <WishlistButton onClick={handleFavoriteToggle} isFavorite={isFavorite}>
+      <WishlistButton 
+        onClick={handleFavoriteToggle} 
+        isFavorite={isFavorite}
+        disabled={loading}
+      >
         {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
       </WishlistButton>
 

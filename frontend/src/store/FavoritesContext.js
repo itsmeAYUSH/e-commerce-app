@@ -1,83 +1,137 @@
 import React, { createContext, useContext, useReducer, useEffect } from "react";
+import { useSelector } from 'react-redux';
+import { getFavorites, toggleFavorite } from "../services/userService";
+import { useSnackbar } from "../contexts/SnackbarContext";
 
-// Create context
 const FavoritesContext = createContext();
 
-// Initial state - load from localStorage if available
 const initialState = {
-  favorites: JSON.parse(localStorage.getItem("favorites")) || [],
+  favorites: [],
+  loading: false,
+  error: null
 };
 
-// Reducer function
 const favoritesReducer = (state, action) => {
-  let updatedFavorites;
-
   switch (action.type) {
-    case "ADD_FAVORITE":
-      // Prevent duplicates
-      if (state.favorites.some((item) => item._id === action.payload._id)) {
-        return state; // Return unchanged state if product is already in favorites
-      }
-      updatedFavorites = {
+    case "SET_LOADING":
+      return { ...state, loading: true, error: null };
+      
+    case "SET_FAVORITES":
+      return {
         ...state,
-        favorites: [...state.favorites, action.payload],
+        loading: false,
+        favorites: action.payload || [], // Ensure we always have an array
+        error: null
       };
-      localStorage.setItem(
-        "favorites",
-        JSON.stringify(updatedFavorites.favorites)
-      );
-      return updatedFavorites;
 
-    case "REMOVE_FAVORITE":
-      updatedFavorites = {
+    case "SET_ERROR":
+      return {
         ...state,
-        favorites: state.favorites.filter(
-          (item) => item._id !== action.payload._id
-        ),
+        loading: false,
+        error: action.payload,
+        favorites: state.favorites // Keep existing favorites on error
       };
-      localStorage.setItem(
-        "favorites",
-        JSON.stringify(updatedFavorites.favorites)
-      );
-      return updatedFavorites;
 
-    case "CLEAR_FAVORITES":
-      localStorage.removeItem("favorites");
-      return { ...state, favorites: [] };
+    case "OPTIMISTIC_TOGGLE":
+      return {
+        ...state,
+        favorites: action.payload,
+        loading: true,
+        error: null
+      };
 
     default:
       return state;
   }
 };
 
-// Favorites Provider component
 export const FavoritesProvider = ({ children }) => {
   const [state, dispatch] = useReducer(favoritesReducer, initialState);
+  const { showSnackbar } = useSnackbar();
+  const token = useSelector(state => state.auth.token);
 
-  // Update localStorage whenever favorites change
   useEffect(() => {
-    localStorage.setItem("favorites", JSON.stringify(state.favorites));
-  }, [state.favorites]);
+    if (token) {
+      loadFavorites();
+    } else {
+      dispatch({ type: "SET_FAVORITES", payload: [] });
+    }
+  }, [token]);
 
-  const addFavorite = (item) => {
-    dispatch({ type: "ADD_FAVORITE", payload: item });
+  const loadFavorites = async () => {
+    try {
+      dispatch({ type: "SET_LOADING" });
+      const favorites = await getFavorites();
+      if (!Array.isArray(favorites)) {
+        throw new Error('Invalid favorites data received');
+      }
+      dispatch({ type: "SET_FAVORITES", payload: favorites });
+    } catch (error) {
+      console.error('Error loading favorites:', error);
+      dispatch({ 
+        type: "SET_ERROR", 
+        payload: error.message || "Failed to load favorites" 
+      });
+      showSnackbar(error.message || "Failed to load favorites", "error");
+    }
   };
 
-  const removeFavorite = (item) => {
-    dispatch({ type: "REMOVE_FAVORITE", payload: item });
-  };
+  const handleToggleFavorite = async (product) => {
+    if (!product || !product._id) {
+      showSnackbar("Invalid product data", "error");
+      return;
+    }
 
-  const clearFavorites = () => {
-    dispatch({ type: "CLEAR_FAVORITES" });
+    const isCurrentlyFavorite = state.favorites.some(fav => fav._id === product._id);
+    const originalFavorites = [...state.favorites];
+    
+    try {
+      // Optimistic update
+      dispatch({
+        type: "OPTIMISTIC_TOGGLE",
+        payload: isCurrentlyFavorite
+          ? state.favorites.filter(fav => fav._id !== product._id)
+          : [...state.favorites, product]
+      });
+
+      // Actual API call
+      const updatedFavorites = await toggleFavorite(product._id);
+      
+      if (!Array.isArray(updatedFavorites)) {
+        throw new Error('Invalid response from server');
+      }
+
+      // Sync with server response
+      dispatch({ type: "SET_FAVORITES", payload: updatedFavorites });
+      
+      showSnackbar(
+        isCurrentlyFavorite ? "Removed from favorites" : "Added to favorites",
+        "success"
+      );
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      // Revert optimistic update
+      dispatch({ type: "SET_FAVORITES", payload: originalFavorites });
+      
+      // Show error message
+      const errorMessage = error.message === 'Server error. Please try again later.'
+        ? error.message
+        : isCurrentlyFavorite 
+          ? "Failed to remove from favorites" 
+          : "Failed to add to favorites";
+      
+      showSnackbar(errorMessage, "error");
+    }
   };
 
   return (
     <FavoritesContext.Provider
       value={{
-        state,
-        addFavorite,
-        removeFavorite,
-        clearFavorites,
+        favorites: state.favorites,
+        loading: state.loading,
+        error: state.error,
+        toggleFavorite: handleToggleFavorite,
+        reloadFavorites: loadFavorites
       }}
     >
       {children}
@@ -85,7 +139,10 @@ export const FavoritesProvider = ({ children }) => {
   );
 };
 
-// Custom hook to use the Favorites Context
 export const useFavorites = () => {
-  return useContext(FavoritesContext);
+  const context = useContext(FavoritesContext);
+  if (!context) {
+    throw new Error('useFavorites must be used within a FavoritesProvider');
+  }
+  return context;
 };

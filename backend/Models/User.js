@@ -43,6 +43,76 @@ const userSchema = new mongoose.Schema({
     enum: ["user", "admin"],
     default: "user",
   },
+  favorites: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product'
+  }],
+  cart: [{
+    product: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Product',
+      required: true
+    },
+    quantity: {
+      type: Number,
+      required: true,
+      min: 1,
+      default: 1
+    }
+  }],
+  shippingAddresses: [{
+    name: { type: String, required: true },
+    addressLine1: { type: String, required: true },
+    addressLine2: String,
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+    postalCode: { type: String, required: true },
+    country: { type: String, required: true },
+    phone: { type: String, required: true },
+    isDefault: { type: Boolean, default: false }
+  }],
+  orderHistory: [{
+    orderId: { type: String, required: true },
+    products: [{
+      product: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product',
+        required: true
+      },
+      quantity: {
+        type: Number,
+        required: true
+      },
+      price: {
+        type: Number,
+        required: true
+      }
+    }],
+    totalAmount: {
+      type: Number,
+      required: true
+    },
+    shippingAddress: {
+      name: String,
+      addressLine1: String,
+      addressLine2: String,
+      city: String,
+      state: String,
+      postalCode: String,
+      country: String,
+      phone: String
+    },
+    paymentMethod: String,
+    orderStatus: {
+      type: String,
+      enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
+      default: 'pending'
+    },
+    orderDate: {
+      type: Date,
+      default: Date.now
+    }
+  }],
   createdAt: {
     type: Date,
     default: Date.now,

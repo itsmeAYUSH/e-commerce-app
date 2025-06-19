@@ -1,47 +1,43 @@
-import React, { createContext, useContext, useReducer, useEffect, useState } from "react";
+import React, { createContext, useContext, useReducer, useEffect } from "react";
+import { getCart, updateCart } from "../services/userService";
 import { useSnackbar } from "../contexts/SnackbarContext";
 
 const CartContext = createContext();
 
 const initialState = {
-  items: JSON.parse(localStorage.getItem("cart")) || [],
+  items: [],
+  loading: false,
+  error: null
 };
 
 const cartReducer = (state, action) => {
-  let updatedCart;
   switch (action.type) {
-    case "ADD_ITEM":
-      // Check if item already exists
-      const existingItemIndex = state.items.findIndex(item => item.id === action.payload.id);
-      if (existingItemIndex >= 0) {
-        // Item exists, don't add again (snackbar will be shown by the provider)
-        return state;
-      }
-      updatedCart = { ...state, items: [...state.items, action.payload] };
-      localStorage.setItem("cart", JSON.stringify(updatedCart.items));
-      return updatedCart;
+    case "SET_LOADING":
+      return { ...state, loading: true, error: null };
 
-    case "UPDATE_ITEM":
-      updatedCart = {
+    case "SET_CART":
+      return {
         ...state,
-        items: state.items.map(item => 
-          item.id === action.payload.id ? action.payload : item
-        )
+        loading: false,
+        items: action.payload || [], // Ensure we always have an array
+        error: null
       };
-      localStorage.setItem("cart", JSON.stringify(updatedCart.items));
-      return updatedCart;
 
-    case "REMOVE_ITEM":
-      updatedCart = {
+    case "SET_ERROR":
+      return {
         ...state,
-        items: state.items.filter((item) => item.id !== action.payload.id),
+        loading: false,
+        error: action.payload,
+        items: state.items // Keep existing items on error
       };
-      localStorage.setItem("cart", JSON.stringify(updatedCart.items));
-      return updatedCart;
 
     case "CLEAR_CART":
-      localStorage.removeItem("cart");
-      return { ...state, items: [] };
+      return {
+        ...state,
+        loading: false,
+        items: [],
+        error: null
+      };
 
     default:
       return state;
@@ -52,39 +48,136 @@ export const CartProvider = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, initialState);
   const { showSnackbar } = useSnackbar();
 
+  // Load cart when component mounts and when auth token changes
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(state.items));
-  }, [state.items]);
+    const token = localStorage.getItem('token');
+    if (token) {
+      loadCart();
+    } else {
+      dispatch({ type: "SET_CART", payload: [] });
+    }
+  }, []);
 
-  const addItem = (item) => {
-    const existingItem = state.items.find((i) => i.id === item.id);
-    if (existingItem) {
-      // Item exists, don't add again (snackbar will be shown by the provider)
+  const loadCart = async () => {
+    try {
+      dispatch({ type: "SET_LOADING" });
+      const cart = await getCart();
+      if (!Array.isArray(cart)) {
+        throw new Error('Invalid cart data received');
+      }
+      dispatch({ type: "SET_CART", payload: cart });
+    } catch (error) {
+      console.error('Error loading cart:', error);
+      dispatch({ 
+        type: "SET_ERROR", 
+        payload: error.message || "Failed to load cart"
+      });
+      showSnackbar(error.message || "Failed to load cart", "error");
+    }
+  };
+
+  const addItem = async (product) => {
+    if (!product || !product._id) {
+      showSnackbar("Invalid product data", "error");
       return;
     }
-    dispatch({ type: "ADD_ITEM", payload: item });
+
+    try {
+      dispatch({ type: "SET_LOADING" });
+      const cart = await updateCart(product._id, 1);
+      if (!Array.isArray(cart)) {
+        throw new Error('Invalid response from server');
+      }
+      dispatch({ type: "SET_CART", payload: cart });
+      showSnackbar("Added to cart", "success");
+    } catch (error) {
+      console.error('Error adding item to cart:', error);
+      dispatch({ 
+        type: "SET_ERROR", 
+        payload: error.message || "Failed to add item to cart"
+      });
+      showSnackbar(error.message || "Failed to add item to cart", "error");
+    }
   };
 
-  const removeItem = (item) => {
-    dispatch({ type: "REMOVE_ITEM", payload: item });
+  const removeItem = async (product) => {
+    if (!product || !product._id) {
+      showSnackbar("Invalid product data", "error");
+      return;
+    }
+
+    try {
+      dispatch({ type: "SET_LOADING" });
+      const cart = await updateCart(product._id, 0); // 0 quantity removes the item
+      if (!Array.isArray(cart)) {
+        throw new Error('Invalid response from server');
+      }
+      dispatch({ type: "SET_CART", payload: cart });
+      showSnackbar("Removed from cart", "success");
+    } catch (error) {
+      console.error('Error removing item from cart:', error);
+      dispatch({ 
+        type: "SET_ERROR", 
+        payload: error.message || "Failed to remove item from cart"
+      });
+      showSnackbar(error.message || "Failed to remove item from cart", "error");
+    }
   };
 
-  const updateItem = (item) => {
-    dispatch({ type: "UPDATE_ITEM", payload: item });
+  const updateItem = async (product, quantity) => {
+    if (!product || !product._id) {
+      showSnackbar("Invalid product data", "error");
+      return;
+    }
+
+    try {
+      dispatch({ type: "SET_LOADING" });
+      const cart = await updateCart(product._id, quantity);
+      if (!Array.isArray(cart)) {
+        throw new Error('Invalid response from server');
+      }
+      dispatch({ type: "SET_CART", payload: cart });
+      showSnackbar("Cart updated", "success");
+    } catch (error) {
+      console.error('Error updating cart:', error);
+      dispatch({ 
+        type: "SET_ERROR", 
+        payload: error.message || "Failed to update cart"
+      });
+      showSnackbar(error.message || "Failed to update cart", "error");
+    }
   };
 
-  const clearCart = () => {
-    dispatch({ type: "CLEAR_CART" });
+  const clearCart = async () => {
+    try {
+      dispatch({ type: "SET_LOADING" });
+      // Clear cart by setting quantity to 0 for all items
+      await Promise.all(
+        state.items.map(item => updateCart(item.product._id, 0))
+      );
+      dispatch({ type: "CLEAR_CART" });
+      showSnackbar("Cart cleared", "success");
+    } catch (error) {
+      console.error('Error clearing cart:', error);
+      dispatch({ 
+        type: "SET_ERROR", 
+        payload: error.message || "Failed to clear cart"
+      });
+      showSnackbar(error.message || "Failed to clear cart", "error");
+    }
   };
 
   return (
     <CartContext.Provider
       value={{
-        state,
+        items: state.items || [], // Ensure we always provide an array
+        loading: state.loading,
+        error: state.error,
         addItem,
         removeItem,
         updateItem,
         clearCart,
+        reloadCart: loadCart
       }}
     >
       {children}
@@ -92,4 +185,10 @@ export const CartProvider = ({ children }) => {
   );
 };
 
-export const useCart = () => useContext(CartContext);
+export const useCart = () => {
+  const context = useContext(CartContext);
+  if (!context) {
+    throw new Error('useCart must be used within a CartProvider');
+  }
+  return context;
+};

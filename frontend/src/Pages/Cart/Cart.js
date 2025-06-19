@@ -19,8 +19,7 @@ import { useSnackbar } from "../../contexts/SnackbarContext";
 
 const Cart = () => {
   const navigate = useNavigate();
-  const { state, removeItem, addItem, updateItem } = useCart(); 
-  const { items } = state;
+  const { items, loading, removeItem, addItem, updateItem } = useCart();
   const { showSnackbar } = useSnackbar();
 
   const handleQuantityChange = (index, change) => {
@@ -44,6 +43,10 @@ const Cart = () => {
     showSnackbar(`${item.name} removed from cart`, 'info');
   };
 
+  if (loading) {
+    return <div className={styles.loading}>Loading cart...</div>;
+  }
+
   return (
     <div>
       <div className={styles.cartHeader}>
@@ -61,7 +64,7 @@ const Cart = () => {
                 <TableCell sx={{ color: "#fff" }}>Remove</TableCell>
               </TableRow>
             </TableHead>
-            {items.length === 0 ? (
+            {!items || items.length === 0 ? (
               <TableBody>
                 <TableRow>
                   <TableCell colSpan={5} align="center">
@@ -117,7 +120,7 @@ const Cart = () => {
             )}
           </Table>
         </TableContainer>
-        <OrderSummmary items={items} />
+        <OrderSummmary items={items || []} />
       </div>
       <Collection />
       <Footer />

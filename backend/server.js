@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const productRoutes = require("./Routes/productRoutes");
 const contactRoutes = require("./Routes/contactRoutes");
 const authRoutes = require("./Routes/authRoutes");
+const userDataRoutes = require("./Routes/userDataRoutes");
 
 dotenv.config();
 
@@ -20,6 +21,21 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Detailed error logging middleware
+app.use((err, req, res, next) => {
+  console.error('Detailed Error:', {
+    message: err.message,
+    stack: err.stack,
+    path: req.path,
+    method: req.method,
+    body: req.body,
+    params: req.params,
+    query: req.query,
+    user: req.user
+  });
+  next(err);
+});
 
 // MongoDB Connection
 const connectDB = async () => {
@@ -38,13 +54,15 @@ connectDB();
 app.use("/api/products", productRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/user', userDataRoutes);
 
-// Global error handler
+// Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error('Error:', err);
   res.status(500).json({
     success: false,
-    message: 'Something went wrong!'
+    message: 'Server error',
+    details: process.env.NODE_ENV === 'development' ? err.message : undefined
   });
 });
 
@@ -59,4 +77,9 @@ app.use('*', (req, res) => {
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+});
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err) => {
+  console.error('Unhandled Promise Rejection:', err);
 });

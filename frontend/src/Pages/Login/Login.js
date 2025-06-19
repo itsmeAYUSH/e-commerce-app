@@ -50,7 +50,7 @@ const Login = () => {
       localStorage.setItem('user', JSON.stringify(data.user));
 
       // Update Redux store
-      dispatch(login(data.user));
+      dispatch(login({ token: data.token, user: data.user }));
 
       // Show success message
       showSnackbar('Successfully logged in!', 'success');
@@ -99,7 +99,7 @@ const Login = () => {
       localStorage.setItem('user', JSON.stringify(data.user));
 
       // Update Redux store
-      dispatch(login(data.user));
+      dispatch(login({ token: data.token, user: data.user }));
 
       // Show success message
       showSnackbar('Successfully logged in with Google!', 'success');

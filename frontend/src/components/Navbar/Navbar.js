@@ -22,14 +22,10 @@ const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const searchRef = useRef(null);
   const navRef = useRef(null);
-  const {
-    state: { favorites },
-  } = useFavorites();
-
-  // Use the cart context to get cart items
-  const {
-    state: { items },
-  } = useCart();
+  
+  // Get favorites and cart items from contexts
+  const { favorites } = useFavorites();
+  const { items } = useCart();
 
   // Fetch products from API
   useEffect(() => {
@@ -246,7 +242,7 @@ const Navbar = () => {
           />
         )}
         <Badge
-          badgeContent={favorites.length}
+          badgeContent={favorites?.length || 0}
           color="error"
           max={99}
           overlap="circular"
@@ -258,7 +254,7 @@ const Navbar = () => {
           />
         </Badge>
         <Badge
-          badgeContent={items.length}
+          badgeContent={items?.length || 0}
           color="error"
           max={99}
           overlap="circular"
