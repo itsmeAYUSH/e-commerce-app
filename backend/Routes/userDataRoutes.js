@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { protect } = require('../Middleware/authMiddleware');
+const { protect } = require('../middleware/authMiddleware');
 const {
   toggleFavorite,
   getFavorites,
@@ -13,7 +13,7 @@ const {
   addOrder,
   getOrderHistory,
   clearCart
-} = require('../Controllers/userDataController');
+} = require('../controllers/userDataController');
 
 // Favorites routes
 router.route('/favorites').get(protect, getFavorites);
