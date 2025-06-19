@@ -1,5 +1,5 @@
-const User  = require('../Models/User');
-const Product = require('../Models/Product');
+const User  = require('../models/User');
+const Product = require('../models/Product');
 const mongoose = require('mongoose');
 
 // @desc    Add/Remove product to/from favorites
