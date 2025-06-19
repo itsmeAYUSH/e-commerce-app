@@ -1,7 +1,6 @@
 import './App.css';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-// import { AuthProvider } from './store/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import Loader from './components/Loader/Loader';
 import HomePages from './Pages/HomePages/HomePages';
@@ -10,7 +9,6 @@ import AboutUs from './Pages/AboutUs/AboutUs';
 import ContactUs from './Pages/ContactUs/ContactUs';
 import Blog from './Pages/Blog/Blog';
 import NotFound from './Pages/NotFound/NotFound';
-import ProductDetail from './Pages/ProductsDetails/ProductsDetails';
 import Cart from './Pages/Cart/Cart';
 import Favorite from './Pages/Favorite/Favorite';
 import Categories from './Pages/Categories/Categories';
@@ -41,7 +39,7 @@ const App = () => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const response = await fetch('http://localhost:5000/api/products');
+        const response = await fetch('https://e-commerce-app-p1sv.onrender.com/api/products');
         if (!response.ok) {
           throw new Error('Failed to fetch products');
         }

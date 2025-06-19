@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../store/CartContext";
 import { useSnackbar } from "../../contexts/SnackbarContext";
@@ -60,7 +60,7 @@ const RazorpayPayment = ({ formData, amount, items, onSuccess, onError }) => {
                   orderStatus: 'paid'
                 });
                 await axios.post(
-                  'http://localhost:5000/api/user/order',
+                  'https://e-commerce-app-p1sv.onrender.com/api/user/order',
                   {
                     orderId: response.razorpay_payment_id,
                     products: (items || []).map(item => ({

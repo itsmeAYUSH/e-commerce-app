@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import styles from "./FeaturedCategories.module.css"; // Fixed the import extension
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // Sample data
 const categoryData = [

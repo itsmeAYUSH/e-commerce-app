@@ -37,7 +37,7 @@ const ContactUs = () => {
     try {
       // Make sure this URL points to your actual backend server
       const response = await fetch(
-        "http://localhost:5000/api/contact/send-email",
+        "https://e-commerce-app-p1sv.onrender.com/api/contact/send-email",
         {
           method: "POST",
           headers: {

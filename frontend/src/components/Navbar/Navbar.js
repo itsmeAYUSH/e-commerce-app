@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Navbar.module.css";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
@@ -32,7 +32,7 @@ const Navbar = () => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const response = await fetch("http://localhost:5000/api/products");
+        const response = await fetch("https://e-commerce-app-p1sv.onrender.com/api/products");
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }

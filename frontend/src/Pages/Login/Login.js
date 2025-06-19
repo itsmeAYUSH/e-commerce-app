@@ -31,7 +31,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      const response = await fetch('https://e-commerce-app-p1sv.onrender.com/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ const Login = () => {
       const user = result.user;
 
       // Send the Google token to your backend
-      const response = await fetch('http://localhost:5000/api/auth/google', {
+      const response = await fetch('https://e-commerce-app-p1sv.onrender.com/api/auth/google', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

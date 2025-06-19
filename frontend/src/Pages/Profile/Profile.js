@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../Redux/Reducers/authSlice';
 import {
@@ -17,13 +17,10 @@ import {
   List,
   ListItem,
   ListItemText,
-  IconButton,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  Snackbar,
-  Alert,
   Card,
   CardContent,
   useMediaQuery,
@@ -34,11 +31,8 @@ import {
   Save,
   ReceiptLong,
   FavoriteBorder,
-  LocationOn,
   Security,
   Logout,
-  Delete,
-  Add,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "../../contexts/SnackbarContext";
@@ -46,7 +40,7 @@ import ProductCard from "../ProductCard/ProductCard";
 
 // Delete account API call
 const deleteAccountApi = async (token) => {
-  const response = await fetch('http://localhost:5000/api/auth/delete-account', {
+  const response = await fetch('https://e-commerce-app-p1sv.onrender.com/api/auth/delete-account', {
     method: 'DELETE',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -120,7 +114,7 @@ const Profile = () => {
 
         // Fetch user profile data
         console.log('Fetching user profile data...');
-        const response = await fetch(`http://localhost:5000/api/auth/me`, {
+        const response = await fetch(`https://e-commerce-app-p1sv.onrender.com/api/auth/me`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -170,7 +164,7 @@ const Profile = () => {
 
         // Fetch user's orders
         console.log('Fetching user order history...');
-        const ordersResponse = await fetch(`http://localhost:5000/api/user/order-history`, {
+        const ordersResponse = await fetch(`https://e-commerce-app-p1sv.onrender.com/api/user/order-history`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -185,7 +179,7 @@ const Profile = () => {
 
         // Fetch user's favorites
         console.log('Fetching user favorites...');
-        const favoritesResponse = await fetch(`http://localhost:5000/api/user/favorites`, {
+        const favoritesResponse = await fetch(`https://e-commerce-app-p1sv.onrender.com/api/user/favorites`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -202,7 +196,7 @@ const Profile = () => {
 
         // Fetch user's addresses
         console.log('Fetching user addresses...');
-        const addressesResponse = await fetch(`http://localhost:5000/api/user/shipping-address`, {
+        const addressesResponse = await fetch(`https://e-commerce-app-p1sv.onrender.com/api/user/shipping-address`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -226,7 +220,7 @@ const Profile = () => {
     };
 
     fetchUserData();
-  }, [navigate]);
+  }, [navigate,showSnackbar]);
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -269,7 +263,7 @@ const Profile = () => {
       
       console.log('Updating profile with data:', updateData);
       
-      const response = await fetch(`http://localhost:5000/api/auth/update-profile`, {
+      const response = await fetch(`https://e-commerce-app-p1sv.onrender.com/api/auth/update-profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -317,7 +311,7 @@ const Profile = () => {
 
   const addAddress = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/user/shipping-address`, {
+      const response = await fetch(`https://e-commerce-app-p1sv.onrender.com/api/user/shipping-address`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -348,45 +342,27 @@ const Profile = () => {
     }
   };
 
-  const deleteAddress = async (addressId) => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/user/shipping-address/${addressId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
 
-      if (!response.ok) {
-        throw new Error('Failed to delete address');
-      }
 
-      setAddresses(addresses.filter((address) => address._id !== addressId));
-      showSnackbar("Address deleted successfully");
-    } catch (error) {
-      showSnackbar("Failed to delete address", "error");
-    }
-  };
+  // const removeFavorite = async (productId) => {
+  //   try {
+  //     const response = await fetch(`https://e-commerce-app-p1sv.onrender.com/api/user/favorites/${productId}`, {
+  //       method: 'DELETE',
+  //       headers: {
+  //         'Authorization': `Bearer ${localStorage.getItem('token')}`
+  //       }
+  //     });
 
-  const removeFavorite = async (productId) => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/user/favorites/${productId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+  //     if (!response.ok) {
+  //       throw new Error('Failed to remove from favorites');
+  //     }
 
-      if (!response.ok) {
-        throw new Error('Failed to remove from favorites');
-      }
-
-      setFavorites(favorites.filter((fav) => fav._id !== productId));
-      showSnackbar("Removed from favorites");
-    } catch (error) {
-      showSnackbar("Failed to remove from favorites", "error");
-    }
-  };
+  //     setFavorites(favorites.filter((fav) => fav._id !== productId));
+  //     showSnackbar("Removed from favorites");
+  //   } catch (error) {
+  //     showSnackbar("Failed to remove from favorites", "error");
+  //   }
+  // };
 
   const handleLogout = async () => {
     try {

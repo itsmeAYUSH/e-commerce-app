@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/user';
+const API_URL = 'https://e-commerce-app-p1sv.onrender.com/api/user';
 
 // Create axios instance with auth header
 const axiosInstance = axios.create({

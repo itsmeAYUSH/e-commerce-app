@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Table,
   TableBody,
@@ -12,14 +11,12 @@ import {
 import styles from "./Cart.module.css";
 import Footer from "../../components/Footer/Footer";
 import Collection from "../../components/Collection/Collection";
-import { useNavigate } from "react-router-dom";
 import { useCart } from "../../store/CartContext";
 import OrderSummmary from "../../components/OrderSummary/OrderSummary";
 import { useSnackbar } from "../../contexts/SnackbarContext";
 
 const Cart = () => {
-  const navigate = useNavigate();
-  const { items, loading, removeItem, addItem, updateItem } = useCart();
+  const { items, loading, removeItem, updateItem } = useCart();
   const { showSnackbar } = useSnackbar();
 
   // Helper to always pass the correct product object to CartContext

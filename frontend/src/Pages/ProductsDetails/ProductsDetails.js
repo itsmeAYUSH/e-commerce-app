@@ -33,7 +33,7 @@ const ProductDetail = () => {
         setLoading(true);
         console.log('Fetching product with ID:', id);
         
-        const response = await fetch(`http://localhost:5000/api/products/${id}`);
+        const response = await fetch(`https://e-commerce-app-p1sv.onrender.com/api/products/${id}`);
         const data = await response.json();
         
         if (!response.ok) {
