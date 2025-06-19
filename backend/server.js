@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: "furniflexx.netlify.app",
+  origin: "https://furniflexx.netlify.app",
   credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
