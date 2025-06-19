@@ -1,15 +1,17 @@
 import React, { useState } from "react";
-import { TextField, Snackbar, Alert } from "@mui/material";
+import { TextField } from "@mui/material";
 import styles from "./Checkout.module.css";
 import Footer from "../../components/Footer/Footer";
 import Collection from "../../components/Collection/Collection";
 import OrderSummary from "../../components/OrderSummary/OrderSummary";
 import { useCart } from "../../store/CartContext";
 import RazorpayPayment from "../../components/RazorpayPayment/RazorpayPayment";
+import { useSnackbar } from "../../contexts/SnackbarContext";
 
 const Checkout = () => {
   const { state } = useCart();
   const { items } = state;
+  const { showSnackbar } = useSnackbar();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -23,9 +25,6 @@ const Checkout = () => {
   });
 
   const [errors, setErrors] = useState({});
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState("error");
   const [showPayment, setShowPayment] = useState(false);
 
   const handleInputChange = (e) => {
@@ -51,9 +50,7 @@ const Checkout = () => {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length > 0) {
-      setSnackbarMessage("Please fill in all required fields.");
-      setSnackbarSeverity("error");
-      setSnackbarOpen(true);
+      showSnackbar("Please fill in all required fields.", "error");
       return false;
     }
 
@@ -218,20 +215,6 @@ const Checkout = () => {
           onError={() => setShowPayment(false)}
         />
       )}
-
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => setSnackbarOpen(false)}
-      >
-        <Alert
-          onClose={() => setSnackbarOpen(false)}
-          severity={snackbarSeverity}
-          sx={{ width: "100%" }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </div>
   );
 };

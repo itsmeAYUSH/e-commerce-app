@@ -9,7 +9,8 @@ import XIcon from "@mui/icons-material/X";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import CallRoundedIcon from "@mui/icons-material/CallRounded";
 import BusinessIcon from "@mui/icons-material/Business";
-import { Snackbar, Alert, CircularProgress } from "@mui/material";
+import { CircularProgress } from "@mui/material";
+import { useSnackbar } from "../../contexts/SnackbarContext";
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -19,11 +20,7 @@ const ContactUs = () => {
     message: "",
   });
   const [loading, setLoading] = useState(false);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "success",
-  });
+  const { showSnackbar } = useSnackbar();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -60,11 +57,7 @@ const ContactUs = () => {
         }
 
         // Success handling
-        setSnackbar({
-          open: true,
-          message: "Message sent successfully! We'll get back to you soon.",
-          severity: "success",
-        });
+        showSnackbar("Message sent successfully! We'll get back to you soon.", "success");
 
         // Clear form
         setFormData({
@@ -81,18 +74,10 @@ const ContactUs = () => {
       }
     } catch (error) {
       console.error("Error submitting form:", error);
-      setSnackbar({
-        open: true,
-        message: error.message || "Failed to send message. Please try again.",
-        severity: "error",
-      });
+      showSnackbar(error.message || "Failed to send message. Please try again.", "error");
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar((prev) => ({ ...prev, open: false }));
   };
 
   return (
@@ -231,22 +216,6 @@ const ContactUs = () => {
 
       <Collection />
       <Footer />
-
-      {/* Snackbar for notifications */}
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbar.severity}
-          sx={{ width: "100%" }}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </div>
   );
 };

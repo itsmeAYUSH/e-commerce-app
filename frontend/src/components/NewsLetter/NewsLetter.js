@@ -1,15 +1,11 @@
 import React, { useState } from "react";
 import styles from "./NewsLetter.module.css";
-import { Snackbar, Alert } from "@mui/material";
+import { useSnackbar } from "../../contexts/SnackbarContext";
 
 const NewsLetter = () => {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "success",
-  });
+  const { showSnackbar } = useSnackbar();
 
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -39,27 +35,12 @@ const NewsLetter = () => {
       const isSuccess = Math.random() > 0.1;
 
       if (isSuccess) {
-        setSnackbar({
-          open: true,
-          message: "Successfully subscribed to the newsletter!",
-          severity: "success",
-        });
+        showSnackbar("Successfully subscribed to the newsletter!", "success");
         setEmail("");
       } else {
-        setSnackbar({
-          open: true,
-          message: "Error subscribing. Please try again later.",
-          severity: "error",
-        });
+        showSnackbar("Error subscribing. Please try again later.", "error");
       }
     }, 500);
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar({
-      ...snackbar,
-      open: false,
-    });
   };
 
   return (
@@ -91,22 +72,6 @@ const NewsLetter = () => {
           loading="lazy"
         />
       </div>
-
-      {/* Snackbar for notifications */}
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbar.severity}
-          sx={{ width: "100%" }}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </div>
   );
 };

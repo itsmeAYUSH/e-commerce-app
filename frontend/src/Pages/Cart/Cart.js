@@ -15,11 +15,13 @@ import Collection from "../../components/Collection/Collection";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../store/CartContext";
 import OrderSummmary from "../../components/OrderSummary/OrderSummary";
+import { useSnackbar } from "../../contexts/SnackbarContext";
 
 const Cart = () => {
   const navigate = useNavigate();
   const { state, removeItem, addItem, updateItem } = useCart(); 
   const { items } = state;
+  const { showSnackbar } = useSnackbar();
 
   const handleQuantityChange = (index, change) => {
     const item = items[index];
@@ -28,12 +30,20 @@ const Cart = () => {
     if (newQuantity <= 0) {
       // Only remove the item if quantity reaches zero
       removeItem(item);
+      showSnackbar(`${item.name} removed from cart`, 'info');
     } else {
       // Update the item with the new quantity
       const updatedItem = { ...item, quantity: newQuantity };
       updateItem(updatedItem);
+      showSnackbar(`Updated ${item.name} quantity to ${newQuantity}`, 'success');
     }
   };
+
+  const handleRemoveItem = (item) => {
+    removeItem(item);
+    showSnackbar(`${item.name} removed from cart`, 'info');
+  };
+
   return (
     <div>
       <div className={styles.cartHeader}>
@@ -96,7 +106,7 @@ const Cart = () => {
                     <TableCell>
                       <Button
                         className={styles.circularButton}
-                        onClick={() => removeItem(item)}
+                        onClick={() => handleRemoveItem(item)}
                       >
                         X
                       </Button>

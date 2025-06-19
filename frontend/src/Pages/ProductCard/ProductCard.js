@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { useFavorites } from "../../store/FavoritesContext"; // Import Favorites context
-import { useCart } from "../../store/CartContext"; // Import Cart context
+import React from "react";
+import { useFavorites } from "../../store/FavoritesContext";
+import { useCart } from "../../store/CartContext";
 import {
   Card,
   CardMedia,
@@ -8,7 +8,6 @@ import {
   Typography,
   IconButton,
   Tooltip,
-  Snackbar,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -16,6 +15,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { styled } from "@mui/system";
 import { Link } from "react-router-dom";
 import styles from "./ProductCard.module.css";
+import { useSnackbar } from "../../contexts/SnackbarContext";
 
 const DiscountBadge = styled("div")({
   position: "absolute",
@@ -41,8 +41,7 @@ const WishlistButton = styled(IconButton)(({ isFavorite }) => ({
 const ProductCard = ({ product }) => {
   const { state, addFavorite, removeFavorite } = useFavorites();
   const { addItem } = useCart();
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const { showSnackbar } = useSnackbar();
 
   // Sync local `isFavorite` with global favorites context
   const isFavorite = state.favorites.some((fav) => fav._id === product._id);
@@ -50,12 +49,11 @@ const ProductCard = ({ product }) => {
   const handleFavoriteToggle = () => {
     if (isFavorite) {
       removeFavorite(product);
-      setSnackbarMessage("Removed from favorites!");
+      showSnackbar("Removed from favorites!", "info");
     } else {
       addFavorite(product);
-      setSnackbarMessage("Added to favorites!");
+      showSnackbar("Added to favorites!", "success");
     }
-    setSnackbarOpen(true);
   };
 
   const handleAddToCart = (event) => {
@@ -73,15 +71,11 @@ const ProductCard = ({ product }) => {
       name: product.name,
       price: price || 0, // Fallback to 0 if parsing fails
       quantity: 1,
-      // image: product.image,
+      image: product.image,
     };
 
     addItem(itemToAdd);
-    setSnackbarMessage("Added to cart!");
-    setSnackbarOpen(true);
-  };
-  const handleCloseSnackbar = () => {
-    setSnackbarOpen(false);
+    showSnackbar(`${product.name} added to cart!`, "success");
   };
 
   return (
@@ -130,7 +124,6 @@ const ProductCard = ({ product }) => {
             ₹{product.price}
           </Typography>
        
-          {/* Cart Button INSIDE Link but prevents navigation */}
           <IconButton
             sx={{
               backgroundColor: "#fff",
@@ -143,14 +136,6 @@ const ProductCard = ({ product }) => {
           </IconButton>
         </CardContent>
       </Link>
-
-      {/* Snackbar for notification */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-        message={snackbarMessage}
-      />
     </Card>
   );
 };

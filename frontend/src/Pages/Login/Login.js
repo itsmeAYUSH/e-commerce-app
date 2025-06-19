@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { login } from '../../Redux/Reducers/authSlice';
 import { auth, googleProvider } from '../../firebase';
 import { signInWithPopup } from 'firebase/auth';
+import { useSnackbar } from '../../contexts/SnackbarContext';
 import './Login.css';
 
 const Login = () => {
@@ -15,6 +16,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { showSnackbar } = useSnackbar();
 
   const handleChange = (e) => {
     setFormData({
@@ -50,10 +52,14 @@ const Login = () => {
       // Update Redux store
       dispatch(login(data.user));
 
+      // Show success message
+      showSnackbar('Successfully logged in!', 'success');
+
       // Redirect to home page
       navigate('/');
     } catch (err) {
       setError(err.message);
+      showSnackbar(err.message, 'error');
     } finally {
       setLoading(false);
     }
@@ -95,10 +101,14 @@ const Login = () => {
       // Update Redux store
       dispatch(login(data.user));
 
+      // Show success message
+      showSnackbar('Successfully logged in with Google!', 'success');
+
       // Redirect to home page
       navigate('/',{ replace: true });
     } catch (err) {
       setError(err.message);
+      showSnackbar(err.message, 'error');
     } finally {
       setLoading(false);
     }

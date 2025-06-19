@@ -1,21 +1,13 @@
-import React, { useEffect, useState,useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../store/CartContext";
-import { Snackbar, Alert } from "@mui/material";
+import { useSnackbar } from "../../contexts/SnackbarContext";
 
 const RazorpayPayment = ({ formData, amount, onSuccess, onError }) => {
     const { clearCart } = useCart();
     const navigate = useNavigate();
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState("");
-    const [snackbarSeverity, setSnackbarSeverity] = useState("error");
     const [razorpayLoaded, setRazorpayLoaded] = useState(false);
-  
-    const showSnackbar = (message, severity) => {
-      setSnackbarMessage(message);
-      setSnackbarSeverity(severity);
-      setSnackbarOpen(true);
-    };
+    const { showSnackbar } = useSnackbar();
   
     const handlePayment = useCallback(() => {
       if (!window.Razorpay) {
@@ -52,6 +44,8 @@ const RazorpayPayment = ({ formData, amount, onSuccess, onError }) => {
   
             setTimeout(() => {
               clearCart();
+              document.body.style.overflow = 'auto';
+              document.documentElement.style.overflow = 'auto';
               navigate("/order-success", {
                 state: {
                   orderId: response.razorpay_payment_id,
@@ -70,6 +64,8 @@ const RazorpayPayment = ({ formData, amount, onSuccess, onError }) => {
           ondismiss: function () {
             console.log("Payment modal closed without completing payment");
             showSnackbar("Payment cancelled", "info");
+            document.body.style.overflow = 'auto';
+            document.documentElement.style.overflow = 'auto';
           },
         },
       };
@@ -87,7 +83,7 @@ const RazorpayPayment = ({ formData, amount, onSuccess, onError }) => {
         showSnackbar("Error initializing payment. Please try again.", "error");
         if (onError) onError(error);
       }
-    }, [amount, formData, clearCart, navigate, onSuccess, onError]);
+    }, [amount, formData, clearCart, navigate, onSuccess, onError, showSnackbar]);
   
     // Load Razorpay script and trigger payment when ready
     useEffect(() => {
@@ -124,23 +120,7 @@ const RazorpayPayment = ({ formData, amount, onSuccess, onError }) => {
       };
     }, [handlePayment]);
   
-    return (
-      <>
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={6000}
-          onClose={() => setSnackbarOpen(false)}
-        >
-          <Alert
-            onClose={() => setSnackbarOpen(false)}
-            severity={snackbarSeverity}
-            sx={{ width: "100%" }}
-          >
-            {snackbarMessage}
-          </Alert>
-        </Snackbar>
-      </>
-    );
+    return null;
   };
 
 export default RazorpayPayment;

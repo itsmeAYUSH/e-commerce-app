@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect, useState } from "react";
-import { Snackbar, Alert } from "@mui/material";
+import { useSnackbar } from "../contexts/SnackbarContext";
 
 const CartContext = createContext();
 
@@ -50,82 +50,46 @@ const cartReducer = (state, action) => {
 
 export const CartProvider = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, initialState);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "success"
-  });
+  const { showSnackbar } = useSnackbar();
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(state.items));
   }, [state.items]);
 
   const addItem = (item) => {
-    const existingItem = state.items.find(i => i.id === item.id);
+    const existingItem = state.items.find((i) => i.id === item.id);
     if (existingItem) {
-      setSnackbar({
-        open: true,
-        message: "This product is already in your cart!",
-        severity: "info"
-      });
-      return false;
+      // Item exists, don't add again (snackbar will be shown by the provider)
+      return;
     }
     dispatch({ type: "ADD_ITEM", payload: item });
-    setSnackbar({
-      open: true,
-      message: "Product added to cart!",
-      severity: "success"
-    });
-    return true;
+  };
+
+  const removeItem = (item) => {
+    dispatch({ type: "REMOVE_ITEM", payload: item });
   };
 
   const updateItem = (item) => {
     dispatch({ type: "UPDATE_ITEM", payload: item });
   };
 
-  const removeItem = (item) => {
-    dispatch({ type: "REMOVE_ITEM", payload: item });
-    setSnackbar({
-      open: true,
-      message: "Product removed from cart!",
-      severity: "success"
-    });
-  };
-
   const clearCart = () => {
     dispatch({ type: "CLEAR_CART" });
   };
 
-  const handleCloseSnackbar = () => {
-    setSnackbar(prev => ({ ...prev, open: false }));
-  };
-
   return (
-    <CartContext.Provider value={{ 
-      state, 
-      addItem, 
-      updateItem, 
-      removeItem, 
-      clearCart 
-    }}>
+    <CartContext.Provider
+      value={{
+        state,
+        addItem,
+        removeItem,
+        updateItem,
+        clearCart,
+      }}
+    >
       {children}
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert 
-          onClose={handleCloseSnackbar} 
-          severity={snackbar.severity}
-          sx={{ width: '100%' }}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </CartContext.Provider>
   );
 };
 
-export const useCart = () => {
-  return useContext(CartContext);
-};
+export const useCart = () => useContext(CartContext);

@@ -41,6 +41,7 @@ import {
   Add,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { useSnackbar } from "../../contexts/SnackbarContext";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -54,11 +55,6 @@ const Profile = () => {
   const [favorites, setFavorites] = useState([]);
   const [addresses, setAddresses] = useState([]);
   const [openAddressDialog, setOpenAddressDialog] = useState(false);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "success",
-  });
   const [confirmLogoutDialog, setConfirmLogoutDialog] = useState(false);
 
   const [editableUserInfo, setEditableUserInfo] = useState({
@@ -80,6 +76,7 @@ const Profile = () => {
 
   const user = useSelector(state => state.auth.user);
   const dispatch = useDispatch();
+  const { showSnackbar } = useSnackbar();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -393,21 +390,6 @@ const Profile = () => {
     } catch (error) {
       showSnackbar("Failed to logout", "error");
     }
-  };
-
-  const showSnackbar = (message, severity = "success") => {
-    setSnackbar({
-      open: true,
-      message,
-      severity,
-    });
-  };
-
-  const closeSnackbar = () => {
-    setSnackbar({
-      ...snackbar,
-      open: false,
-    });
   };
 
   if (loading) {
@@ -1113,22 +1095,6 @@ const Profile = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
-      {/* Snackbar */}
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={6000}
-        onClose={closeSnackbar}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      >
-        <Alert
-          onClose={closeSnackbar}
-          severity={snackbar.severity}
-          sx={{ width: "100%" }}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </Container>
   );
 };

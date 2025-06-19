@@ -7,7 +7,6 @@ import {
   CardContent,
   Button,
   Grid,
-  Snackbar,
   CircularProgress,
   Box
 } from "@mui/material";
@@ -17,15 +16,16 @@ import Footer from "../../components/Footer/Footer";
 import Collection from "../../components/Collection/Collection";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../store/CartContext";
+import { useSnackbar } from "../../contexts/SnackbarContext";
 
 const ProductDetail = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
   const { addItem } = useCart();
+  const { showSnackbar } = useSnackbar();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -40,6 +40,7 @@ const ProductDetail = () => {
           if (response.status === 404) {
             console.log('Product not found, redirecting to products page');
             setError('Product not found');
+            showSnackbar('Product not found', 'error');
             setTimeout(() => {
               navigate('/products');
             }, 2000);
@@ -56,6 +57,7 @@ const ProductDetail = () => {
       } catch (err) {
         console.error('Error fetching product:', err);
         setError(err.message);
+        showSnackbar(err.message, 'error');
         setTimeout(() => {
           navigate('/products');
         }, 2000);
@@ -65,7 +67,7 @@ const ProductDetail = () => {
     };
 
     fetchProduct();
-  }, [id, navigate]);
+  }, [id, navigate, showSnackbar]);
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -83,7 +85,7 @@ const ProductDetail = () => {
     };
     
     addItem(itemToAdd);
-    setSnackbarOpen(true);
+    showSnackbar(`${product.name} added to cart`, 'success');
   };
 
   const handleBuyNow = () => {
@@ -102,6 +104,7 @@ const ProductDetail = () => {
     };
     
     addItem(itemToAdd);
+    showSnackbar(`${product.name} added to cart`, 'success');
     navigate('/cart');
   };
 
@@ -260,13 +263,6 @@ const ProductDetail = () => {
       </div>
       <Collection />
       <Footer />
-
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={() => setSnackbarOpen(false)}
-        message="Added to cart!"
-      />
     </div>
   );
 };
