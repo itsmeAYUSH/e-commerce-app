@@ -21,6 +21,8 @@ const ContactUs = () => {
   });
   const [loading, setLoading] = useState(false);
   const { showSnackbar } = useSnackbar();
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,7 +39,7 @@ const ContactUs = () => {
     try {
       // Make sure this URL points to your actual backend server
       const response = await fetch(
-        "${backendUrl}/api/contact/send-email",
+        `${backendUrl}/api/contact/send-email`,
         {
           method: "POST",
           headers: {

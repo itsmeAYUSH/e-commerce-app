@@ -55,7 +55,7 @@ const App = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [backendUrl]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');

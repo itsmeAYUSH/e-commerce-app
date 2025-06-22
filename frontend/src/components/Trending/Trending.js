@@ -44,7 +44,7 @@ const Trending = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [backendUrl]);
 
   const filteredProducts =
     selectedCategory === "All"

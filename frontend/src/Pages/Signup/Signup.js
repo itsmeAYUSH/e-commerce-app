@@ -23,6 +23,8 @@ const Signup = ({ onLogin }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -81,7 +83,7 @@ const Signup = ({ onLogin }) => {
     }
 
     try {
-      const response = await fetch("${backendUrl}/api/auth/signup", {
+      const response = await fetch(`${backendUrl}/api/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

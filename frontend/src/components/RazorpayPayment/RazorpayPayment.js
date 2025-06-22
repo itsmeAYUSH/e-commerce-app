@@ -144,7 +144,7 @@ const RazorpayPayment = ({ formData, amount, items, onSuccess, onError }) => {
           }
         };
       }
-    }, [amount, formData, items, clearCart, navigate, onSuccess, onError, showSnackbar]);
+    }, [amount, backendUrl, formData, items, clearCart, navigate, onSuccess, onError, showSnackbar]);
 
     return null;
 };

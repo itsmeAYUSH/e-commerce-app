@@ -69,7 +69,7 @@ const ProductDetail = () => {
     };
 
     fetchProduct();
-  }, [id, navigate, showSnackbar]);
+  }, [id, navigate, showSnackbar, backendUrl]);
 
   const handleAddToCart = () => {
     if (!product) return;

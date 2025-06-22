@@ -74,7 +74,7 @@ const Products = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [backendUrl]);
 
   const handlePriceRangeChange = (event, newValue) => {
     setPriceRange(newValue);

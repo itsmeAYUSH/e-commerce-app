@@ -58,7 +58,7 @@ const Navbar = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [backendUrl]);
 
   // Filter products based on search query
   useEffect(() => {
