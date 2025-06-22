@@ -11,11 +11,22 @@ const userDataRoutes = require("./Routes/userDataRoutes");
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      "http://localhost:3000",
+      "https://furniflexx.netlify.app"
+    ];
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
