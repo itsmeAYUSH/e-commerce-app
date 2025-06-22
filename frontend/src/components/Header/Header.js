@@ -17,7 +17,7 @@ const Header = () => {
       <p>Sign Up & get 20% Off for all collection</p>
       <div className={styles.social}>
         <CallRoundedIcon className={styles.icons} />
-        <p>+001234567890</p>
+        <p>+91 887952074x</p>
       </div>
     </div>
   );

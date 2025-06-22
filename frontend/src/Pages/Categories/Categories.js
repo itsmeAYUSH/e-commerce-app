@@ -11,7 +11,7 @@ const Categories = () => {
   const categories = [
     {
       id: 1,
-      name: "Bedroom",
+      name: "Bed Room",
       description: "Create your perfect sanctuary with our bedroom collections",
       image:
         "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",

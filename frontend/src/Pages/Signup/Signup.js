@@ -81,7 +81,7 @@ const Signup = ({ onLogin }) => {
     }
 
     try {
-      const response = await fetch("https://e-commerce-app-p1sv.onrender.com/api/auth/signup", {
+      const response = await fetch("${backendUrl}/api/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

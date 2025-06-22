@@ -1,6 +1,6 @@
 import axios from 'axios';
-
-const API_URL = 'https://e-commerce-app-p1sv.onrender.com/api/user';
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
+const API_URL = `${backendUrl}/api/user`;
 
 // Create axios instance with auth header
 const axiosInstance = axios.create({

@@ -9,6 +9,9 @@ const RazorpayPayment = ({ formData, amount, items, onSuccess, onError }) => {
     const navigate = useNavigate();
     const { showSnackbar } = useSnackbar();
     const paymentTriggered = useRef(false);
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+    
+
 
     useEffect(() => {
       if (paymentTriggered.current) return;
@@ -60,7 +63,7 @@ const RazorpayPayment = ({ formData, amount, items, onSuccess, onError }) => {
                   orderStatus: 'paid'
                 });
                 await axios.post(
-                  'https://e-commerce-app-p1sv.onrender.com/api/user/order',
+                  `${backendUrl}/api/user/order`,
                   {
                     orderId: response.razorpay_payment_id,
                     products: (items || []).map(item => ({

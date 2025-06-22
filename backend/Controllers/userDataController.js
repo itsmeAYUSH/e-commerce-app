@@ -80,7 +80,7 @@ const toggleFavorite = async (req, res) => {
       }
     ).populate({
       path: 'favorites',
-      select: 'name price image category code'
+      select: 'name price image category code discount'
     });
 
     if (!updatedUser) {
@@ -118,7 +118,7 @@ const getFavorites = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).populate({
       path: 'favorites',
-      select: 'name price image category code'
+      select: 'name price image category code discount'
     });
     res.json({
       success: true,

@@ -30,6 +30,8 @@ const App = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
 
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
   const user = useSelector(state => state.auth.user);
@@ -39,7 +41,7 @@ const App = () => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const response = await fetch('https://e-commerce-app-p1sv.onrender.com/api/products');
+        const response = await fetch(`${backendUrl}/api/products`);
         if (!response.ok) {
           throw new Error('Failed to fetch products');
         }

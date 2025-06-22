@@ -114,7 +114,12 @@ const ProductCard = ({ product }) => {
             </Typography>
           </Tooltip>
           <Typography variant="body1" textAlign={"left"}>
-            ₹{product.price}
+            <span style={{ textDecoration: 'line-through', color: '#b0b0b0', marginRight: 8 }}>
+              ₹{product.originalPrice} /-
+            </span>
+            <span style={{fontWeight: 'bold' }}>
+              ₹{product.price} /-
+            </span>
           </Typography>
        
           <IconButton

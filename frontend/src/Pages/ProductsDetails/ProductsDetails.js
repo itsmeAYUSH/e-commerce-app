@@ -26,6 +26,8 @@ const ProductDetail = () => {
   const { id } = useParams();
   const { addItem } = useCart();
   const { showSnackbar } = useSnackbar();
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -33,7 +35,7 @@ const ProductDetail = () => {
         setLoading(true);
         console.log('Fetching product with ID:', id);
         
-        const response = await fetch(`https://e-commerce-app-p1sv.onrender.com/api/products/${id}`);
+        const response = await fetch(`${backendUrl}/api/products/${id}`);
         const data = await response.json();
         
         if (!response.ok) {
@@ -77,7 +79,7 @@ const ProductDetail = () => {
       : Number(product.price);
 
     const itemToAdd = {
-      id: product._id,
+      _id: product._id,
       name: product.name,
       price: price || 0,
       quantity: 1,
@@ -96,7 +98,7 @@ const ProductDetail = () => {
       : Number(product.price);
 
     const itemToAdd = {
-      id: product._id,
+      _id: product._id,
       name: product.name,
       price: price || 0,
       quantity: 1,

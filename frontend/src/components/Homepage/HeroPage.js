@@ -9,7 +9,7 @@ const HomePage = () => {
   const navigate = useNavigate();
   const [activeRoom, setActiveRoom] = useState(0);
   const roomData = [
-    { name: "Bedroom", image: "/images/bedroom.png", items: "1200+" },
+    { name: "Bed Room", image: "/images/bedroom.png", items: "1200+" },
     { name: "Living Room", image: "/images/livingroom.png", items: "950+" },
     { name: "Dining Room", image: "/images/waitingroom.png", items: "800+" },
   ];

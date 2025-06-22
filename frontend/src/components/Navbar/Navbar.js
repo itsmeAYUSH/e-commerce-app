@@ -21,6 +21,8 @@ const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const searchRef = useRef(null);
   const navRef = useRef(null);
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
   
   // Get favorites and cart items from contexts
   const { favorites } = useFavorites();
@@ -31,7 +33,7 @@ const Navbar = () => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const response = await fetch("https://e-commerce-app-p1sv.onrender.com/api/products");
+        const response = await fetch(`${backendUrl}/api/products`);
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }

@@ -17,6 +17,8 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { showSnackbar } = useSnackbar();
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
 
   const handleChange = (e) => {
     setFormData({
@@ -31,7 +33,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('https://e-commerce-app-p1sv.onrender.com/api/auth/login', {
+      const response = await fetch(`${backendUrl}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -75,7 +77,7 @@ const Login = () => {
       const user = result.user;
 
       // Send the Google token to your backend
-      const response = await fetch('https://e-commerce-app-p1sv.onrender.com/api/auth/google', {
+      const response = await fetch(`${backendUrl}/api/auth/google`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

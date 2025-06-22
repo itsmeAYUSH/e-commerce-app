@@ -24,7 +24,7 @@ const questions = [
   {
     question: "How do I contact customer support for assistance?",
     answer:
-      "You can contact our customer support team via email at furniflex123@gmail.com or call us at +001234567890 or even visit us at Saki Naka, Andheri, Mumbai, Maharashtra. Our support team is available Monday to Friday from 9 AM to 6 PM (EST). You can also reach us through the live chat option on our website.",
+      "You can contact our customer support team via email at furniflex123@gmail.com or call us at +91 887952074x or even visit us at Saki Naka, Andheri, Mumbai, Maharashtra. Our support team is available Monday to Friday from 9 AM to 6 PM (EST). You can also reach us through the live chat option on our website.",
   },
 ];
 

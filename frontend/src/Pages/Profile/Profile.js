@@ -38,9 +38,10 @@ import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "../../contexts/SnackbarContext";
 import ProductCard from "../ProductCard/ProductCard";
 
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 // Delete account API call
 const deleteAccountApi = async (token) => {
-  const response = await fetch('https://e-commerce-app-p1sv.onrender.com/api/auth/delete-account', {
+  const response = await fetch(`${backendUrl}/api/auth/delete-account`, {
     method: 'DELETE',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -113,7 +114,7 @@ const Profile = () => {
 
         // Fetch user profile data
         console.log('Fetching user profile data...');
-        const response = await fetch(`https://e-commerce-app-p1sv.onrender.com/api/auth/me`, {
+        const response = await fetch(`${backendUrl}/api/auth/me`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -163,7 +164,7 @@ const Profile = () => {
 
         // Fetch user's orders
         console.log('Fetching user order history...');
-        const ordersResponse = await fetch(`https://e-commerce-app-p1sv.onrender.com/api/user/order-history`, {
+        const ordersResponse = await fetch(`${backendUrl}/api/user/order-history`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -178,7 +179,7 @@ const Profile = () => {
 
         // Fetch user's favorites
         console.log('Fetching user favorites...');
-        const favoritesResponse = await fetch(`https://e-commerce-app-p1sv.onrender.com/api/user/favorites`, {
+        const favoritesResponse = await fetch(`${backendUrl}/api/user/favorites`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -195,7 +196,7 @@ const Profile = () => {
 
         // Fetch user's addresses
         console.log('Fetching user addresses...');
-        const addressesResponse = await fetch(`https://e-commerce-app-p1sv.onrender.com/api/user/shipping-address`, {
+        const addressesResponse = await fetch(`${backendUrl}/api/user/shipping-address`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -262,7 +263,7 @@ const Profile = () => {
       
       console.log('Updating profile with data:', updateData);
       
-      const response = await fetch(`https://e-commerce-app-p1sv.onrender.com/api/auth/update-profile`, {
+      const response = await fetch(`${backendUrl}/api/auth/update-profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -310,7 +311,7 @@ const Profile = () => {
 
   const addAddress = async () => {
     try {
-      const response = await fetch(`https://e-commerce-app-p1sv.onrender.com/api/user/shipping-address`, {
+      const response = await fetch(`${backendUrl}/api/user/shipping-address`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -345,7 +346,7 @@ const Profile = () => {
 
   // const removeFavorite = async (productId) => {
   //   try {
-  //     const response = await fetch(`https://e-commerce-app-p1sv.onrender.com/api/user/favorites/${productId}`, {
+  //     const response = await fetch(`${backendUrl}/api/user/favorites/${productId}`, {
   //       method: 'DELETE',
   //       headers: {
   //         'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -643,7 +644,7 @@ const Profile = () => {
                           Status: {order.orderStatus}
                         </Typography>
                         <Typography variant="body2">
-                          Total: ${order.totalAmount}
+                          Total: ₹{order.totalAmount}
                         </Typography>
                         <Box sx={{ mt: 2 }}>
                           <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Products:</Typography>
@@ -657,7 +658,7 @@ const Profile = () => {
                               <Box>
                                 <Typography variant="body1">{item.product?.name}</Typography>
                                 <Typography variant="body2">Qty: {item.quantity}</Typography>
-                                <Typography variant="body2">Price: ${item.price}</Typography>
+                                <Typography variant="body2">Price: ₹{item.price}</Typography>
                               </Box>
                             </Box>
                           ))}

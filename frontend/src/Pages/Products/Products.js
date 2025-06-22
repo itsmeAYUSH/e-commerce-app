@@ -25,7 +25,7 @@ const Products = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [priceRange, setPriceRange] = useState([50, 300]);
+  const [priceRange, setPriceRange] = useState([5000, 100000]);
   const [selectedColors, setSelectedColors] = useState([]);
   const [availability, setAvailability] = useState("");
   const [selectedCategory, setSelectedCategory] = useState([]); // Changed to array
@@ -33,13 +33,14 @@ const Products = () => {
   const [sortOrder, setSortOrder] = useState("asc");
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 12;
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
   // Parse prices once when data is loaded
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const response = await fetch("https://e-commerce-app-p1sv.onrender.com/api/products");
+        const response = await fetch(`${backendUrl}/api/products`);
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }
@@ -93,7 +94,7 @@ const Products = () => {
   };
 
   const clearFilters = () => {
-    setPriceRange([50, 300]);
+    setPriceRange([5000, 100000]);
     setSelectedColors([]);
     setAvailability("");
     setSelectedCategory([]);
@@ -190,7 +191,7 @@ const Products = () => {
             <AccordionDetails>
               <ul className={styles.radioGroup}>
                 {[
-                  "Bedroom",
+                  "Bed Room",
                   "Living Room",
                   "Office",
                   "Kitchen",
@@ -225,8 +226,8 @@ const Products = () => {
                   valueLabelDisplay="auto"
                   size="small"
                   color="primary"
-                  min={50}
-                  max={300}
+                  min={5000}
+                  max={100000}
                 />
                 <span>₹{priceRange[1]}</span>
               </div>

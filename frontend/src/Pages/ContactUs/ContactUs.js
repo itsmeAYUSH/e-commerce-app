@@ -37,7 +37,7 @@ const ContactUs = () => {
     try {
       // Make sure this URL points to your actual backend server
       const response = await fetch(
-        "https://e-commerce-app-p1sv.onrender.com/api/contact/send-email",
+        "${backendUrl}/api/contact/send-email",
         {
           method: "POST",
           headers: {
@@ -109,7 +109,7 @@ const ContactUs = () => {
               <span className={styles.icons}>
                 <CallRoundedIcon />
               </span>
-              <p>+91 1234567890</p>
+              <p>+91 887952074x</p>
             </div>
             <div className={styles.infoItem}>
               <span className={styles.icons}>

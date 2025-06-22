@@ -9,9 +9,14 @@ const categories = [
   "All",
   "Bed Room",
   "Living Room",
-  "Dining Room",
+  "Office",
+  "Kitchen",
   "Outdoor",
-  "Indoor",
+  "Decor"
+  // "Dining Room",
+  // "Outdoor",
+  // "Indoor",
+ 
 ];
 
 const Trending = () => {
@@ -20,11 +25,12 @@ const Trending = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("https://e-commerce-app-p1sv.onrender.com/api/products");
+        const response = await fetch(`${backendUrl}/api/products`);
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }
