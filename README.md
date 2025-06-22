@@ -1,3 +1,94 @@
+# E-commerce Web Application
+
+## Overview
+
+This is a full-stack E-commerce web application designed to provide a seamless online shopping experience. It features user authentication, product browsing, cart management, order processing, and more. The project is organized into a **frontend** (React) and a **backend** (Node.js/Express + MongoDB).
+
+---
+
+## Tech Stack
+
+### Frontend
+
+- **React.js**: UI library for building interactive user interfaces.
+- **React Router**: For client-side routing and navigation.
+- **Redux**: State management for authentication and cart.
+- **Context API**: For local state management (e.g., Snackbar, Cart, Favorites).
+- **CSS Modules**: Scoped and modular CSS for styling components.
+- **Axios/Fetch**: For making HTTP requests to the backend.
+- **Firebase**: (Optional) For additional services like authentication or storage.
+
+### Backend
+
+- **Node.js**: JavaScript runtime for server-side logic.
+- **Express.js**: Web framework for building RESTful APIs.
+- **MongoDB**: NoSQL database for storing users, products, and orders.
+- **Mongoose**: ODM for MongoDB, providing schema and model support.
+- **dotenv**: For environment variable management.
+- **CORS**: Middleware to handle Cross-Origin Resource Sharing.
+- **body-parser**: Middleware to parse incoming request bodies.
+
+---
+
+## Features
+
+### User
+- User registration and login (authentication)
+- Profile management
+- Password security (hashed storage)
+- Protected routes (only accessible to logged-in users)
+
+### Product
+- Product listing and details
+- Product categories and featured sections
+- Search and filter products
+- Add to cart and manage cart items
+- Add to favorites/wishlist
+
+### Cart & Checkout
+- Cart management (add, remove, update quantity)
+- Order summary and checkout process
+- Payment integration (e.g., Razorpay)
+- Order success and confirmation page
+
+### Blog & Content
+- Latest blog section
+- About Us, Contact Us, and FAQ pages
+
+### Miscellaneous
+- Responsive design for mobile and desktop
+- Loader and Snackbar notifications
+- Offline notice and error handling
+- 404 Not Found page
+
+---
+
+## Project Structure
+
+```
+E-commerce/
+  my-app/
+    backend/
+      Controllers/         # Express controllers for business logic
+      middleware/          # Custom middleware (e.g., auth)
+      Models/              # Mongoose models (User, Product)
+      Routes/              # Express route definitions
+      server.js            # Main server entry point
+      package.json         # Backend dependencies
+    frontend/
+      public/              # Static assets
+      src/
+        components/        # Reusable React components
+        contexts/          # React Context providers
+        Pages/             # Page-level React components
+        Redux/             # Redux store and slices
+        services/          # API service functions
+        store/             # Context stores (Cart, Favorites)
+        util/              # Utility functions and data
+        App.js             # Main React app
+        index.js           # Entry point
+      package.json         # Frontend dependencies
+```
 
 ---
 
@@ -104,12 +195,6 @@
 
 - **Frontend:** Deploy the `frontend` build folder to Netlify, Vercel, or any static hosting.
 - **Backend:** Deploy the `backend` to a Node.js server (Heroku, Render, etc.). Make sure to set environment variables.
-
----
-
-## License
-
-This project is licensed under the MIT License.
 
 ---
 
