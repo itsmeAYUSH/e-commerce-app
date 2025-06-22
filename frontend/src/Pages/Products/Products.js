@@ -32,6 +32,7 @@ const Products = () => {
   const [selectedMaterial, setSelectedMaterial] = useState([]); // Changed to array
   const [sortOrder, setSortOrder] = useState("asc");
   const [currentPage, setCurrentPage] = useState(1);
+  const [showFilters, setShowFilters] = useState(false); // State for mobile filter visibility
   const productsPerPage = 12;
   const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
@@ -182,7 +183,12 @@ const Products = () => {
       </div>
       {loading && <Loader />}
       <div className={styles.productPage}>
-        <div className={styles.filterOptions}>
+        <div className={styles.mobileFilterButton}>
+          <Button variant="contained" className={styles.filterButton} onClick={() => setShowFilters(!showFilters)}>
+            Filters
+          </Button>
+        </div>
+        <div className={`${styles.filterOptions} ${showFilters ? styles.show : ''}`}>
           <h2>Filter Options</h2>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
