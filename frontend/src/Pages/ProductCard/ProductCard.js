@@ -64,7 +64,6 @@ const ProductCard = ({ product }) => {
     event.preventDefault();
 
     addItem(product);
-    showSnackbar(`${product.name} added to cart!`, "success");
   };
 
   return (
@@ -114,9 +113,11 @@ const ProductCard = ({ product }) => {
             </Typography>
           </Tooltip>
           <Typography variant="body1" textAlign={"left"}>
-            <span style={{ textDecoration: 'line-through', color: '#b0b0b0', marginRight: 8 }}>
-              ₹{product.originalPrice} /-
-            </span>
+            {product.originalPrice && (
+              <span style={{ textDecoration: 'line-through', color: '#b0b0b0', marginRight: 8 }}>
+                ₹{product.originalPrice} /-
+              </span>
+            )}
             <span style={{fontWeight: 'bold' }}>
               ₹{product.price} /-
             </span>

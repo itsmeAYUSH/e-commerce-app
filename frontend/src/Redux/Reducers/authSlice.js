@@ -1,9 +1,29 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+const getInitialToken = () => {
+  const token = localStorage.getItem('token');
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    if (payload.exp && payload.exp < Date.now() / 1000) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      return null;
+    }
+    return token;
+  } catch (e) {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    return null;
+  }
+};
+
+const token = getInitialToken();
+
 const initialState = {
-  user: JSON.parse(localStorage.getItem('user')) || null,
-  token: localStorage.getItem('token') || null,
-  isAuthenticated: !!localStorage.getItem('token'),
+  user: token ? JSON.parse(localStorage.getItem('user')) : null,
+  token: token,
+  isAuthenticated: !!token,
   loading: false,
   error: null,
 };

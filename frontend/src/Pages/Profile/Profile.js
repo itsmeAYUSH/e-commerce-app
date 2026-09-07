@@ -65,6 +65,7 @@ const Profile = () => {
   const [editMode, setEditMode] = useState(false);
   const [orders, setOrders] = useState([]);
   const [favorites, setFavorites] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [addresses, setAddresses] = useState([]);
   const [openAddressDialog, setOpenAddressDialog] = useState(false);
   const [confirmLogoutDialog, setConfirmLogoutDialog] = useState(false);
@@ -325,7 +326,7 @@ const Profile = () => {
       }
 
       const addedAddress = await response.json();
-      setAddresses([...addresses, addedAddress]);
+      setAddresses(addedAddress.addresses || []);
       setOpenAddressDialog(false);
       setNewAddress({
         name: "",

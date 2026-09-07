@@ -18,10 +18,13 @@ app.use(cors({
   origin: function (origin, callback) {
     const allowedOrigins = [
       "http://localhost:3000",
+      "http://localhost:3001",
       "https://furniflexx.netlify.app"
     ];
     if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
+    
+    const isLocalhost = origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:');
+    if (allowedOrigins.includes(origin) || isLocalhost) {
       return callback(null, true);
     } else {
       return callback(new Error('Not allowed by CORS'));
@@ -32,21 +35,6 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Detailed error logging middleware
-app.use((err, req, res, next) => {
-  console.error('Detailed Error:', {
-    message: err.message,
-    stack: err.stack,
-    path: req.path,
-    method: req.method,
-    body: req.body,
-    params: req.params,
-    query: req.query,
-    user: req.user
-  });
-  next(err);
-});
 
 // MongoDB Connection
 const connectDB = async () => {
@@ -66,6 +54,21 @@ app.use("/api/products", productRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userDataRoutes);
+
+// Detailed error logging middleware
+app.use((err, req, res, next) => {
+  console.error('Detailed Error:', {
+    message: err.message,
+    stack: err.stack,
+    path: req.path,
+    method: req.method,
+    body: req.body,
+    params: req.params,
+    query: req.query,
+    user: req.user
+  });
+  next(err);
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {

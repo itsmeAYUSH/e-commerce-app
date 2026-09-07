@@ -87,7 +87,6 @@ const ProductDetail = () => {
     };
     
     addItem(itemToAdd);
-    showSnackbar(`${product.name} added to cart`, 'success');
   };
 
   const handleBuyNow = () => {
@@ -106,7 +105,6 @@ const ProductDetail = () => {
     };
     
     addItem(itemToAdd);
-    showSnackbar(`${product.name} added to cart`, 'success');
     navigate('/cart');
   };
 

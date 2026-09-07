@@ -1,13 +1,26 @@
 const Product = require("../Models/Product.js");
 const mongoose = require("mongoose");
 
+// Helper functions to safely parse string/numeric values
+const cleanNumber = (val) => {
+  if (typeof val === 'number') return val;
+  if (!val) return 0;
+  return parseFloat(String(val).replace(/[^0-9.-]+/g, "")) || 0;
+};
+
+const cleanInt = (val) => {
+  if (typeof val === 'number') return val;
+  if (!val) return 0;
+  return parseInt(String(val).replace(/[^0-9-]+/g, "").replace("-", "")) || 0;
+};
+
 // Helper function to transform incoming product data
 const transformProductData = (product) => {
   return {
     ...product,
-    price: parseFloat(product.price.replace(/[^0-9.-]+/g, "")),
-    originalPrice: parseFloat(product.originalPrice.replace(/[^0-9.-]+/g, "")),
-    discount: parseInt(product.discount.replace(/[^0-9-]+/g, "").replace("-", "")),
+    price: cleanNumber(product.price),
+    originalPrice: cleanNumber(product.originalPrice),
+    discount: cleanInt(product.discount),
     description: product.description || `${product.name} - ${product.material} ${product.category} furniture`,
     code: product.code || generateProductCode(product.name, product.category)
   };

@@ -1,5 +1,5 @@
 import './App.css';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import Loader from './components/Loader/Loader';
@@ -24,12 +24,15 @@ import OfflineNotice from './components/OfflineNotice/OfflineNotice';
 import { CartProvider } from './store/CartContext';
 import { FavoritesProvider } from './store/FavoritesContext';
 import ProductsDetails from './Pages/ProductsDetails/ProductsDetails';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from './Redux/Reducers/authSlice';
 
 const App = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
   const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 
@@ -60,18 +63,21 @@ const App = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    dispatch(logout());
     navigate('/login', { replace: true });
   };
+
+  const isAuthRoute = location.pathname === '/login' || location.pathname === '/signup';
 
   return (
     <CartProvider>
       <FavoritesProvider>
         <div className="app">
-          {loading && <Loader />}
-          {!loading && (
+          {loading && !isAuthRoute && <Loader />}
+          {(isAuthRoute || !loading) && (
             <>
-              <Header user={user} onLogout={handleLogout} />
-              <Navbar />
+              {!isAuthRoute && <Header user={user} onLogout={handleLogout} />}
+              {!isAuthRoute && <Navbar />}
               <ScrollToTop />
               <OfflineNotice />
               <Routes>

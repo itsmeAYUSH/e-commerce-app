@@ -1,6 +1,5 @@
-// components/Signup.js
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 import styles from "./Signup.module.css";
 import {
   TextField,
@@ -10,6 +9,8 @@ import {
   Paper,
   Link,
 } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { login } from "../../Redux/Reducers/authSlice";
 
 const Signup = ({ onLogin }) => {
   const [formData, setFormData] = useState({
@@ -23,6 +24,7 @@ const Signup = ({ onLogin }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 
@@ -111,6 +113,9 @@ const Signup = ({ onLogin }) => {
       // Store token and user data
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
+      
+      // Update Redux store
+      dispatch(login({ token: data.token, user: data.user }));
       
       // Call onLogin with both token and user
       if (typeof onLogin === 'function') {
@@ -240,7 +245,7 @@ const Signup = ({ onLogin }) => {
           </Button>
         </form>
         <Typography align="center" className={styles.link}>
-          Already have an account? <Link href="/login">Login</Link>
+          Already have an account? <Link component={RouterLink} to="/login">Login</Link>
         </Typography>
       </Paper>
     </Container>

@@ -1,4 +1,5 @@
 import { createContext, useContext, useReducer, useEffect } from "react";
+import { useSelector } from 'react-redux';
 import { getCart, updateCart, clearCartBulk } from "../services/userService";
 import { useSnackbar } from "../contexts/SnackbarContext";
 
@@ -48,16 +49,17 @@ export const CartProvider = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, initialState);
   const { showSnackbar } = useSnackbar();
 
+  const token = useSelector(state => state.auth.token);
+
   // Load cart when component mounts and when auth token changes
   useEffect(() => {
-    const token = localStorage.getItem('token');
     if (token) {
       loadCart();
     } else {
       dispatch({ type: "SET_CART", payload: [] });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [token]);
 
   const loadCart = async () => {
     try {

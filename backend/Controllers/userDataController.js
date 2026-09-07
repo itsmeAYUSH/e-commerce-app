@@ -58,9 +58,9 @@ const toggleFavorite = async (req, res) => {
 
     console.log('Current user favorites:', user.favorites);
 
-    // Convert favorites to ObjectIds for comparison
+    // Convert favorites for comparison robustly
     const favoriteIndex = user.favorites.findIndex(id => 
-      id.equals(productObjectId)
+      id && id.toString() === productId
     );
 
     console.log('Favorite index:', favoriteIndex);
@@ -388,11 +388,23 @@ const addOrder = async (req, res) => {
     }
     console.log('productsWithObjectId:', productsWithObjectId);
 
+    // Map shippingAddress format robustly to match backend schema fields
+    const mappedShippingAddress = shippingAddress ? {
+      name: shippingAddress.name || `${shippingAddress.firstName || ''} ${shippingAddress.lastName || ''}`.trim() || 'Valued Customer',
+      addressLine1: shippingAddress.addressLine1 || shippingAddress.address || '',
+      addressLine2: shippingAddress.addressLine2 || shippingAddress.companyName || '',
+      city: shippingAddress.city || '',
+      state: shippingAddress.state || '',
+      postalCode: shippingAddress.postalCode || shippingAddress.zipCode || '',
+      country: shippingAddress.country || '',
+      phone: shippingAddress.phone || shippingAddress.phoneNumber || ''
+    } : {};
+
     user.orderHistory.push({
       orderId,
       products: productsWithObjectId,
       totalAmount,
-      shippingAddress,
+      shippingAddress: mappedShippingAddress,
       paymentMethod,
       orderStatus: orderStatus || 'pending',
       orderDate: new Date()

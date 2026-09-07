@@ -15,7 +15,11 @@ const transporter = nodemailer.createTransport({
 // Verify connection on startup
 transporter.verify((error) => {
   if (error) {
-    console.error('SMTP Connection Error:', error);
+    if (error.code === 'EAUTH') {
+      console.warn('\x1b[33m%s\x1b[0m', 'SMTP Warning: Invalid email credentials (EMAIL_USER / EMAIL_PASSWORD) in backend/.env. Email features will be unavailable.');
+    } else {
+      console.error('SMTP Connection Error:', error.message || error);
+    }
   } else {
     console.log('SMTP Server is ready to send emails');
   }
